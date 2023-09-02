@@ -11,7 +11,7 @@ body {
     #7a2c9e 129.35%
   ); */
   font-family: sans-serif;
-  /* overflow-y: hidden; */
+  overflow-y: hidden;
   display: flex;
   position: relative;
   justify-content: center;
@@ -22,6 +22,21 @@ body {
 .playgroundWrapper {
   width: 100vw;
   height: 100vh;
+}
+
+.ideWrapper {
+  width: 45vw;
+  height: 45vh; 
+  border: 1px solid '#e0e0e0';
+  border-radius: 10px;
+  position: absolute;
+}
+
+.ide {
+  width: 30px !important;
+  height: 100px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* .modeSelectionWrapper {
