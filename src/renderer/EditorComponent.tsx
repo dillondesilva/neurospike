@@ -1,4 +1,5 @@
 import CodeFlask from 'codeflask';
+import Prism from 'prismjs';
 import { useEffect, useRef } from 'react';
 import { Paper } from '@mui/material';
 import './App.css';
@@ -12,13 +13,16 @@ export default function EditorComponent() {
       lineNumbers: true,
     });
 
+    flask.addLanguage('python', Prism.languages.python);
+
     // How to listen for changes on your editor
     flask.onUpdate((code) => {
       // ...
     });
 
     // How to update your editor with custom content:
-    const defaultText = 'import neurospike\n\n#TODO: Write your simulation code in here!';
+    const defaultText =
+      'import neurospike\n\n#TODO: Write your simulation code in here!';
 
     flask.updateCode(defaultText);
   });
