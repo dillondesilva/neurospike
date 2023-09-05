@@ -1,4 +1,10 @@
-import { ToggleButton, ToggleButtonGroup, Slider, Stack } from '@mui/material';
+import {
+  Button,
+  ToggleButton,
+  ToggleButtonGroup,
+  Slider,
+  Stack,
+} from '@mui/material';
 
 export default function LIFControlPanel() {
   return (
@@ -84,10 +90,18 @@ export default function LIFControlPanel() {
         spacing={10}
         sx={{
           alignItems: 'center',
-          justifyContent: 'right',
+          justifyContent: 'space-between',
           paddingTop: '7vh',
         }}
       >
+        <Button
+          variant="outlined"
+          sx={{
+            height: '5vh',
+          }}
+        >
+          <p>Run Simulation</p>
+        </Button>
         <ToggleButtonGroup
           sx={{
             height: '5vh',

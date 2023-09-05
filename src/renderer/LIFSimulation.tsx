@@ -1,20 +1,23 @@
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { useRef } from 'react';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import model from '../assets/scene.gltf';
 
-function TestMesh() {
+function TestMesh({ url }) {
   const testRef = useRef();
+  const geom = useLoader(GLTFLoader, './multipolar_neuron.glb');
+  console.log(geom);
 
   useFrame(({ clock }) => {
     if (testRef.current) {
-      testRef.current.rotation.x = clock.getElapsedTime();
-      testRef.current.rotation.y = clock.getElapsedTime() / 4;
+      testRef.current.rotation.y = clock.getElapsedTime() / 6;
+      // testRef.current.rotation.y = clock.getElapsedTime() / 4;
     }
   });
 
   return (
     <mesh ref={testRef}>
-      <boxGeometry />
-      <meshBasicMaterial color="royalblue" />
+      <primitive object={geom.scene} scale={[7, 7, 7]} rotation={[0, 0, 0]} position={[0,-2,0]}/>
     </mesh>
   );
 }
@@ -23,7 +26,7 @@ export default function LIFSimulation() {
   return (
     <Canvas>
       <ambientLight intensity={0.1} />
-      <directionalLight color="red" position={[0, 0, 5]} />
+      <directionalLight color="red" position={[0, 0, 0]} />
       <TestMesh />
     </Canvas>
   );

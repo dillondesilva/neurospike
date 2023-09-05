@@ -98,6 +98,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.3",
+    "@react-three/drei": "^9.82.0",
     "@react-three/fiber": "^8.13.7",
     "chart.js": "^4.4.0",
     "codeflask": "^1.4.1",
