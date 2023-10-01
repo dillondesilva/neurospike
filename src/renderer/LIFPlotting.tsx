@@ -8,6 +8,9 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+
+import { useEffect, useState } from 'react';
+
 import { Line } from 'react-chartjs-2';
 
 ChartJS.register(
@@ -19,7 +22,8 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-const data = {
+
+const seedData = {
   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
   datasets: [
     {
@@ -31,25 +35,39 @@ const data = {
   ],
 };
 
-const config = {
-  animations: {
-    tension: {
-      duration: 1000,
-      easing: 'linear',
-      from: 1,
-      to: 0,
-      loop: true,
-    },
-  },
-  scales: {
-    y: {
-      // defining min and max so hiding the dataset does not change scale range
-      min: 0,
-      max: 100,
-    },
-  },
-};
-
 export default function LIFPlotting() {
-  return <Line options={config} data={data} />;
+  const [simulationDataStr, setSimulationDataStr] = useState('');
+  const [plotData, setPlotData] = useState(seedData);
+
+  const updatePlotData = () => {
+    console.log('Updating plot data');
+    const parsedData = JSON.parse(simulationDataStr);
+    const membraneVoltage = parsedData.membrane_voltage;
+    const { timepoints } = parsedData;
+
+    const newPlotData = {
+      labels: timepoints,
+      datasets: [
+        {
+          label: 'Transmembrane Potential',
+          data: membraneVoltage,
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+        },
+      ],
+    };
+
+    setPlotData(newPlotData);
+  };
+
+  window.electron.ipcRenderer.on('run-code', async (arg: string) => {
+    if (arg.includes('{')) {
+      const dataStartingIndex = arg.indexOf('{');
+      console.log('substring');
+      await setSimulationDataStr(arg.substring(dataStartingIndex, arg.length));
+      updatePlotData();
+    }
+  });
+
+  return <Line data={plotData} />;
 }

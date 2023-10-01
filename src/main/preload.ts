@@ -25,5 +25,8 @@ const electronHandler = {
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);
+contextBridge.exposeInMainWorld('path', electronHandler);
+contextBridge.exposeInMainWorld('fs', electronHandler);
+contextBridge.exposeInMainWorld('os', electronHandler);
 
 export type ElectronHandler = typeof electronHandler;

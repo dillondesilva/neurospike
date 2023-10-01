@@ -10,14 +10,19 @@ function TestMesh({ url }) {
 
   useFrame(({ clock }) => {
     if (testRef.current) {
-      testRef.current.rotation.y = clock.getElapsedTime() / 6;
+      testRef.current.rotation.y = clock.getElapsedTime() / 2;
       // testRef.current.rotation.y = clock.getElapsedTime() / 4;
     }
   });
 
   return (
     <mesh ref={testRef}>
-      <primitive object={geom.scene} scale={[7, 7, 7]} rotation={[0, 0, 0]} position={[0,-2,0]}/>
+      <primitive
+        object={geom.scene}
+        scale={[7, 7, 7]}
+        rotation={[0, 0, 0]}
+        position={[0, -2, 0]}
+      />
     </mesh>
   );
 }
@@ -27,6 +32,10 @@ export default function LIFSimulation() {
     <Canvas>
       <ambientLight intensity={0.1} />
       <directionalLight color="red" position={[0, 0, 0]} />
+      {/* <mesh>
+        <sphereGeometry args={[0, 0, 0]} />
+        <meshStandardMaterial />
+      </mesh> */}
       <TestMesh />
     </Canvas>
   );

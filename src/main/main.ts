@@ -9,6 +9,8 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
+import fs from 'fs';
+import { spawn } from 'child_process';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
@@ -29,6 +31,33 @@ ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
+});
+
+ipcMain.on('run-code', async (event, arg) => {
+  const simulationFilePath = `${app.getPath('temp')}simulation.py`;
+  fs.writeFile(simulationFilePath, arg[0], (err) => {
+    if (err) {
+      console.error(err);
+    }
+  });
+
+  const python = spawn('python3', [simulationFilePath]);
+  let output = '';
+  python.stdout.on('data', (data) => {
+    output += data.toString();
+  });
+
+  python.stderr.on('data', (data) => {
+    console.log('Pipe data from python script ...');
+    output = new TextDecoder().decode(data);
+    event.reply('run-code', output);
+  });
+
+  python.on('exit', (code) => {
+    console.log(`child process close all stdio with code ${code}`);
+    // send data to browser
+    event.reply('run-code', output);
+  });
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -75,6 +104,9 @@ const createWindow = async () => {
     height: 1080,
     icon: getAssetPath('icon.png'),
     webPreferences: {
+      nodeIntegration: true, // <--- flag
+      // contextIsolation: false,
+      nodeIntegrationInWorker: true, // <---  for web workers
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),

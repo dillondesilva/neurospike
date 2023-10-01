@@ -1,37 +1,52 @@
-import CodeFlask from 'codeflask';
-import Prism from 'prismjs';
-import { useEffect, useRef } from 'react';
-import { Paper } from '@mui/material';
+import { useCodeMirror } from '@uiw/react-codemirror';
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { python } from '@codemirror/lang-python';
+import { useEffect, useRef, useState } from 'react';
+import { Button, Paper } from '@mui/material';
 import './App.css';
 
+const code = 'import neurospike';
+const extensions = [python()];
+
 export default function EditorComponent() {
-  const editorRef = useRef('editorRef');
+  const editor = useRef();
+  const [editorContent, setEditorContent] = useState(code);
+  const { setContainer } = useCodeMirror({
+    container: editor.current,
+    extensions,
+    theme: vscodeDark,
+    value: editorContent,
+    onChange: (value) => {
+      setEditorContent(value);
+    },
+  });
 
   useEffect(() => {
-    const flask = new CodeFlask(editorRef.current, {
-      language: 'python',
-      lineNumbers: true,
-    });
-
-    flask.addLanguage('python', Prism.languages.python);
-
-    // How to listen for changes on your editor
-    flask.onUpdate((code) => {
-      // ...
-    });
-
-    // How to update your editor with custom content:
-    const defaultText =
-      'import neurospike\n\n#TODO: Write your simulation code in here!';
-
-    flask.updateCode(defaultText);
+    if (editor.current) {
+      setContainer(editor.current);
+    }
   });
+
+  const runCode = () => {
+    window.electron.ipcRenderer.sendMessage('run-code', [editorContent]);
+  };
 
   return (
     <div>
       <Paper elevation={0} className="ideWrapper">
-        <div ref={editorRef} />
+        {/* <div ref={editorRef} /> */}
+        <div ref={editor} />
       </Paper>
+        <Button
+          sx={{
+            zIndex: 15,
+            float: 'right',
+          }}
+          variant="contained"
+          onClick={runCode}
+        >
+          Run
+        </Button>
     </div>
   );
 }
