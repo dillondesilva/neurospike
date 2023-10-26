@@ -50,6 +50,7 @@ export default function LIFPlayground() {
                 width: '45vw',
                 border: '1px solid #e0e0e0',
                 borderRadius: '10px',
+                padding: '0!important',
               }}
             >
               <LIFSimulation />

@@ -9,4 +9,9 @@ window.electron.ipcRenderer.once('ipc-example', (arg) => {
   console.log(arg);
 });
 
+window.electron.ipcRenderer.once('test', (arg) => {
+  console.log(arg);
+});
+
+window.electron.ipcRenderer.sendMessage('test', 'test');
 window.electron.ipcRenderer.sendMessage('ipc-example', ['poop']);

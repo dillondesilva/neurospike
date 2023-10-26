@@ -1,5 +1,5 @@
 import { useCodeMirror } from '@uiw/react-codemirror';
-import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { python } from '@codemirror/lang-python';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Paper } from '@mui/material';
@@ -37,16 +37,16 @@ export default function EditorComponent() {
         {/* <div ref={editorRef} /> */}
         <div ref={editor} />
       </Paper>
-        <Button
-          sx={{
-            zIndex: 15,
-            float: 'right',
-          }}
-          variant="contained"
-          onClick={runCode}
-        >
-          Run
-        </Button>
+      <Button
+        sx={{
+          zIndex: 15,
+          float: 'right',
+        }}
+        variant="contained"
+        onClick={runCode}
+      >
+        Run
+      </Button>
     </div>
   );
 }

@@ -33,6 +33,11 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
+ipcMain.on('test', async (event, arg) => {
+  console.log("Running test...")
+  event.reply('test', 'Random test');
+});
+
 ipcMain.on('run-code', async (event, arg) => {
   const simulationFilePath = `${app.getPath('temp')}simulation.py`;
   fs.writeFile(simulationFilePath, arg[0], (err) => {
@@ -40,6 +45,8 @@ ipcMain.on('run-code', async (event, arg) => {
       console.error(err);
     }
   });
+
+  event.reply('run-code', "Done");
 
   const python = spawn('python3', [simulationFilePath]);
   let output = '';
@@ -50,6 +57,7 @@ ipcMain.on('run-code', async (event, arg) => {
   python.stderr.on('data', (data) => {
     console.log('Pipe data from python script ...');
     output = new TextDecoder().decode(data);
+    console.log(output);
     event.reply('run-code', output);
   });
 
