@@ -39,7 +39,7 @@ export default function LIFPlayground() {
                 border: '1px solid #e0e0e0',
                 borderRadius: '10px',
                 alignContent: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
               }}
             >
               <LIFPlotting />
@@ -51,6 +51,7 @@ export default function LIFPlayground() {
                 border: '1px solid #e0e0e0',
                 borderRadius: '10px',
                 padding: '0!important',
+                overflowY: 'auto',
               }}
             >
               <LIFSimulation />

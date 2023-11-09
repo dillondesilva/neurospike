@@ -1,14 +1,15 @@
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { useRef, useState } from 'react';
 import { Text } from '@react-three/drei';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import model from '../assets/scene.gltf';
+import { Button, Container, Slider } from '@mui/material';
+import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 
 const INITIAL_LIF_VISUALISATION_DATA = {
   membrane_voltage: [-70],
   intracellular_color_v: [[132, 215, 206]],
   extracellular_color_v: [[238, 128, 238]],
   timepoints: [0],
+  stim_pulse_train: [1],
 };
 
 function TestMesh(data) {
@@ -16,17 +17,24 @@ function TestMesh(data) {
   const ecRef = useRef();
   const ecText = useRef();
   const icText = useRef();
+  const stimRef = useRef();
   const { timepoints } = data.data;
   // Figuring out initial intracellular color
+  const initialICValue = Math.round(data.data.membrane_voltage[0] * 100) / 100;
+  const initialECValue = 0;
 
   const initialICColor = data.data.intracellular_color_v[0];
   const initialECColor = data.data.extracellular_color_v[0];
-  const initialICText = `Intracellular Potential: ${data.data.membrane_voltage[0].toString()}`;
+  const initialICText = `Intracellular Potential: ${initialICValue.toString()}`;
+  const initialECText = `Extracellular Potential: ${initialECValue.toString()}`;
 
   const [currentTimepoint, setNewTimepoint] = useState(0);
   const [currentICColor, setICColor] = useState(initialICColor);
   const [currentECColor, setECColor] = useState(initialECColor);
   const [currentICText, setICText] = useState(initialICText);
+  const [currentECText, setECText] = useState(initialECText);
+  const [timeText, setTimeText] = useState('Time: 0 ms');
+  const [isCurrentOn, setCurrentState] = useState(false);
 
   const updateTimepoint = () => {
     if (currentTimepoint === timepoints.length - 1) {
@@ -36,16 +44,26 @@ function TestMesh(data) {
     }
     const newICColor = data.data.intracellular_color_v[currentTimepoint];
     const newECColor = data.data.extracellular_color_v[currentTimepoint];
-    const newICValue = data.data.membrane_voltage[currentTimepoint];
+    const newICValue =
+      Math.round(data.data.membrane_voltage[currentTimepoint] * 100) / 100;
+    const newECValue = Math.round((initialICValue - newICValue) * 100) / 100;
 
     setICColor(newICColor);
     setECColor(newECColor);
-    setICText(`Intracellular Potential: ${newICValue.toString()}`);
+    setICText(`Intracellular Potential: ${newICValue.toString()} mV`);
+    setECText(`Extracellular Potential: ${newECValue.toString()} mV`);
+    setTimeText(`Time: ${currentTimepoint} ms`);
+
+    if (data.data.stim_pulse_train[currentTimepoint] === 1) {
+      setCurrentState(true);
+    } else {
+      setCurrentState(false);
+    }
   };
 
   let tick = 0;
   useFrame(({ clock }) => {
-    if (tick === 20) {
+    if (tick === 2) {
       updateTimepoint();
     } else {
       tick += 1;
@@ -64,17 +82,13 @@ function TestMesh(data) {
       ecRef.current.material.color.g = currentECColor[1] / 255;
       ecRef.current.material.color.b = currentECColor[2] / 255;
     }
+
+    if (stimRef.current) {
+      stimRef.current.visible = isCurrentOn;
+    }
   });
 
   return (
-    // <mesh ref={testRef}>
-    //   <primitive
-    //     object={geom.scene}
-    //     scale={[7, 7, 7]}
-    //     rotation={[0, 0, 0]}
-    //     position={[0, -2, 0]}
-    //   />
-    // </mesh>
     <mesh>
       <Text
         ref={icText}
@@ -94,7 +108,16 @@ function TestMesh(data) {
         anchorX="center" // default
         anchorY="middle" // default
       >
-        Extracellular potential: 0 mV
+        {currentECText}
+      </Text>
+      <Text
+        scale={[0.15, 0.15, 0.15]}
+        position={[3.5, 2, 2]}
+        color="black" // default
+        anchorX="center" // default
+        anchorY="middle" // default
+      >
+        {timeText}
       </Text>
       <mesh visible position={[0, 0, 0]}>
         <torusGeometry args={[2, 0.3, 20, 100]} />
@@ -108,6 +131,18 @@ function TestMesh(data) {
         <boxGeometry args={[25, 15, 3]} />
         <meshStandardMaterial />
       </mesh>
+      <mesh position={[3, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.2, 0.2, 2]} />
+        <meshStandardMaterial color="grey" opacity={0.4} transparent />
+      </mesh>
+      <mesh ref={stimRef} position={[3, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.03, 0.03, 2.27]} />
+        <meshStandardMaterial color="#2c75ff" />
+      </mesh>
+      {/* <mesh position={[3, 0, 0]} rotation={[0,0, Math.PI / 2]}>
+        <sphereGeometry args={[0.1]}  />
+        <meshStandardMaterial color={"blue"} />
+      </mesh> */}
     </mesh>
   );
 }
@@ -125,14 +160,51 @@ export default function LIFSimulation() {
     if (arg.includes('{')) {
       const dataStartingIndex = arg.indexOf('{');
       await setSimulationDataStr(arg.substring(dataStartingIndex, arg.length));
+      console.log(simulationDataStr);
       updateVisualisation();
     }
   });
 
   return (
-    <Canvas>
-      <ambientLight intensity={1} />
-      <TestMesh data={visualization} />
-    </Canvas>
+    <Container
+      sx={{
+        position: 'relative',
+        height: '100%',
+        width: '100%',
+        padding: '0!important',
+        display: 'flex',
+        justifyContent: 'center',
+      }}
+    >
+      <Container
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          height: '100%',
+          padding: '0!important',
+        }}
+      >
+        <Canvas>
+          <ambientLight intensity={1.5} />
+          <TestMesh data={visualization} />
+        </Canvas>
+      </Container>
+      <Container
+        sx={{
+          position: 'absolute',
+          zIndex: 10,
+          padding: 0,
+          bottom: 10,
+          width: '70%',
+          display: 'flex',
+          justifyContent: 'space-evenly',
+        }}
+      >
+        <Button>Play</Button>
+        <Slider defaultValue={30} />
+        <Button>1x</Button>
+      </Container>
+    </Container>
   );
 }

@@ -2,7 +2,7 @@ import { useCodeMirror } from '@uiw/react-codemirror';
 import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { python } from '@codemirror/lang-python';
 import { useEffect, useRef, useState } from 'react';
-import { Button, Paper } from '@mui/material';
+import { Button, Paper, Container } from '@mui/material';
 import './App.css';
 
 const code = 'import neurospike';
@@ -34,19 +34,25 @@ export default function EditorComponent() {
   return (
     <div>
       <Paper elevation={0} className="ideWrapper">
-        {/* <div ref={editorRef} /> */}
         <div ref={editor} />
       </Paper>
-      <Button
+      <Container
         sx={{
-          zIndex: 15,
-          float: 'right',
+          paddingRight: 3,
+          paddingTop: 0.5,
         }}
-        variant="contained"
-        onClick={runCode}
       >
-        Run
-      </Button>
+        <Button
+          sx={{
+            zIndex: 15,
+            float: 'right',
+          }}
+          variant="contained"
+          onClick={runCode}
+        >
+          Run
+        </Button>
+      </Container>
     </div>
   );
 }
