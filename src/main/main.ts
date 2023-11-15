@@ -46,8 +46,6 @@ ipcMain.on('run-code', async (event, arg) => {
     }
   });
 
-  event.reply('run-code', "Done");
-
   const python = spawn('python3', [simulationFilePath]);
   let output = '';
   python.stdout.on('data', (data) => {
@@ -58,7 +56,10 @@ ipcMain.on('run-code', async (event, arg) => {
     console.log('Pipe data from python script ...');
     output = new TextDecoder().decode(data);
     console.log(output);
-    event.reply('run-code', output);
+    if (output.includes('{')) {
+      event.reply('run-code', output);
+    }
+    // event.reply('run-code', output);
   });
 
   python.on('exit', (code) => {

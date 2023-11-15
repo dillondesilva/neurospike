@@ -24,12 +24,10 @@ ChartJS.register(
 );
 
 const seedData = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+  labels: [],
   datasets: [
     {
-      label: 'Looping tension',
-      data: [65, 59, 80, 81, 26, 55, 40],
-      fill: false,
+      data: [],
       borderColor: 'rgb(75, 192, 192)',
     },
   ],

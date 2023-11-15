@@ -1,7 +1,7 @@
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { useRef, useState } from 'react';
 import { Text } from '@react-three/drei';
-import { Button, Container, Slider } from '@mui/material';
+import { Button, Container, Slider, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 
 const INITIAL_LIF_VISUALISATION_DATA = {
@@ -203,7 +203,18 @@ export default function LIFSimulation() {
       >
         <Button>Play</Button>
         <Slider defaultValue={30} />
-        <Button>1x</Button>
+        <FormControl size="small">
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={10}
+            label="Speed"
+          >
+            <MenuItem value={10}>1x</MenuItem>
+            <MenuItem value={20}>2x</MenuItem>
+            <MenuItem value={30}>0.5x</MenuItem>
+          </Select>
+      </FormControl>
       </Container>
     </Container>
   );
