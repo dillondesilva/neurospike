@@ -36,6 +36,7 @@ const seedData = {
 export default function LIFPlotting() {
   const [simulationDataStr, setSimulationDataStr] = useState('');
   const [plotData, setPlotData] = useState(seedData);
+  const [isPlotUpdated, setIsPlotUpdated] = useState(false);
 
   const updatePlotData = () => {
     console.log('Updating plot data');
@@ -58,16 +59,24 @@ export default function LIFPlotting() {
     };
 
     setPlotData(newPlotData);
-    console.log(plotData)
+    console.log(plotData);
   };
 
   window.electron.ipcRenderer.on('run-code', async (arg: string) => {
     if (arg.includes('{')) {
+      setIsPlotUpdated(true);
       const dataStartingIndex = arg.indexOf('{');
-      await setSimulationDataStr(arg.substring(dataStartingIndex, arg.length));
-      updatePlotData();
+      setSimulationDataStr(arg.substring(dataStartingIndex, arg.length));
+      // updatePlotData();
     }
   });
+
+  useEffect(() => {
+    if (isPlotUpdated) {
+      updatePlotData();
+    }
+    // updatePlotData();
+  }, [simulationDataStr, isPlotUpdated]);
 
   return <Line data={plotData} />;
 }

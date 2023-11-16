@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Button, Paper, Container, CircularProgress } from '@mui/material';
 import './App.css';
 
-const code = 'import neurospike';
+const code = 'from neurospikelib.lif import LIFSimulation';
 const extensions = [python()];
 
 function CodeStatusElement(props: any) {
@@ -73,22 +73,6 @@ export default function EditorComponent() {
         }}
       >
         <CodeStatusElement editorContent={editorContent} />
-        {/* <Button
-          sx={{
-            zIndex: 15,
-            float: 'right',
-          }}
-          variant="contained"
-          onClick={runCode}
-        >
-          Run
-        </Button>
-        <CircularProgress
-          sx={{
-            zIndex: 15,
-            float: 'right',
-          }}
-        /> */}
       </Container>
     </div>
   );

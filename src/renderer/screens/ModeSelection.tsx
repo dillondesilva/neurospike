@@ -32,10 +32,10 @@ export default function ModeSelection() {
           description={playgroundDescriptions.lif}
           playgroundRef="/lif"
         />
-        <ModeOptionCard
+        {/* <ModeOptionCard
           title="EIF Model Playground"
           description={playgroundDescriptions.eif}
-        />
+        /> */}
         <ModeOptionCard
           title="HH Spike Playground"
           description={playgroundDescriptions.hhSpike}

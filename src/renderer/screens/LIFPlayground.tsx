@@ -1,26 +1,65 @@
-import { AppBar, Stack, Grid, Container, Toolbar, IconButton, Typography } from '@mui/material';
+import {
+  AppBar,
+  Stack,
+  Grid,
+  Container,
+  Toolbar,
+  IconButton,
+  Typography,
+} from '@mui/material';
 import '../App.css';
 import EditorComponent from 'renderer/EditorComponent';
 import LIFControlPanel from 'renderer/LIFControlPanel';
 import LIFSimulation from 'renderer/LIFSimulation';
 import LIFPlotting from 'renderer/LIFPlotting';
-// import MenuIcon from '@mui/icons-material/Menu';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import HomeIcon from '@mui/icons-material/Home';
+import { useNavigate } from 'react-router-dom';
 
 import App from 'renderer/App';
 
+// Following code for theme from MUI example
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#1976d2',
+    },
+  },
+});
+
 export default function LIFPlayground() {
+  const navigate = useNavigate();
+  const returnHome = () => {
+    navigate('/');
+  };
+
   return (
     <div className="playgroundWrapper">
-      <AppBar position="static" color="primary" sx={{
-        height: '6vh'
-      }}>
-        <Toolbar>
-        {/* <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-          <MenuIcon />
-        </IconButton> */}
-        <p>Yo</p>
-        </Toolbar>
-      </AppBar>
+      <ThemeProvider theme={darkTheme}>
+        <AppBar
+          position="static"
+          color="primary"
+          sx={{
+            height: '6vh',
+            justifyContent: 'center',
+            boxShadow: 0,
+          }}
+        >
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={returnHome}
+            >
+              <HomeIcon />
+            </IconButton>
+            <p>Leaky Integrate and Fire (LIF) Playground</p>
+          </Toolbar>
+        </AppBar>
+      </ThemeProvider>
       <Grid
         container
         spacing={0}
@@ -32,7 +71,7 @@ export default function LIFPlayground() {
           <Stack spacing={2}>
             <Container
               sx={{
-                height: '45vh',
+                height: '42vh',
                 width: '45vw',
                 border: '1px solid #e0e0e0',
                 borderRadius: '10px',
@@ -47,7 +86,7 @@ export default function LIFPlayground() {
           <Stack spacing={2}>
             <Container
               sx={{
-                height: '45vh',
+                height: '42vh',
                 width: '45vw',
                 border: '1px solid #e0e0e0',
                 borderRadius: '10px',

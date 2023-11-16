@@ -65,7 +65,10 @@ ipcMain.on('run-code', async (event, arg) => {
   python.on('exit', (code) => {
     console.log(`child process close all stdio with code ${code}`);
     // send data to browser
-    event.reply('run-code', output);
+    if (output.includes('{')) {
+      event.reply('run-code', output);
+    }
+    // event.reply('run-code', output);
   });
 });
 
