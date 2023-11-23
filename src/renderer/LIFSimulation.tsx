@@ -1,6 +1,7 @@
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { useRef, useState } from 'react';
 import { Text } from '@react-three/drei';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Button, Container, Slider, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 
@@ -88,6 +89,8 @@ function TestMesh(data) {
     }
   });
 
+  const geom = useLoader(GLTFLoader, './electrode.glb');
+
   return (
     <mesh>
       <Text
@@ -119,25 +122,28 @@ function TestMesh(data) {
       >
         {timeText}
       </Text>
-      <mesh visible position={[0, 0, 0]}>
+      {/* <mesh visible position={[0, 0, 0]}>
         <torusGeometry args={[2, 0.3, 20, 100]} />
         <meshStandardMaterial />
-      </mesh>
+      </mesh> */}
       <mesh ref={testRef} visible position={[0, 0, 0]}>
         <torusGeometry args={[0.03, 1.7, 20, 100]} />
-        <meshStandardMaterial />
+        <meshStandardMaterial opacity={0.75} transparent  />
       </mesh>
       <mesh ref={ecRef} visible position={[0, 0, -5]}>
         <boxGeometry args={[25, 15, 3]} />
         <meshStandardMaterial />
       </mesh>
-      <mesh position={[3, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+      {/* <mesh position={[3, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[0.2, 0.2, 2]} />
         <meshStandardMaterial color="grey" opacity={0.4} transparent />
       </mesh>
       <mesh ref={stimRef} position={[3, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[0.03, 0.03, 2.27]} />
         <meshStandardMaterial color="#2c75ff" />
+      </mesh> */}
+      <mesh >
+        <primitive object={geom.scene} scale={[0.15, 0.15, 0.15]} rotation={[-Math.PI / 2, Math.PI, Math.PI / 2]} position={[1.25, 1 ,0]}/>
       </mesh>
       {/* <mesh position={[3, 0, 0]} rotation={[0,0, Math.PI / 2]}>
         <sphereGeometry args={[0.1]}  />
