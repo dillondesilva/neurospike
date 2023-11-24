@@ -2,8 +2,19 @@ import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { useRef, useState } from 'react';
 import { Text } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { Button, Container, Slider, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import {
+  Button,
+  Container,
+  Slider,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  IconButton,
+} from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
 const INITIAL_LIF_VISUALISATION_DATA = {
   membrane_voltage: [-70],
@@ -13,7 +24,7 @@ const INITIAL_LIF_VISUALISATION_DATA = {
   stim_pulse_train: [1],
 };
 
-function TestMesh(data) {
+function TestMesh(data, active) {
   const testRef = useRef();
   const ecRef = useRef();
   const ecText = useRef();
@@ -52,7 +63,7 @@ function TestMesh(data) {
     setICColor(newICColor);
     setECColor(newECColor);
     setICText(`Intracellular Potential: ${newICValue.toString()} mV`);
-    setECText(`Extracellular Potential: ${newECValue.toString()} mV`);
+    setECText(`Transmembrane Potential: ${newECValue.toString()} mV`);
     setTimeText(`Time: ${currentTimepoint} ms`);
 
     if (data.data.stim_pulse_train[currentTimepoint] === 1) {
@@ -64,28 +75,28 @@ function TestMesh(data) {
 
   let tick = 0;
   useFrame(({ clock }) => {
-    if (tick === 2) {
-      updateTimepoint();
-    } else {
-      tick += 1;
-    }
+    if (data.active) {
+      if (tick === 6) {
+        updateTimepoint();
+      } else {
+        tick += 1;
+      }
 
-    if (testRef.current) {
-      testRef.current.rotation.z = clock.getElapsedTime() / 2;
-      testRef.current.rotation.x = clock.getElapsedTime() / 2;
-      testRef.current.material.color.r = currentICColor[0] / 255;
-      testRef.current.material.color.g = currentICColor[1] / 255;
-      testRef.current.material.color.b = currentICColor[2] / 255;
-    }
+      if (testRef.current) {
+        testRef.current.material.color.r = currentICColor[0] / 255;
+        testRef.current.material.color.g = currentICColor[1] / 255;
+        testRef.current.material.color.b = currentICColor[2] / 255;
+      }
 
-    if (ecRef.current) {
-      ecRef.current.material.color.r = currentECColor[0] / 255;
-      ecRef.current.material.color.g = currentECColor[1] / 255;
-      ecRef.current.material.color.b = currentECColor[2] / 255;
-    }
+      if (ecRef.current) {
+        ecRef.current.material.color.r = currentECColor[0] / 255;
+        ecRef.current.material.color.g = currentECColor[1] / 255;
+        ecRef.current.material.color.b = currentECColor[2] / 255;
+      }
 
-    if (stimRef.current) {
-      stimRef.current.visible = isCurrentOn;
+      if (stimRef.current) {
+        stimRef.current.visible = isCurrentOn;
+      }
     }
   });
 
@@ -101,11 +112,11 @@ function TestMesh(data) {
         anchorX="center" // default
         anchorY="middle" // default
       >
-        {currentICText}
+        {/* {currentICText} */}
       </Text>
       <Text
         ref={ecText}
-        scale={[0.15, 0.15, 0.15]}
+        scale={[0.175, 0.175, 0.175]}
         position={[-2.75, 1, 2]}
         color="black" // default
         anchorX="center" // default
@@ -122,39 +133,33 @@ function TestMesh(data) {
       >
         {timeText}
       </Text>
-      {/* <mesh visible position={[0, 0, 0]}>
+      <mesh visible position={[0, 0, 0]}>
         <torusGeometry args={[2, 0.3, 20, 100]} />
         <meshStandardMaterial />
-      </mesh> */}
+      </mesh>
       <mesh ref={testRef} visible position={[0, 0, 0]}>
         <torusGeometry args={[0.03, 1.7, 20, 100]} />
-        <meshStandardMaterial opacity={0.75} transparent  />
+        <meshStandardMaterial opacity={0.75} transparent />
       </mesh>
       <mesh ref={ecRef} visible position={[0, 0, -5]}>
         <boxGeometry args={[25, 15, 3]} />
         <meshStandardMaterial />
       </mesh>
-      {/* <mesh position={[3, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.2, 0.2, 2]} />
-        <meshStandardMaterial color="grey" opacity={0.4} transparent />
+      <mesh>
+        <primitive
+          object={geom.scene}
+          scale={[0.08, 0.08, 0.08]}
+          rotation={[-Math.PI / 2, Math.PI, Math.PI / 2]}
+          position={[1.5, 0, 0]}
+        />
       </mesh>
-      <mesh ref={stimRef} position={[3, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.03, 0.03, 2.27]} />
-        <meshStandardMaterial color="#2c75ff" />
-      </mesh> */}
-      <mesh >
-        <primitive object={geom.scene} scale={[0.15, 0.15, 0.15]} rotation={[-Math.PI / 2, Math.PI, Math.PI / 2]} position={[1.25, 1 ,0]}/>
-      </mesh>
-      {/* <mesh position={[3, 0, 0]} rotation={[0,0, Math.PI / 2]}>
-        <sphereGeometry args={[0.1]}  />
-        <meshStandardMaterial color={"blue"} />
-      </mesh> */}
     </mesh>
   );
 }
 
 export default function LIFSimulation() {
   const [simulationDataStr, setSimulationDataStr] = useState('');
+  const [isActive, setActiveState] = useState(true);
   const [visualization, setData] = useState(INITIAL_LIF_VISUALISATION_DATA);
 
   const updateVisualisation = () => {
@@ -193,7 +198,7 @@ export default function LIFSimulation() {
       >
         <Canvas>
           <ambientLight intensity={1.5} />
-          <TestMesh data={visualization} />
+          <TestMesh data={visualization} active={isActive} />
         </Canvas>
       </Container>
       <Container
@@ -207,7 +212,15 @@ export default function LIFSimulation() {
           justifyContent: 'space-evenly',
         }}
       >
-        <Button>Play</Button>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          sx={{ mr: 2 }}
+          onClick={() => {setActiveState(!isActive)}}
+        >
+          <PauseCircleIcon />
+        </IconButton>
         <Slider defaultValue={30} />
         <FormControl size="small">
           <Select
@@ -220,7 +233,7 @@ export default function LIFSimulation() {
             <MenuItem value={20}>2x</MenuItem>
             <MenuItem value={30}>0.5x</MenuItem>
           </Select>
-      </FormControl>
+        </FormControl>
       </Container>
     </Container>
   );
