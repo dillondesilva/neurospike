@@ -67,7 +67,6 @@ export default function LIFPlotting() {
       setIsPlotUpdated(true);
       const dataStartingIndex = arg.indexOf('{');
       setSimulationDataStr(arg.substring(dataStartingIndex, arg.length));
-      // updatePlotData();
     }
   });
 

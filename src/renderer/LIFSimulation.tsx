@@ -1,5 +1,5 @@
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Text } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import {
@@ -31,6 +31,7 @@ function TestMesh(data, active) {
   const icText = useRef();
   const stimRef = useRef();
   const { timepoints } = data.data;
+
   // Figuring out initial intracellular color
   const initialICValue = Math.round(data.data.membrane_voltage[0] * 100) / 100;
   const initialECValue = 0;
@@ -40,13 +41,19 @@ function TestMesh(data, active) {
   const initialICText = `Intracellular Potential: ${initialICValue.toString()}`;
   const initialECText = `Extracellular Potential: ${initialECValue.toString()}`;
 
-  const [currentTimepoint, setNewTimepoint] = useState(0);
+  const [currentTimepoint, setNewTimepoint] = useState(timepoints[0]);
   const [currentICColor, setICColor] = useState(initialICColor);
   const [currentECColor, setECColor] = useState(initialECColor);
   const [currentICText, setICText] = useState(initialICText);
   const [currentECText, setECText] = useState(initialECText);
   const [timeText, setTimeText] = useState('Time: 0 ms');
   const [isCurrentOn, setCurrentState] = useState(false);
+
+  window.electron.ipcRenderer.on('run-code', async (arg: string) => {
+    if (arg.includes('{')) {
+      setNewTimepoint(timepoints[0]);
+    }
+  });
 
   const updateTimepoint = () => {
     if (currentTimepoint === timepoints.length - 1) {
@@ -159,8 +166,17 @@ function TestMesh(data, active) {
 
 export default function LIFSimulation() {
   const [simulationDataStr, setSimulationDataStr] = useState('');
+  const [isUpdated, setUpdatedStatus] = useState(false);
   const [isActive, setActiveState] = useState(true);
   const [visualization, setData] = useState(INITIAL_LIF_VISUALISATION_DATA);
+
+  let playButton;
+  if (isActive) {
+    playButton = <PauseCircleIcon />;
+  } else {
+    playButton = <PlayCircleIcon />;
+  }
+
 
   const updateVisualisation = () => {
     const parsedData = JSON.parse(simulationDataStr);
@@ -169,12 +185,19 @@ export default function LIFSimulation() {
 
   window.electron.ipcRenderer.on('run-code', async (arg: string) => {
     if (arg.includes('{')) {
+      setUpdatedStatus(true);
       const dataStartingIndex = arg.indexOf('{');
       await setSimulationDataStr(arg.substring(dataStartingIndex, arg.length));
-      console.log(simulationDataStr);
       updateVisualisation();
     }
   });
+
+  useEffect(() => {
+    if (isUpdated) {
+      updateVisualisation();
+    }
+    // updatePlotData();
+  }, [simulationDataStr, isUpdated]);
 
   return (
     <Container
@@ -217,9 +240,11 @@ export default function LIFSimulation() {
           color="inherit"
           aria-label="menu"
           sx={{ mr: 2 }}
-          onClick={() => {setActiveState(!isActive)}}
+          onClick={() => {
+            setActiveState(!isActive);
+          }}
         >
-          <PauseCircleIcon />
+          {playButton}
         </IconButton>
         <Slider defaultValue={30} />
         <FormControl size="small">
