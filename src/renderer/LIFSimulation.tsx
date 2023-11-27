@@ -140,10 +140,10 @@ function TestMesh(data, active) {
       >
         {timeText}
       </Text>
-      <mesh visible position={[0, 0, 0]}>
+      {/* <mesh visible position={[0, 0, 0]}>
         <torusGeometry args={[2, 0.3, 20, 100]} />
         <meshStandardMaterial />
-      </mesh>
+      </mesh> */}
       <mesh ref={testRef} visible position={[0, 0, 0]}>
         <torusGeometry args={[0.03, 1.7, 20, 100]} />
         <meshStandardMaterial opacity={0.75} transparent />
@@ -176,7 +176,6 @@ export default function LIFSimulation() {
   } else {
     playButton = <PlayCircleIcon />;
   }
-
 
   const updateVisualisation = () => {
     const parsedData = JSON.parse(simulationDataStr);

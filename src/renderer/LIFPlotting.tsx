@@ -27,10 +27,31 @@ const seedData = {
   labels: [],
   datasets: [
     {
+      label: 'Transmembrane Potential',
       data: [],
+      fill: false,
       borderColor: 'rgb(75, 192, 192)',
     },
   ],
+};
+
+const options = {
+  scales: {
+    x: {
+      beginAtZero: true,
+      title: {
+        display: true,
+        text: 'Time (ms)',
+      },
+    },
+    y: {
+      beginAtZero: true,
+      title: {
+        display: true,
+        text: 'Transmembrane Voltage (mV)',
+      },
+    },
+  },
 };
 
 export default function LIFPlotting() {
@@ -77,5 +98,5 @@ export default function LIFPlotting() {
     // updatePlotData();
   }, [simulationDataStr, isPlotUpdated]);
 
-  return <Line data={plotData} />;
+  return <Line data={plotData} options={options} />;
 }
