@@ -20,7 +20,6 @@ function CodeStatusElement(props: any) {
   window.electron.ipcRenderer.on('run-code', async (arg: string) => {
     console.log(arg)
     setIsCodeRunning(false);
-    console.log("message received")
   });
 
   if (!isCodeRunning) {

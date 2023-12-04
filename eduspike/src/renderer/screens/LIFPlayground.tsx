@@ -16,8 +16,6 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
 
-import App from 'renderer/App';
-
 // Following code for theme from MUI example
 const darkTheme = createTheme({
   palette: {

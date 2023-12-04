@@ -1,3 +1,6 @@
+import { Container, IconButton } from '@mui/material';
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -65,10 +68,11 @@ export default function LIFPlotting() {
     const parsedData = JSON.parse(simulationDataStr);
     console.log(parsedData);
     const membraneVoltage = parsedData.membrane_voltage;
-    const { timepoints } = parsedData;
+    const timePoints = parsedData.timepoints;
+    const appliedCurrent = parsedData.applied_current;
 
     const newPlotData = {
-      labels: timepoints,
+      labels: timePoints,
       datasets: [
         {
           label: 'Transmembrane Potential',
@@ -76,11 +80,16 @@ export default function LIFPlotting() {
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
         },
+        {
+          label: 'Applied Current',
+          data: appliedCurrent,
+          fill: false,
+          borderColor: 'rgb(255, 0, 0)',
+        },
       ],
     };
 
     setPlotData(newPlotData);
-    console.log(plotData);
   };
 
   window.electron.ipcRenderer.on('run-code', async (arg: string) => {
@@ -98,5 +107,24 @@ export default function LIFPlotting() {
     // updatePlotData();
   }, [simulationDataStr, isPlotUpdated]);
 
-  return <Line data={plotData} options={options} />;
+  return (
+    <Container
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <IconButton edge="start" color="inherit" aria-label="menu">
+        <ArrowCircleLeftIcon />
+      </IconButton>
+      <Container sx={{alignItems: 'center'}}>
+        <Line data={plotData} options={options}/>
+      </Container>
+      <IconButton edge="start" color="inherit" aria-label="menu">
+          <ArrowCircleRightIcon />
+        </IconButton>
+    </Container>
+  );
 }

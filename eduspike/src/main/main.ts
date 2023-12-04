@@ -112,8 +112,8 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1920,
-    height: 1080,
+    width: 1440,
+    height: 765,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       nodeIntegration: true, // <--- flag
@@ -124,6 +124,8 @@ const createWindow = async () => {
         : path.join(__dirname, '../../.erb/dll/preload.js'),
     },
   });
+
+  mainWindow.setMinimumSize(1440, 765);
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 

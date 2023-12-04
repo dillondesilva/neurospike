@@ -1,0 +1,19 @@
+{
+    "$model_type": {
+        "type": "string"
+    },
+    "$neuron_parameters": {
+        "type": "object",
+        "properties": {
+            "$membrane_capacitance": {
+                "type": "number"
+            },
+            "$membrane_resistance": {
+                "type": "number"
+            }
+        }
+    },
+    "$simulation_parameters": {
+        "pulse_amplitude": "number"
+    }
+}

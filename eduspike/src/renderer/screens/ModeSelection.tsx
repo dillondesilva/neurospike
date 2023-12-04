@@ -18,7 +18,7 @@ export default function ModeSelection() {
           justifyContent: 'center',
         }}
       >
-        <h1>🧠 Neurospike 🧠</h1>
+        <h1>🧠 Neurospike Education 🧠</h1>
       </Box>
       <Box
         sx={{

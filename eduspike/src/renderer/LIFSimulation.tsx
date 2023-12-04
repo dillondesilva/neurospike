@@ -31,21 +31,18 @@ function TestMesh(data, active) {
   const icText = useRef();
   const stimRef = useRef();
   const { timepoints } = data.data;
-
-  // Figuring out initial intracellular color
-  const initialICValue = Math.round(data.data.membrane_voltage[0] * 100) / 100;
-  const initialECValue = 0;
+  const membraneVoltageData = data.data.membrane_voltage;
 
   const initialICColor = data.data.intracellular_color_v[0];
   const initialECColor = data.data.extracellular_color_v[0];
-  const initialICText = `Intracellular Potential: ${initialICValue.toString()}`;
-  const initialECText = `Extracellular Potential: ${initialECValue.toString()}`;
+  const initialMembraneV = data.data.membrane_voltage[0];
+  const initialMembraneVText = `Transmembrane Potential: ${initialMembraneV} mV`;
 
   const [currentTimepoint, setNewTimepoint] = useState(timepoints[0]);
   const [currentICColor, setICColor] = useState(initialICColor);
   const [currentECColor, setECColor] = useState(initialECColor);
-  const [currentICText, setICText] = useState(initialICText);
-  const [currentECText, setECText] = useState(initialECText);
+  const [currentMembraneV, setMembraneV] = useState(initialMembraneV);
+  const [currentMembraneVText, setMembraneVText] = useState(initialMembraneVText);
   const [timeText, setTimeText] = useState('Time: 0 ms');
   const [isCurrentOn, setCurrentState] = useState(false);
 
@@ -63,14 +60,12 @@ function TestMesh(data, active) {
     }
     const newICColor = data.data.intracellular_color_v[currentTimepoint];
     const newECColor = data.data.extracellular_color_v[currentTimepoint];
-    const newICValue =
-      Math.round(data.data.membrane_voltage[currentTimepoint] * 100) / 100;
-    const newECValue = Math.round((initialICValue - newICValue) * 100) / 100;
+
 
     setICColor(newICColor);
     setECColor(newECColor);
-    setICText(`Intracellular Potential: ${newICValue.toString()} mV`);
-    setECText(`Transmembrane Potential: ${newECValue.toString()} mV`);
+    setMembraneV(Math.round(membraneVoltageData[currentTimepoint] * 100) / 100);
+    setMembraneVText(`Transmembrane Potential: ${currentMembraneV} mV`);
     setTimeText(`Time: ${currentTimepoint} ms`);
 
     if (data.data.stim_pulse_train[currentTimepoint] === 1) {
@@ -112,38 +107,26 @@ function TestMesh(data, active) {
   return (
     <mesh>
       <Text
-        ref={icText}
-        scale={[0.15, 0.15, 0.15]}
-        position={[0, 0, 2]}
-        color="black" // default
-        anchorX="center" // default
-        anchorY="middle" // default
-      >
-        {/* {currentICText} */}
-      </Text>
-      <Text
         ref={ecText}
         scale={[0.175, 0.175, 0.175]}
-        position={[-2.75, 1, 2]}
-        color="black" // default
-        anchorX="center" // default
-        anchorY="middle" // default
-      >
-        {currentECText}
-      </Text>
-      <Text
-        scale={[0.15, 0.15, 0.15]}
-        position={[3.5, 2, 2]}
+        position={[-2.5, 1.25, 2]}
         color="black" // default
         anchorX="center" // default
         anchorY="middle" // default
       >
         {timeText}
+        {'\n\n'}
+        {currentMembraneVText}
       </Text>
-      {/* <mesh visible position={[0, 0, 0]}>
-        <torusGeometry args={[2, 0.3, 20, 100]} />
-        <meshStandardMaterial />
-      </mesh> */}
+      {/* <Text
+        scale={[0.175, 0.175, 0.175]}
+        position={[-2.75, 1.5, 2]}
+        color="black" // default
+        anchorX="center" // default
+        anchorY="middle" // default
+      >
+        {timeText}
+      </Text> */}
       <mesh ref={testRef} visible position={[0, 0, 0]}>
         <torusGeometry args={[0.03, 1.7, 20, 100]} />
         <meshStandardMaterial opacity={0.75} transparent />
@@ -238,14 +221,14 @@ export default function LIFSimulation() {
           edge="start"
           color="inherit"
           aria-label="menu"
-          sx={{ mr: 2 }}
+          
           onClick={() => {
             setActiveState(!isActive);
           }}
         >
           {playButton}
         </IconButton>
-        <Slider defaultValue={30} />
+        {/* <Slider defaultValue={30} />
         <FormControl size="small">
           <Select
             labelId="demo-simple-select-label"
@@ -257,7 +240,7 @@ export default function LIFSimulation() {
             <MenuItem value={20}>2x</MenuItem>
             <MenuItem value={30}>0.5x</MenuItem>
           </Select>
-        </FormControl>
+        </FormControl> */}
       </Container>
     </Container>
   );
