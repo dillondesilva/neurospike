@@ -1,10 +1,8 @@
-import json
-import sys
+from lif_output import LIFOutput
 
 import numpy as np
-from neuron import h
-from neuron.units import ms, mV
-import matplotlib.pyplot as plt
+import json
+import sys
 
 DEFAULT_NUM_TIMEPOINTS = 101
 DEFAULT_NUM_VOLTAGE_POINTS = 101
@@ -132,9 +130,13 @@ class LIFSimulation:
                 spike_times.append(time_vec[i + 1])
                 membrane_v_vec[i + 1] = v_reset
 
-        plt.scatter(spike_times, [threshold_v for i in spike_times])
-        plt.plot(time_vec, membrane_v_vec.tolist())
-        plt.show()
+        # Create output instance
+        simulation_output = LIFOutput()
+        simulation_output.set_membrane_voltage(membrane_v_vec)
+        simulation_output.set_timepoints(time_vec)
+        simulation_output.set_injected_current(injected_current)
+        simulation_output.set
+
         reshaped_membrane_v_vec = np.reshape(membrane_v_vec, (len(membrane_v_vec), 1))
 
         # Getting color visualization
