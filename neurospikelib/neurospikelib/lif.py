@@ -1,123 +1,98 @@
-from neuron import h
-from neuron.units import mV, ms
+from .lif_output import LIFOutput
 
-import numpy as np 
-import sys
+import numpy as np
 import json
+import sys
 
 DEFAULT_NUM_TIMEPOINTS = 101
 DEFAULT_NUM_VOLTAGE_POINTS = 101
 
-def visualize_custom_lif(membrane_v, timepoints, step_current):
-    # Getting color visualization
-    membrane_v = list(membrane_v)
-    timepoints = list(timepoints)
+# Default voltages are in mV
+DEFAULT_THRESHOLD_VOLTAGE = -55
+DEFAULT_RESTING_VOLTAGE = -70
 
-    min_v = np.min(membrane_v)
-    max_v = np.max(membrane_v)
-    reshaped_membrane_v = np.reshape(membrane_v, (len(membrane_v), 1))
-    normalized_v_data = ((reshaped_membrane_v - min_v) / (max_v - min_v))
+# Capacitance and Ohms in microfarads and ohms respectively
+DEFAULT_MEMBRANE_CAPACITANCE = 2
+DEFAULT_MEMBRANE_RESISTANCE = 4
 
-    intracellular_color_v, extracellular_color_v = LIFSimulation.create_visualization_data(normalized_v_data)
-    stim_pulse_train = []
-    for i in step_current:
-        if i > 0:
-            stim_pulse_train.append(1)
-        else:
-            stim_pulse_train.append(0)
+# Simulation duration in ms
+DEFAULT_SIMULATION_DURATION = 100
+DEFAULT_RESOLUTION = 10
 
-    simulation_results = {
-        "membrane_voltage": membrane_v,
-        "intracellular_color_v": intracellular_color_v.tolist(),
-        "extracellular_color_v": extracellular_color_v.tolist(),
-        "timepoints": timepoints,
-        "stim_pulse_train": list(stim_pulse_train)
-    }
-
-    sys.stdout.write(json.dumps(simulation_results))
-
-class LIFSimulation:
-    '''
+class LIF:
+    """
     Leaky Integrate and Fire Simulation Module for Neurospike. Operates
     as a wrapper around brian2 and neurodynex3 libraries to provide
     LIF Model support for Neurospike simulation app
-    '''
-    def __init__(self, stimulation_parameters, neuron_parameters, simulation_duration):
-        '''Instantiates a new LIF Simulation with given parameters'''
-        self._stimulation_parameters = stimulation_parameters
-        self._neuron_parameters = neuron_parameters
-        self._simulation_duration = simulation_duration
-        h.load_file("stdrun.hoc")
-
-    def __normalize_time_series(self, time_series):
-        '''Normalizes a given time series. Used for color assignment algorithm'''
-        normalized_values = expit(time_series)
-        return normalized_values
+    """
 
     @staticmethod
-    def create_visualization_data(normalized_v_data, base_color=(132, 215, 206), final_color=(238,129,238)):
-        '''Calculate colors to create visualization for LIF simulation'''
-        base_color_v = np.array(base_color)
-        final_color_v = np.array(final_color)
+    def visualize_custom_lif(membrane_v_vec, time_vec, current_vec):
+        '''
+        Creates EduSpike compatible output based on values from custom 
+        LIF model
+        '''
+        # Create output instance
+        simulation_output = LIFOutput()
+        simulation_output.set_membrane_voltage(membrane_v_vec)
+        simulation_output.set_timepoints(time_vec)
+        simulation_output.set_injected_current(current_vec)
+        sys.stdout.write(simulation_output.jsonify())
 
-        color_distance = (final_color_v - base_color_v)[np.newaxis]
 
-        color_time_v = color_distance * normalized_v_data
-        intracellular_color_v = base_color_v + color_time_v
-        extracellular_color_v = final_color_v - color_time_v
+    @staticmethod
+    def simulate(
+        threshold_v=DEFAULT_THRESHOLD_VOLTAGE,
+        resting_v=DEFAULT_RESTING_VOLTAGE,
+        membrane_c=DEFAULT_MEMBRANE_CAPACITANCE,
+        membrane_r=DEFAULT_MEMBRANE_RESISTANCE,
+        simulation_duration=DEFAULT_SIMULATION_DURATION,
+        resolution=DEFAULT_RESOLUTION,
+        pulses=list()
+    ):
+        """
+        Runs LIF model simulation given the following data:
+            - Threshold voltage (mV)
+            - Resting voltage (mV)
+            - Membrane capacitance (Microfarads)
+            - Membrane resistance (Ohms)
+            - Pulses object
+        """
+        num_points = simulation_duration * resolution
+        current_vec = np.zeros(num_points)
+        membrane_v_vec = np.zeros(num_points)
+        membrane_v_vec[0] = resting_v
+        dt = (simulation_duration / (num_points - 1))
+        time_vec = np.linspace(0, simulation_duration, num_points)
+        v_reset = resting_v
 
-        return (intracellular_color_v, extracellular_color_v)
-    
-    def simulate(self):
-        '''Runs LIF model simulation by given parameters'''
-        # Initialize time vector and membrane voltage vector
-        # Create soma-only neuron model with passive
-        # leak channels for membrane
-        soma = h.Section(name="soma")
-        soma.insert("pas")
-        soma.L = self._neuron_parameters["length"]
-        soma.diam = self._neuron_parameters["diam"]
+        for pulse in pulses:
+            pulse_start = pulse["start"]
+            pulse_end = pulse["end"]
+            pulse_amplitude = pulse["amp"]
 
-        # Create step current from input parameters
-        stim = h.IClamp(soma(0.5))
-        stim.dur = self._stimulation_parameters["duration"]
-        stim.amp = self._stimulation_parameters["amplitude"]
-        stim.delay = self._stimulation_parameters["t_start"]
-        soma_v = h.Vector().record(soma(0.5)._ref_v)
-        time = h.Vector().record(h._ref_t)
+            # Determining indices to apply pulse
+            pulse_start_idx = pulse_start * resolution
+            pulse_end_idx = pulse_end * resolution
+            pulse_app_indices = [range(pulse_start_idx, pulse_end_idx + 1)]
+            pulse_vec = np.zeros(len(pulse_app_indices))
+            pulse_vec.fill(pulse_amplitude)
+            np.put(current_vec, pulse_app_indices, pulse_vec)
 
-        # Run simulation
-        h.dt = 1 * ms
-        resting_membrane_potential = self._neuron_parameters["resting_v"] * mV
-        simulation_duration = self._simulation_duration * ms
-        h.finitialize(resting_membrane_potential)
-        h.continuerun(simulation_duration)
+        # Determining time constant
+        tau = membrane_r * membrane_c
+        spike_times = []
+        # Forward Euler solver
+        for i in range(len(membrane_v_vec) - 1):
+            membrane_v_vec[i + 1] = ((dt/tau) * ((resting_v - membrane_v_vec[i]) + (membrane_r * current_vec[i]))) + membrane_v_vec[i]
+            # Handle spiking
+            if membrane_v_vec[i+1] >= threshold_v:
+                spike_times.append(time_vec[i + 1])
+                membrane_v_vec[i + 1] = v_reset
 
-        reshaped_soma_v = np.reshape(soma_v, (len(soma_v), 1))
-
-        # Getting color visualization
-        min_v = np.min(list(soma_v))
-        max_v = np.max(list(soma_v))
-
-        normalized_v_data = ((reshaped_soma_v - min_v) / (max_v - min_v))
-        intracellular_color_v, extracellular_color_v = LIFSimulation.create_visualization_data(normalized_v_data)
-
-        # Pulse train for stimulation
-        stim_pulse_train = []
-        stim_end_time = self._stimulation_parameters["duration"] + self._stimulation_parameters["t_start"]
-        stim_start_time = self._stimulation_parameters["t_start"]
-        for tp in time:
-            if tp < stim_end_time and tp > stim_start_time:
-                stim_pulse_train.append(1)
-            else:
-                stim_pulse_train.append(0)
-
-        simulation_results = {
-            "membrane_voltage": list(soma_v),
-            "intracellular_color_v": intracellular_color_v.tolist(),
-            "extracellular_color_v": extracellular_color_v.tolist(),
-            "timepoints": list(time),
-            "stim_pulse_train": list(stim_pulse_train)
-        }
-
-        sys.stdout.write(json.dumps(simulation_results))
+        # Create output instance
+        simulation_output = LIFOutput()
+        simulation_output.set_membrane_voltage(membrane_v_vec)
+        simulation_output.set_timepoints(time_vec)
+        simulation_output.set_injected_current(current_vec)
+        sys.stdout.write(simulation_output.jsonify())
