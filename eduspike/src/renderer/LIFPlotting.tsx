@@ -110,21 +110,23 @@ export default function LIFPlotting() {
   return (
     <Container
       sx={{
+        flex: 1,
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
       }}
     >
-      <IconButton edge="start" color="inherit" aria-label="menu">
-        <ArrowCircleLeftIcon />
-      </IconButton>
-      <Container sx={{alignItems: 'center'}}>
-        <Line data={plotData} options={options}/>
+      <Container
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingBottom: '3vh',
+        }}
+      >
+        <Line data={plotData} options={options} />
       </Container>
-      <IconButton edge="start" color="inherit" aria-label="menu">
-          <ArrowCircleRightIcon />
-        </IconButton>
     </Container>
   );
 }

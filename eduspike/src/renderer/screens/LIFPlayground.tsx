@@ -84,6 +84,7 @@ export default function LIFPlayground() {
           <Stack spacing={2}>
             <Container
               sx={{
+                display: 'flex',
                 height: '42vh',
                 width: '45vw',
                 border: '1px solid #e0e0e0',
