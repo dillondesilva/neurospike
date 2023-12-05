@@ -134,25 +134,5 @@ class LIFSimulation:
         simulation_output = LIFOutput()
         simulation_output.set_membrane_voltage(membrane_v_vec)
         simulation_output.set_timepoints(time_vec)
-        simulation_output.set_injected_current(injected_current)
-        simulation_output.set
-
-        reshaped_membrane_v_vec = np.reshape(membrane_v_vec, (len(membrane_v_vec), 1))
-
-        # Getting color visualization
-        min_v = np.min(list(membrane_v_vec))
-        max_v = np.max(list(membrane_v_vec))
-
-        normalized_v_data = ((reshaped_membrane_v_vec - min_v) / (max_v - min_v))
-        intracellular_color_v, extracellular_color_v = LIFSimulation.create_visualization_data(normalized_v_data)
-        simulation_results = {
-            "membrane_voltage": list(membrane_v_vec),
-            "applied_current": [list(current_vec)],
-            "intracellular_color_v": intracellular_color_v.tolist(),
-            "extracellular_color_v": extracellular_color_v.tolist(),
-            "timepoints": list(time_vec),
-            "spike_times": list(spike_times),
-            "threshold_v": list(threshold_v),
-        }
-
-        sys.stdout.write(json.dumps(simulation_results))
+        simulation_output.set_injected_current(current_vec)
+        sys.stdout.write(simulation_output.jsonify())

@@ -8,4 +8,4 @@ LIFSimulation.simulate(pulses=[{
     "start": 40,
     "end": 80,
     "amp": 5
-}], membrane_c=1)
+}], membrane_c=1, resolution=1)
