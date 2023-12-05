@@ -6,8 +6,9 @@ This is a monorepo containing all, open-source projects developed at Neurospike.
 
 Currently, there are two main projects being developed by Neurospike. These are **Eduspike** and our ongoing simulation library, **neurospikelib**.
 
-### TODO: Eduspike
+### Eduspike
 
+Eduspike is an educational neural simulation tool that provides a modernised interface for interacting with computational neuron models. Through a powerful visualisation module, built-in IDE and integration with neurospikelib, we provide users a hands on experience with popular models such as the LIF and the Hodgkin Huxley neurons. 
 
 ### TODO: Neurospikelib
 
