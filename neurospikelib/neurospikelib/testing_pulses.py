@@ -1,6 +1,6 @@
-from lif_new import LIFSimulation
+from lif import LIF
 
-LIFSimulation.simulate(pulses=[{
+LIF.simulate(pulses=[{
     "start": 10,
     "end": 20,
     "amp": 3
