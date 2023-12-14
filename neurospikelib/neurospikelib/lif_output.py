@@ -37,13 +37,14 @@ class LIFOutput:
         min_v = np.min(list(membrane_voltage))
 
         normalized_v_data = (reshaped_membrane_voltage - min_v) / (max_v - min_v)
-        intracellular_color_v, extracellular_color_v = self._create_visualization_data(
+        intracellular_color_v, extracellular_color_v, membrane_color_v = self._create_visualization_data(
             normalized_v_data
         )
 
         self._data["membrane_voltage"] = membrane_voltage.tolist()
         self._visualization["intracellular_color_v"] = intracellular_color_v.tolist()
         self._visualization["extracellular_color_v"] = extracellular_color_v.tolist()
+        self._visualization["membrane_color_v"] = membrane_color_v.tolist()
 
     def set_timepoints(self, timepoints):
         """
@@ -81,10 +82,8 @@ class LIFOutput:
 
         intracellular_color_v = base_color_v + color_time_v
         extracellular_color_v = final_color_v - color_time_v
-        print("color membrane")
-        print(membrane_color)
 
-        return (intracellular_color_v, extracellular_color_v)
+        return (intracellular_color_v, extracellular_color_v, membrane_color_v)
 
     def jsonify(self):
         """

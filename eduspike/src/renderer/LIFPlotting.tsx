@@ -67,9 +67,9 @@ export default function LIFPlotting() {
     console.log(simulationDataStr);
     const parsedData = JSON.parse(simulationDataStr);
     console.log(parsedData);
-    const membraneVoltage = parsedData.membrane_voltage;
-    const timePoints = parsedData.timepoints;
-    const appliedCurrent = parsedData.applied_current;
+    const membraneVoltage = parsedData.data.membrane_voltage;
+    const timePoints = parsedData.data.timepoints;
+    // const appliedCurrent = parsedData.applied_current;
 
     const newPlotData = {
       labels: timePoints,
@@ -80,12 +80,12 @@ export default function LIFPlotting() {
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
         },
-        {
-          label: 'Applied Current',
-          data: appliedCurrent,
-          fill: false,
-          borderColor: 'rgb(255, 0, 0)',
-        },
+        // {
+        //   label: 'Applied Current',
+        //   data: appliedCurrent,
+        //   fill: false,
+        //   borderColor: 'rgb(255, 0, 0)',
+        // },
       ],
     };
 

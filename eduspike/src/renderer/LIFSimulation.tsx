@@ -12,17 +12,30 @@ import {
   MenuItem,
   IconButton,
 } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
+
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
+// const INITIAL_LIF_VISUALISATION_DATA = {
+//   membrane_voltage: [-70],
+//   intracellular_color_v: [[255, 255, 255]],
+//   extracellular_color_v: [[255, 255, 255]],
+//   membrane_color_v: [[10, 250, 255]],
+//   timepoints: [0],
+// };
+
 const INITIAL_LIF_VISUALISATION_DATA = {
-  membrane_voltage: [-70],
-  intracellular_color_v: [[255, 255, 255]],
-  extracellular_color_v: [[255, 255, 255]],
-  timepoints: [0],
-  stim_pulse_train: [1],
-};
+  data: {
+    membrane_voltage: [-70],
+    timepoints: [0],
+    injected_current: [0],
+  },
+  visualization: {
+    intracellular_color_v: [[255, 255, 255]],
+    extracellular_color_v: [[255, 255, 255]],
+    membrane_color_v: [[10, 250, 255]],
+  },
+}
 
 function TestMesh(data, active) {
   const testRef = useRef();
@@ -30,13 +43,14 @@ function TestMesh(data, active) {
   const ecText = useRef();
   const stimRef = useRef();
   const membraneMeshRef = useRef();
+  console.log(data.data.data)
+  const { timepoints } = data.data.data;
+  const membraneVoltageData = data.data.data.membrane_voltage;
+  const initialICColor = data.data.visualization.intracellular_color_v[0];
+  const initialECColor = data.data.visualization.extracellular_color_v[0];
+  const initialMembraneColor = data.data.visualization.membrane_color_v[0];
 
-  const { timepoints } = data.data;
-  const membraneVoltageData = data.data.membrane_voltage;
-
-  const initialICColor = data.data.intracellular_color_v[0];
-  const initialECColor = data.data.extracellular_color_v[0];
-  const initialMembraneV = data.data.membrane_voltage[0];
+  const initialMembraneV = data.data.data.membrane_voltage[0];
   const initialMembraneVText = `Transmembrane Potential: ${initialMembraneV} mV`;
 
   const [currentTimepoint, setNewTimepoint] = useState(timepoints[0]);
@@ -44,6 +58,7 @@ function TestMesh(data, active) {
   const [currentECColor, setECColor] = useState(initialECColor);
   const [currentMembraneV, setMembraneV] = useState(initialMembraneV);
   const [currentMembraneVText, setMembraneVText] = useState(initialMembraneVText);
+  const [currentMembraneColor , setMembraneColor] = useState(initialMembraneColor);
   const [timeText, setTimeText] = useState('Time: 0 ms');
   const [isCurrentOn, setCurrentState] = useState(false);
 
@@ -59,31 +74,26 @@ function TestMesh(data, active) {
     } else {
       setNewTimepoint(currentTimepoint + 1);
     }
-    const newICColor = data.data.intracellular_color_v[currentTimepoint];
-    const newECColor = data.data.extracellular_color_v[currentTimepoint];
-
+    const newICColor = data.data.visualization.intracellular_color_v[currentTimepoint];
+    const newECColor = data.data.visualization.extracellular_color_v[currentTimepoint];
+    const newMembraneColor = data.data.visualization.membrane_color_v[currentTimepoint];
 
     setICColor(newICColor);
     setECColor(newECColor);
+    setMembraneColor(newMembraneColor);
     setMembraneV(Math.round(membraneVoltageData[currentTimepoint] * 100) / 100);
     setMembraneVText(`Transmembrane Potential: ${currentMembraneV} mV`);
     setTimeText(`Time: ${currentTimepoint} ms`);
 
-    if (data.data.stim_pulse_train[currentTimepoint] === 1) {
-      setCurrentState(true);
-    } else {
-      setCurrentState(false);
-    }
+    // if (data.data.data.stim_pulse_train[currentTimepoint] === 1) {
+    //   setCurrentState(true);
+    // } else {
+    //   setCurrentState(false);
+    // }
   };
 
   let tick = 0;
   useFrame(({ clock }) => {
-
-    if (membraneMeshRef.current) {
-      membraneMeshRef.current.material.color.r = 10 / 255;
-      membraneMeshRef.current.material.color.g = 180 / 255;
-      membraneMeshRef.current.material.color.b = 200 / 255;
-    }
 
     if (data.active) {
       if (tick === 6) {
@@ -103,6 +113,12 @@ function TestMesh(data, active) {
         ecRef.current.material.color.r = currentECColor[0] / 255;
         ecRef.current.material.color.g = currentECColor[1] / 255;
         ecRef.current.material.color.b = currentECColor[2] / 255;
+      }
+
+      if (membraneMeshRef.current) {
+        membraneMeshRef.current.material.color.r = currentMembraneColor[0] / 255;
+        membraneMeshRef.current.material.color.g = currentMembraneColor[1] / 255;
+        membraneMeshRef.current.material.color.b = currentMembraneColor[2] / 255;
       }
 
       if (stimRef.current) {
@@ -232,19 +248,6 @@ export default function LIFSimulation() {
         >
           {playButton}
         </IconButton>
-        {/* <Slider defaultValue={30} />
-        <FormControl size="small">
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={10}
-            label="Speed"
-          >
-            <MenuItem value={10}>1x</MenuItem>
-            <MenuItem value={20}>2x</MenuItem>
-            <MenuItem value={30}>0.5x</MenuItem>
-          </Select>
-        </FormControl> */}
       </Container>
     </Container>
   );
