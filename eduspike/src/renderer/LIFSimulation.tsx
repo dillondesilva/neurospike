@@ -18,8 +18,8 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
 const INITIAL_LIF_VISUALISATION_DATA = {
   membrane_voltage: [-70],
-  intracellular_color_v: [[132, 215, 206]],
-  extracellular_color_v: [[238, 128, 238]],
+  intracellular_color_v: [[255, 255, 255]],
+  extracellular_color_v: [[255, 255, 255]],
   timepoints: [0],
   stim_pulse_train: [1],
 };
@@ -28,8 +28,9 @@ function TestMesh(data, active) {
   const testRef = useRef();
   const ecRef = useRef();
   const ecText = useRef();
-  const icText = useRef();
   const stimRef = useRef();
+  const membraneMeshRef = useRef();
+
   const { timepoints } = data.data;
   const membraneVoltageData = data.data.membrane_voltage;
 
@@ -77,6 +78,13 @@ function TestMesh(data, active) {
 
   let tick = 0;
   useFrame(({ clock }) => {
+
+    if (membraneMeshRef.current) {
+      membraneMeshRef.current.material.color.r = 10 / 255;
+      membraneMeshRef.current.material.color.g = 180 / 255;
+      membraneMeshRef.current.material.color.b = 200 / 255;
+    }
+
     if (data.active) {
       if (tick === 6) {
         updateTimepoint();
@@ -85,6 +93,7 @@ function TestMesh(data, active) {
       }
 
       if (testRef.current) {
+        console.log(currentICColor[0])
         testRef.current.material.color.r = currentICColor[0] / 255;
         testRef.current.material.color.g = currentICColor[1] / 255;
         testRef.current.material.color.b = currentICColor[2] / 255;
@@ -118,18 +127,13 @@ function TestMesh(data, active) {
         {'\n\n'}
         {currentMembraneVText}
       </Text>
-      {/* <Text
-        scale={[0.175, 0.175, 0.175]}
-        position={[-2.75, 1.5, 2]}
-        color="black" // default
-        anchorX="center" // default
-        anchorY="middle" // default
-      >
-        {timeText}
-      </Text> */}
       <mesh ref={testRef} visible position={[0, 0, 0]}>
         <torusGeometry args={[0.03, 1.7, 20, 100]} />
-        <meshStandardMaterial opacity={0.75} transparent />
+        <meshStandardMaterial opacity={0.75} transparent/>
+      </mesh>
+      <mesh ref={membraneMeshRef} position={[0, 0, 2]}>
+        <torusGeometry args={[1.2, 0.1, 20, 100]} />
+        <meshStandardMaterial />
       </mesh>
       <mesh ref={ecRef} visible position={[0, 0, -5]}>
         <boxGeometry args={[25, 15, 3]} />
