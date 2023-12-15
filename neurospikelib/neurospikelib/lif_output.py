@@ -23,6 +23,7 @@ class LIFOutput:
         self.visualization = {
             "intracellular_color_v": list(),
             "extracellular_color_v": list(),
+            "membrane_color_v": list(),
         }
 
     def set_membrane_voltage(self, membrane_voltage):
@@ -83,7 +84,7 @@ class LIFOutput:
         intracellular_color_v = base_color_v + color_time_v
         extracellular_color_v = final_color_v - color_time_v
 
-        return (intracellular_color_v, extracellular_color_v, membrane_color_time_v)
+        return (intracellular_color_v, extracellular_color_v, membrane_color)
 
     def jsonify(self):
         """
