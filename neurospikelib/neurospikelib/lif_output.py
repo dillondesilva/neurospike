@@ -14,13 +14,13 @@ class LIFOutput:
         self.simulation_type = "lif"
         self.simulation_title = "LIF Model Membrane Voltage vs Time"
 
-        self._data = {
+        self.data = {
             "membrane_voltage": list(),
             "timepoints": list(),
             "injected_current": list(),
         }
 
-        self._visualization = {
+        self.visualization = {
             "intracellular_color_v": list(),
             "extracellular_color_v": list(),
         }
@@ -41,22 +41,22 @@ class LIFOutput:
             normalized_v_data
         )
 
-        self._data["membrane_voltage"] = membrane_voltage.tolist()
-        self._visualization["intracellular_color_v"] = intracellular_color_v.tolist()
-        self._visualization["extracellular_color_v"] = extracellular_color_v.tolist()
-        self._visualization["membrane_color_v"] = membrane_color_v.tolist()
+        self.data["membrane_voltage"] = membrane_voltage.tolist()
+        self.visualization["intracellular_color_v"] = intracellular_color_v.tolist()
+        self.visualization["extracellular_color_v"] = extracellular_color_v.tolist()
+        self.visualization["membrane_color_v"] = membrane_color_v.tolist()
 
     def set_timepoints(self, timepoints):
         """
         Set timepoints for LIFOutput
         """
-        self._data["timepoints"] = timepoints.tolist()
+        self.data["timepoints"] = timepoints.tolist()
 
     def set_injected_current(self, injected_current):
         """
         Set current injection vector for LIFOutput
         """
-        self._data["injected_current"] = injected_current.tolist()
+        self.data["injected_current"] = injected_current.tolist()
 
     def _create_visualization_data(
         self, normalized_v_data, base_color=(132, 215, 206), final_color=(238, 129, 238),
@@ -83,7 +83,7 @@ class LIFOutput:
         intracellular_color_v = base_color_v + color_time_v
         extracellular_color_v = final_color_v - color_time_v
 
-        return (intracellular_color_v, extracellular_color_v, membrane_color_v)
+        return (intracellular_color_v, extracellular_color_v, membrane_color_time_v)
 
     def jsonify(self):
         """

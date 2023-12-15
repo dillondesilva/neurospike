@@ -34,12 +34,13 @@ ipcMain.on('ipc-example', async (event, arg) => {
 });
 
 ipcMain.on('test', async (event, arg) => {
-  console.log("Running test...")
+  console.log('Running test...');
   event.reply('test', 'Random test');
 });
 
 ipcMain.on('run-code', async (event, arg) => {
   const simulationFilePath = `${app.getPath('temp')}simulation.py`;
+  event.reply('run-code', simulationFilePath);
   fs.writeFile(simulationFilePath, arg[0], (err) => {
     if (err) {
       console.error(err);
@@ -48,6 +49,7 @@ ipcMain.on('run-code', async (event, arg) => {
 
   const python = spawn('python3', [simulationFilePath]);
   let output = '';
+  event.reply('run-code', python);
   python.stdout.on('data', (data) => {
     output += data.toString();
   });
@@ -62,13 +64,12 @@ ipcMain.on('run-code', async (event, arg) => {
     // event.reply('run-code', output);
   });
 
-  python.on('exit', (code) => {
-    console.log(`child process close all stdio with code ${code}`);
+  python.stdout.on('end', () => {
     // send data to browser
     if (output.includes('{')) {
       event.reply('run-code', output);
     }
-    // event.reply('run-code', output);
+    event.reply('run-code', output);
   });
 });
 

@@ -35,7 +35,7 @@ const INITIAL_LIF_VISUALISATION_DATA = {
     extracellular_color_v: [[255, 255, 255]],
     membrane_color_v: [[10, 250, 255]],
   },
-}
+};
 
 function TestMesh(data, active) {
   const testRef = useRef();
@@ -43,7 +43,7 @@ function TestMesh(data, active) {
   const ecText = useRef();
   const stimRef = useRef();
   const membraneMeshRef = useRef();
-  console.log(data.data.data)
+
   const { timepoints } = data.data.data;
   const membraneVoltageData = data.data.data.membrane_voltage;
   const initialICColor = data.data.visualization.intracellular_color_v[0];
@@ -57,8 +57,10 @@ function TestMesh(data, active) {
   const [currentICColor, setICColor] = useState(initialICColor);
   const [currentECColor, setECColor] = useState(initialECColor);
   const [currentMembraneV, setMembraneV] = useState(initialMembraneV);
-  const [currentMembraneVText, setMembraneVText] = useState(initialMembraneVText);
-  const [currentMembraneColor , setMembraneColor] = useState(initialMembraneColor);
+  const [currentMembraneVText, setMembraneVText] =
+    useState(initialMembraneVText);
+  const [currentMembraneColor, setMembraneColor] =
+    useState(initialMembraneColor);
   const [timeText, setTimeText] = useState('Time: 0 ms');
   const [isCurrentOn, setCurrentState] = useState(false);
 
@@ -74,6 +76,7 @@ function TestMesh(data, active) {
     } else {
       setNewTimepoint(currentTimepoint + 1);
     }
+
     const newICColor = data.data.visualization.intracellular_color_v[currentTimepoint];
     const newECColor = data.data.visualization.extracellular_color_v[currentTimepoint];
     const newMembraneColor = data.data.visualization.membrane_color_v[currentTimepoint];
@@ -94,7 +97,6 @@ function TestMesh(data, active) {
 
   let tick = 0;
   useFrame(({ clock }) => {
-
     if (data.active) {
       if (tick === 6) {
         updateTimepoint();
@@ -103,7 +105,6 @@ function TestMesh(data, active) {
       }
 
       if (testRef.current) {
-        console.log(currentICColor[0])
         testRef.current.material.color.r = currentICColor[0] / 255;
         testRef.current.material.color.g = currentICColor[1] / 255;
         testRef.current.material.color.b = currentICColor[2] / 255;
@@ -116,9 +117,12 @@ function TestMesh(data, active) {
       }
 
       if (membraneMeshRef.current) {
-        membraneMeshRef.current.material.color.r = currentMembraneColor[0] / 255;
-        membraneMeshRef.current.material.color.g = currentMembraneColor[1] / 255;
-        membraneMeshRef.current.material.color.b = currentMembraneColor[2] / 255;
+        membraneMeshRef.current.material.color.r =
+          currentMembraneColor[0] / 255;
+        membraneMeshRef.current.material.color.g =
+          currentMembraneColor[1] / 255;
+        membraneMeshRef.current.material.color.b =
+          currentMembraneColor[2] / 255;
       }
 
       if (stimRef.current) {
@@ -145,7 +149,7 @@ function TestMesh(data, active) {
       </Text>
       <mesh ref={testRef} visible position={[0, 0, 0]}>
         <torusGeometry args={[0.03, 1.7, 20, 100]} />
-        <meshStandardMaterial opacity={0.75} transparent/>
+        <meshStandardMaterial opacity={0.75} transparent />
       </mesh>
       <mesh ref={membraneMeshRef} position={[0, 0, 2]}>
         <torusGeometry args={[1.2, 0.1, 20, 100]} />
@@ -190,6 +194,7 @@ export default function LIFSimulation() {
       setUpdatedStatus(true);
       const dataStartingIndex = arg.indexOf('{');
       await setSimulationDataStr(arg.substring(dataStartingIndex, arg.length));
+      console.log(simulationDataStr);
       updateVisualisation();
     }
   });
@@ -241,7 +246,6 @@ export default function LIFSimulation() {
           edge="start"
           color="inherit"
           aria-label="menu"
-          
           onClick={() => {
             setActiveState(!isActive);
           }}
