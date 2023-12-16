@@ -4,6 +4,8 @@ import numpy as np
 
 RGB_WHITE = (255, 255, 255)
 RGB_OFF_WHITE = (240, 240, 240)
+DEFAULT_RGB_RESTING_POTENTIAL = (2, 0, 121)
+DEFAULT_RGB_THRESHOLD_POTENTIAL = (4, 217, 255)
 
 class LIFOutput:
     """
@@ -61,13 +63,14 @@ class LIFOutput:
 
     def _create_visualization_data(
         self, normalized_v_data, base_color=(132, 215, 206), final_color=(238, 129, 238),
-        membrane_initial_color=(1, 74, 219)
+        membrane_initial_color=DEFAULT_RGB_RESTING_POTENTIAL, threshold_color=DEFAULT_RGB_THRESHOLD_POTENTIAL
     ):
         """Calculate colors to create visualization for LIF simulation"""
 
         # Determining change in membrane color
         membrane_color_v = np.array(membrane_initial_color)
-        membrane_color_dist = (RGB_OFF_WHITE - membrane_color_v)[np.newaxis]
+        threshold_color_v = np.array(threshold_color)
+        membrane_color_dist = (threshold_color_v - membrane_color_v)[np.newaxis]
 
         base_color_v = np.array(base_color)
         final_color_v = np.array(final_color)
