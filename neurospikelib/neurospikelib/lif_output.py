@@ -62,32 +62,46 @@ class LIFOutput:
         self.data["injected_current"] = injected_current.tolist()
 
     def _create_visualization_data(
-        self, normalized_v_data, base_color=(132, 215, 206), final_color=(238, 129, 238),
-        membrane_initial_color=DEFAULT_RGB_RESTING_POTENTIAL, threshold_color=DEFAULT_RGB_THRESHOLD_POTENTIAL
+        self, normalized_v_data, ic_initial_color=RGB_WHITE, ec_initial_color=RGB_WHITE, 
+        ic_final_color=(132, 215, 206), 
+        ec_final_color=(238, 129, 238), 
+        membrane_initial_color=DEFAULT_RGB_RESTING_POTENTIAL, 
+        threshold_color=DEFAULT_RGB_THRESHOLD_POTENTIAL
     ):
         """Calculate colors to create visualization for LIF simulation"""
-
+        print(ec_initial_color)
         # Determining change in membrane color
         membrane_color_v = np.array(membrane_initial_color)
         threshold_color_v = np.array(threshold_color)
         membrane_color_dist = (threshold_color_v - membrane_color_v)[np.newaxis]
 
-        base_color_v = np.array(base_color)
-        final_color_v = np.array(final_color)
+        # Setting color vectors for IC and EC visuals
+        ic_initial_color_v = np.array(ic_initial_color)
+        ec_initial_color_v = np.array(ec_initial_color)
+        ic_final_color_v = np.array(ic_final_color)
+        ec_final_color_v = np.array(ec_final_color)
 
-        color_distance = (final_color_v - base_color_v)[np.newaxis]
+        # Calculate distance vector between initial/final IC and EC colors
+        ic_color_distance = (ic_final_color_v - ic_initial_color)[np.newaxis]
+        ec_color_distance = (ec_final_color_v - ec_initial_color)[np.newaxis]
 
-        color_time_v = color_distance * normalized_v_data
+        # color_time_v = color_distance * normalized_v_data
         membrane_color_time_v = membrane_color_dist * normalized_v_data
         membrane_color = membrane_color_v + membrane_color_time_v
+
+        ic_color_v = ic_initial_color_v + (ic_color_distance * normalized_v_data)
+        ec_color_v = ec_initial_color_v + (ec_color_distance * normalized_v_data)
+
         for i in range(len(normalized_v_data)):
             if normalized_v_data[i] == 1:
                 membrane_color[i] = RGB_WHITE
+                ic_color_v[i] = RGB_WHITE
+                ec_color_v[i] = RGB_WHITE
 
-        intracellular_color_v = base_color_v + color_time_v
-        extracellular_color_v = final_color_v - color_time_v
+        # intracellular_color_v = base_color_v + color_time_v
+        # extracellular_color_v = final_color_v - color_time_v
 
-        return (intracellular_color_v, extracellular_color_v, membrane_color)
+        return (ic_color_v, ec_color_v, membrane_color)
 
     def jsonify(self):
         """

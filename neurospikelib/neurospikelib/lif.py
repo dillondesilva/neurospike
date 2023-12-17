@@ -32,6 +32,11 @@ class LIF:
         Creates EduSpike compatible output based on values from custom 
         LIF model
         '''
+        # Reformat as numpy lists
+        membrane_v_vec = np.array(membrane_v_vec)
+        time_vec = np.array(time_vec)
+        current_vec = np.array(current_vec)
+
         # Create output instance
         simulation_output = LIFOutput()
         simulation_output.set_membrane_voltage(membrane_v_vec)

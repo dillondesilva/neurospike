@@ -17,23 +17,13 @@ function getSimulationCode(
   simulationDuration: any,
   pulseDelay: any
 ) {
-  const codeString = `from neurospikelib.lif import LIFSimulation
-# Run sample LIF simulation
-neuron_parameters = {
-    "length": 100,
-    "diam": 20,
-    "resting_v": ${membraneThreshold}
-}
-
-stimulation_parameters = {
-    "duration": ${pulseDuration},
-    "amplitude": ${inputCurrent},
-    "t_start": ${pulseDelay}               
-}
-
-lif_simulation_a = LIFSimulation(stimulation_parameters, neuron_parameters, ${simulationDuration})
-simulation_data = lif_simulation_a.simulate()`;
-
+  const codeString = `from neurospikelib.lif import LIF
+LIF.simulate(pulses=[{
+      "start": ${pulseDelay},
+      "end": ${pulseDelay + pulseDuration},
+      "amp": ${inputCurrent}
+  }], resolution=1, threshold_v=${membraneThreshold}, simulation_duration=${simulationDuration})`;
+  console.log(codeString);
   return codeString;
 }
 

@@ -12,13 +12,13 @@ function CodeStatusElement(props: any) {
   const [isCodeRunning, setIsCodeRunning] = useState(false);
   const runCode = () => {
     setIsCodeRunning(true);
-    console.log(props.editorContent)
+    console.log(props.editorContent);
     window.electron.ipcRenderer.sendMessage('run-code', [props.editorContent]);
-    console.log("message sent")
+    console.log('message sent');
   };
 
   window.electron.ipcRenderer.on('run-code', async (arg: string) => {
-    console.log(arg)
+    console.log(arg);
     setIsCodeRunning(false);
   });
 
