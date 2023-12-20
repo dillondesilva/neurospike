@@ -23,20 +23,22 @@ LIF.simulate(pulses=[{
       "end": ${pulseDelay + pulseDuration},
       "amp": ${inputCurrent}
   }], resolution=1, threshold_v=${membraneThreshold}, simulation_duration=${simulationDuration})`;
-  console.log(codeString);
+
   return codeString;
 }
 
 const INITIAL_INPUT_CURRENT = 2;
 const INITIAL_PULSE_DURATION = 20;
-const INITIAL_RESTING_VOLTAGE = -70;
+const INITIAL_THRESHOLD_VOLTAGE = -55;
 const INITIAL_SIMULATION_DURATION = 100;
 const INITIAL_PULSE_DELAY = 0;
 
 export default function LIFControlPanel() {
   const [inputCurrent, setInputCurrent] = useState(INITIAL_INPUT_CURRENT);
   const [pulseDuration, setPulseDuration] = useState(INITIAL_PULSE_DURATION);
-  const [restingVoltage, setRestingVoltage] = useState(INITIAL_RESTING_VOLTAGE);
+  const [thresholdVoltage, setThresholdVoltage] = useState(
+    INITIAL_THRESHOLD_VOLTAGE
+  );
   const [simulationDuration, setSimulationDuration] = useState(
     INITIAL_SIMULATION_DURATION
   );
@@ -52,7 +54,7 @@ export default function LIFControlPanel() {
     const codeString = getSimulationCode(
       inputCurrent,
       pulseDuration,
-      restingVoltage,
+      thresholdVoltage,
       simulationDuration,
       pulseDelay
     );
@@ -66,9 +68,12 @@ export default function LIFControlPanel() {
   const pulseDurationTooltipText =
     'Select how long a single pulse duration lasts';
 
-  const membraneThresholdTooltipText = 'Set the voltage at which the neuron will fire';
-  const simulationDurationTooltipText = 'Select how long the desired simulation should go for'
-  const pulseEntrypointTooltipText = 'Control when to introduce the pulse into the simulation';
+  const membraneThresholdTooltipText =
+    'Set the voltage at which the neuron will fire';
+  const simulationDurationTooltipText =
+    'Select how long the desired simulation should go for';
+  const pulseEntrypointTooltipText =
+    'Control when to introduce the pulse into the simulation';
 
   return (
     <div>
@@ -136,12 +141,12 @@ export default function LIFControlPanel() {
           sx={{
             width: '20vw',
           }}
-          min={-80}
+          min={-60}
           max={30}
-          value={restingVoltage}
+          value={thresholdVoltage}
           step={10}
           valueLabelDisplay="auto"
-          onChange={(_, newValue) => setRestingVoltage(newValue)}
+          onChange={(_, newValue) => setThresholdVoltage(newValue)}
           ref={membraneThresholdSlider}
         />
       </Stack>
@@ -160,7 +165,7 @@ export default function LIFControlPanel() {
           sx={{
             width: '20vw',
           }}
-          min={0}
+          min={100}
           max={500}
           step={10}
           value={simulationDuration}
@@ -177,7 +182,6 @@ export default function LIFControlPanel() {
           justifyContent: 'space-between',
         }}
       >
-
         <Tooltip title={pulseEntrypointTooltipText} placement="right">
           <p>Pulse entrypoint (ms):</p>
         </Tooltip>

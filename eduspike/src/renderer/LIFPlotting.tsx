@@ -68,8 +68,11 @@ export default function LIFPlotting() {
     const parsedData = JSON.parse(simulationDataStr);
     console.log(parsedData);
     const membraneVoltage = parsedData.data.membrane_voltage;
-    const timePoints = parsedData.data.timepoints;
-    // const appliedCurrent = parsedData.applied_current;
+
+    let timePoints = parsedData.data.timepoints;
+    timePoints = timePoints.map((timepoint: number) => {
+      return Number(timepoint.toFixed(0));
+    });
 
     const newPlotData = {
       labels: timePoints,

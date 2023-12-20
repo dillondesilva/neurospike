@@ -194,14 +194,22 @@
     "webpack-merge": "^5.9.0"
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.erb.ElectronReact",
+    "productName": "Eduspike",
+    "appId": "org.erb.Eduspike",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
       "dist",
       "node_modules",
-      "package.json"
+      "package.json",
+      {
+        "from": "./public",
+        "to": "dist/renderer/"
+      },
+      {
+        "from": "./assets",
+        "to": "dist/renderer/"
+      }
     ],
     "afterSign": ".erb/scripts/notarize.js",
     "mac": {
@@ -246,11 +254,12 @@
     "directories": {
       "app": "release/app",
       "buildResources": "assets",
-      "output": "release/build"
+      "output": "release/build/"
     },
-    "extraResources": [
-      "./assets/**"
-    ],
+    "extraResources": [{
+      "from": "./assets/**",
+      "to": "dist/renderer/"
+    }],
     "publish": {
       "provider": "github",
       "owner": "electron-react-boilerplate",

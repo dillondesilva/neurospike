@@ -1,4 +1,4 @@
-from .lif_output import LIFOutput
+from lif_output import LIFOutput
 
 import numpy as np
 import json

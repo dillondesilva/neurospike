@@ -1,4 +1,4 @@
-from neurospikelib.lif import LIF
+from lif import LIF
 
 LIF.simulate(pulses=[{
     "start": 10,
