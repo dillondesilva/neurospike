@@ -97,7 +97,7 @@ class LIF:
 
         # Create output instance
         simulation_output = LIFOutput()
-        simulation_output.set_membrane_voltage(membrane_v_vec)
+        simulation_output.set_membrane_voltage(membrane_v_vec, threshold_v)
         simulation_output.set_timepoints(time_vec)
         simulation_output.set_injected_current(current_vec)
         sys.stdout.write(simulation_output.jsonify())

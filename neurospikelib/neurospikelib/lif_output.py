@@ -28,7 +28,7 @@ class LIFOutput:
             "membrane_color_v": list(),
         }
 
-    def set_membrane_voltage(self, membrane_voltage):
+    def set_membrane_voltage(self, membrane_voltage, threshold_v):
         """
         Set membrane voltage for LIFOutput and corresponding visualization
         """
@@ -36,12 +36,11 @@ class LIFOutput:
             membrane_voltage, (len(membrane_voltage), 1)
         )
 
-        max_v = np.max(list(membrane_voltage))
         min_v = np.min(list(membrane_voltage))
 
-        normalized_v_data = (reshaped_membrane_voltage - min_v) / (max_v - min_v)
+        normalized_v_data = (reshaped_membrane_voltage - min_v) / (threshold_v - min_v)
         intracellular_color_v, extracellular_color_v, membrane_color_v = self._create_visualization_data(
-            normalized_v_data
+            membrane_voltage, normalized_v_data, threshold_v
         )
 
         self.data["membrane_voltage"] = membrane_voltage.tolist()
@@ -62,14 +61,15 @@ class LIFOutput:
         self.data["injected_current"] = injected_current.tolist()
 
     def _create_visualization_data(
-        self, normalized_v_data, ic_initial_color=RGB_WHITE, ec_initial_color=RGB_WHITE, 
+        self, membrane_voltage, normalized_v_data, threshold_v, 
+        ic_initial_color=RGB_WHITE, ec_initial_color=RGB_WHITE,
         ic_final_color=(132, 215, 206), 
         ec_final_color=(238, 129, 238), 
         membrane_initial_color=DEFAULT_RGB_RESTING_POTENTIAL, 
-        threshold_color=DEFAULT_RGB_THRESHOLD_POTENTIAL
+        threshold_color=DEFAULT_RGB_THRESHOLD_POTENTIAL,
     ):
         """Calculate colors to create visualization for LIF simulation"""
-        print(ec_initial_color)
+
         # Determining change in membrane color
         membrane_color_v = np.array(membrane_initial_color)
         threshold_color_v = np.array(threshold_color)
@@ -93,7 +93,7 @@ class LIFOutput:
         ec_color_v = ec_initial_color_v + (ec_color_distance * normalized_v_data)
 
         for i in range(len(normalized_v_data)):
-            if normalized_v_data[i] == 1:
+            if membrane_voltage[i] >= threshold_v:
                 membrane_color[i] = RGB_WHITE
                 ic_color_v[i] = RGB_WHITE
                 ec_color_v[i] = RGB_WHITE
