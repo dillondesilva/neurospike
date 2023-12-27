@@ -48,7 +48,7 @@ const configuration: webpack.Configuration = {
       path: path.join(dist, '[name].json'),
       name: '[name]',
     }),
-
+    
     /**
      * Create global constants which can be configured at compile time.
      *

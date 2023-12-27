@@ -4,14 +4,25 @@ import { python } from '@codemirror/lang-python';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Paper, Container, CircularProgress } from '@mui/material';
 import './App.css';
+import { loadPyodide } from 'pyodide';
 
 const code = 'from neurospikelib.lif import LIFSimulation';
 const extensions = [python()];
+
+async function hello_python() {
+  let pyodide = await loadPyodide({
+    indexURL: "./pyodide/",
+  });
+  return pyodide.runPythonAsync("1+1");
+}
 
 function CodeStatusElement(props: any) {
   const [isCodeRunning, setIsCodeRunning] = useState(false);
   const runCode = () => {
     setIsCodeRunning(true);
+    hello_python().then((result) => {
+      console.log("Python says that 1+1 =", result);
+    });
     console.log(props.editorContent);
     window.electron.ipcRenderer.sendMessage('run-code', [props.editorContent]);
     console.log('message sent');
@@ -39,6 +50,7 @@ function CodeStatusElement(props: any) {
 
   return <CircularProgress sx={{ zIndex: 15, float: 'right' }} />;
 }
+
 export default function EditorComponent() {
   const editor = useRef();
   const [editorContent, setEditorContent] = useState(code);

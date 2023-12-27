@@ -4,5 +4,8 @@ cli:
 plugins:
   sources:
     - id: trunk
-      ref: v1.1.1
+      ref: v1.4.1
       uri: https://github.com/trunk-io/plugins
+actions:
+  enabled:
+    - trunk-upgrade-available

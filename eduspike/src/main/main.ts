@@ -154,6 +154,10 @@ const createWindow = async () => {
     return { action: 'deny' };
   });
 
+  // loadPyodide().then((pyodide) => {
+  //   console.log(pyodide.runPython('print("Hello from Python!")'))
+  // })
+
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
