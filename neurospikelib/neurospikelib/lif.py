@@ -1,4 +1,4 @@
-from lif_output import LIFOutput
+from .lif_output import LIFOutput
 
 import numpy as np
 import json
@@ -101,3 +101,4 @@ class LIF:
         simulation_output.set_timepoints(time_vec)
         simulation_output.set_injected_current(current_vec)
         sys.stdout.write(simulation_output.jsonify())
+        sys.stdout.write('\n')
