@@ -9,23 +9,34 @@ import { loadPyodide } from 'pyodide';
 const code = 'from neurospikelib.lif import LIFSimulation';
 const extensions = [python()];
 
-async function hello_python() {
-  let pyodide = await loadPyodide({
-    indexURL: "./pyodide/",
+async function hello_python(content) {
+  const pyodide = await loadPyodide({
+    indexURL: './pyodide/',
   });
-  return pyodide.runPythonAsync("1+1");
+
+  pyodide.setStdout({ batched: (string) => {
+    console.log(string);
+    window.electron.ipcRenderer.sendMessage('run-code', [string]);
+  } });
+
+  await pyodide.loadPackage("numpy");
+  await pyodide.loadPackage('./pyodide/neurospikelib-0.1.0-py3-none-any.whl');
+  console.log("now running python");
+  let val = await pyodide.runPythonAsync(content);
+  return val;
 }
 
 function CodeStatusElement(props: any) {
   const [isCodeRunning, setIsCodeRunning] = useState(false);
   const runCode = () => {
     setIsCodeRunning(true);
-    hello_python().then((result) => {
-      console.log("Python says that 1+1 =", result);
+
+    hello_python(props.editorContent).then((result) => {
+      setIsCodeRunning(false);
     });
-    console.log(props.editorContent);
-    window.electron.ipcRenderer.sendMessage('run-code', [props.editorContent]);
-    console.log('message sent');
+    // console.log(props.editorContent);
+    // window.electron.ipcRenderer.sendMessage('run-code', [props.editorContent]);
+    // console.log('message sent');
   };
 
   window.electron.ipcRenderer.on('run-code', async (arg: string) => {

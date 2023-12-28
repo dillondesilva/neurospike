@@ -39,38 +39,39 @@ ipcMain.on('test', async (event, arg) => {
 });
 
 ipcMain.on('run-code', async (event, arg) => {
-  const simulationFilePath = `${app.getPath('temp')}simulation.py`;
-  event.reply('run-code', simulationFilePath);
-  fs.writeFile(simulationFilePath, arg[0], (err) => {
-    if (err) {
-      console.error(err);
-    }
-  });
+  event.reply('run-code', arg[0]);
+  // const simulationFilePath = `${app.getPath('temp')}simulation.py`;
+  // event.reply('run-code', simulationFilePath);
+  // fs.writeFile(simulationFilePath, arg[0], (err) => {
+  //   if (err) {
+  //     console.error(err);
+  //   }
+  // });
 
-  const python = spawn('python3', [simulationFilePath]);
-  let output = '';
-  event.reply('run-code', python);
-  python.stdout.on('data', (data) => {
-    output += data.toString();
-  });
+  // const python = spawn('python3', [simulationFilePath]);
+  // let output = '';
+  // event.reply('run-code', python);
+  // python.stdout.on('data', (data) => {
+  //   output += data.toString();
+  // });
 
-  python.stderr.on('data', (data) => {
-    console.log('Pipe data from python script ...');
-    output = new TextDecoder().decode(data);
-    console.log(output);
-    if (output.includes('{')) {
-      event.reply('run-code', output);
-    }
-    // event.reply('run-code', output);
-  });
+  // python.stderr.on('data', (data) => {
+  //   console.log('Pipe data from python script ...');
+  //   output = new TextDecoder().decode(data);
+  //   console.log(output);
+  //   if (output.includes('{')) {
+  //     event.reply('run-code', output);
+  //   }
+  //   // event.reply('run-code', output);
+  // });
 
-  python.stdout.on('end', () => {
-    // send data to browser
-    if (output.includes('{')) {
-      event.reply('run-code', output);
-    }
-    event.reply('run-code', output);
-  });
+  // python.stdout.on('end', () => {
+  //   // send data to browser
+  //   if (output.includes('{')) {
+  //     event.reply('run-code', output);
+  //   }
+  //   event.reply('run-code', output);
+  // });
 });
 
 if (process.env.NODE_ENV === 'production') {

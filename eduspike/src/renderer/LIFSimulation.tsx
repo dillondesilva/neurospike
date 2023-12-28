@@ -65,6 +65,7 @@ function TestMesh(data, active) {
   const [isCurrentOn, setCurrentState] = useState(false);
 
   window.electron.ipcRenderer.on('run-code', async (arg: string) => {
+    console.log(arg);
     if (arg.includes('{')) {
       setNewTimepoint(timepoints[0]);
     }
