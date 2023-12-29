@@ -9,6 +9,24 @@ import {
 } from '@mui/material';
 
 import { useState, useRef } from 'react';
+import { loadPyodide } from 'pyodide';
+
+async function hello_python(content) {
+  const pyodide = await loadPyodide({
+    indexURL: './pyodide/',
+  });
+
+  pyodide.setStdout({ batched: (string) => {
+    console.log(string);
+    window.electron.ipcRenderer.sendMessage('run-code', [string]);
+  } });
+
+  await pyodide.loadPackage("numpy");
+  await pyodide.loadPackage('./pyodide/neurospikelib-0.1.0-py3-none-any.whl');
+  console.log("now running python");
+  let val = await pyodide.runPythonAsync(content);
+  return val;
+}
 
 function getSimulationCode(
   inputCurrent: any,
@@ -59,7 +77,9 @@ export default function LIFControlPanel() {
       pulseDelay
     );
 
-    window.electron.ipcRenderer.sendMessage('run-code', [codeString]);
+    hello_python(codeString);
+
+    // window.electron.ipcRenderer.sendMessage('run-code', [codeString]);
   };
 
   const inputCurrentTooltipText =
