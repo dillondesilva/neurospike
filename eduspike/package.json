@@ -39,7 +39,7 @@
     "build:renderer": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
     "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
     "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
-    "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
+    "package": "ts-node ./.erb/scripts/clean.js && npm run build && electron-builder build --publish never",
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
     "start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
     "start:main": "cross-env NODE_ENV=development electronmon -r ts-node/register/transpile-only .",
@@ -204,11 +204,11 @@
       "node_modules",
       "package.json",
       {
-        "from": "./public",
+        "from": "public",
         "to": "dist/renderer/"
       },
       {
-        "from": "./assets",
+        "from": "assets",
         "to": "dist/renderer/"
       }
     ],
@@ -257,12 +257,7 @@
       "buildResources": "assets",
       "output": "release/build/"
     },
-    "extraResources": [
-      {
-        "from": "./assets/**",
-        "to": "dist/renderer/"
-      }
-    ],
+    "extraResources": [],
     "publish": {
       "provider": "github",
       "owner": "electron-react-boilerplate",
