@@ -1,6 +1,6 @@
 # Neurospikelib
 
-Neurospikelib is a simple and evolving spiking neuron computation library. It is utilised by applications we develop and can also be used
+Neurospikelib is a simple and evolving neural computation library. It is utilised by applications we develop and can also be used
 as a standalone Python library. 
 
 ## 🔮 Roadmap
