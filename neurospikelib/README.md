@@ -24,9 +24,11 @@ Biological neurons that form neural tissue inside of living beings are one of th
 
 Spiking neuron models use mathematics to describe the nature of these spikes. They form the basis of computational neuroscience.
 
-#### Leaky Integrate and Fire (LIF) Model
+### neurospikelib.lif
 
-TODO: Fill documentation for LIF simulations
+Module for simulation of LIF neurons. To run this:
+
+`LIF.simulate()`
 
 
 
