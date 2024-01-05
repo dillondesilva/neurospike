@@ -173,9 +173,8 @@ const configuration: webpack.Configuration = {
     port,
     compress: true,
     hot: true,
-    headers: { 
-      'Access-Control-Allow-Origin': '*', 
-      'Content-Security-Policy': 'wasm-unsafe-eval'
+    headers: {
+      'Access-Control-Allow-Origin': '*',
     },
     static: {
       publicPath: '/',

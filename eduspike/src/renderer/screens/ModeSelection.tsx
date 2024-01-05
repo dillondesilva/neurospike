@@ -36,10 +36,10 @@ export default function ModeSelection() {
           title="EIF Model Playground"
           description={playgroundDescriptions.eif}
         /> */}
-        <ModeOptionCard
+        {/* <ModeOptionCard
           title="HH Spike Playground"
           description={playgroundDescriptions.hhSpike}
-        />
+        /> */}
       </Box>
     </div>
   );
