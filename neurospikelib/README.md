@@ -51,9 +51,9 @@ LIF.simulate(pulses=[{
 |  **resolution**  |  int   | fefefefefefefe |
 |  **pulses**  |  List[Pulse]   | fefefefefefefe |
 ______
-### LIF.visualize_custom_lif(membrane_v_vec, time_vec, current_vec)
+### LIF.visualize_custom_lif(membrane_v_vec : List[int], time_vec : List[int], current_vec : List[int], threshold_v=DEFAULT_THRESHOLD_VOLTAGE)
 
-TODO: Document this section
+Can be used in conjunction with your own LIF model implementation to port results into the Eduspike editor.
 
 ```python
 # Original Author: Robert Rosenbaum
@@ -94,6 +94,11 @@ current = np.zeros(len(time))
 current.fill(I0)
 LIF.visualize_custom_lif(V, time.tolist(), current)
 ```
-
+| Parameter    |    Type  |  Description  |
+| --- | --- | ----- |
+|  **membrane_v_vec**  |  List[int]   | Lopsem ipsum |
+|  **time_vec**  |  List[int]   | Lopsem ipsum |
+|  **current_vec**  |  List[int]   | Lopsem ipsum |
+|  **threshold_v (optional)**  |  int   | Lopsem ipsum |
 
 
