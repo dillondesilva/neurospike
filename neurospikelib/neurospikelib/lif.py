@@ -27,7 +27,7 @@ class LIF:
     """
 
     @staticmethod
-    def visualize_custom_lif(membrane_v_vec, time_vec, current_vec):
+    def visualize_custom_lif(membrane_v_vec, time_vec, current_vec, threshold_v=-55):
         '''
         Creates EduSpike compatible output based on values from custom 
         LIF model
@@ -39,10 +39,11 @@ class LIF:
 
         # Create output instance
         simulation_output = LIFOutput()
-        simulation_output.set_membrane_voltage(membrane_v_vec)
+        simulation_output.set_membrane_voltage(membrane_v_vec, threshold_v)
         simulation_output.set_timepoints(time_vec)
         simulation_output.set_injected_current(current_vec)
         sys.stdout.write(simulation_output.jsonify())
+        sys.stdout.write('\n')
 
 
     @staticmethod
