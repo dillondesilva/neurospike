@@ -1,11 +1,8 @@
-from neurospikelib.lif import LIF
+from adex import AdEx
 
-LIF.simulate(pulses=[{
+AdEx.simulate(pulses=[{
     "start": 10,
-    "end": 20,
-    "amp": 3
-}, {
-    "start": 40,
-    "end": 80,
-    "amp": 5
-}], membrane_c=1, resolution=1)
+    "end": 200,
+    "amp": 10
+}], membrane_c=1, resolution=100, sharpness=100, tau_w=1000,
+simulation_duration=202)
