@@ -15,7 +15,6 @@ async function hello_python(content) {
   });
 
   pyodide.setStdout({ batched: (string) => {
-    console.log(string);
     window.electron.ipcRenderer.sendMessage('run-code', [string]);
   } });
 
@@ -40,7 +39,6 @@ function CodeStatusElement(props: any) {
   };
 
   window.electron.ipcRenderer.on('run-code', async (arg: string) => {
-    console.log(arg);
     setIsCodeRunning(false);
   });
 
