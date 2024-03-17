@@ -64,9 +64,10 @@ export default function LIFPlotting() {
 
   const updatePlotData = () => {
     console.log('Updating plot data');
-    console.log(simulationDataStr);
+    console.log(new Blob([simulationDataStr]).size);
+    
     const parsedData = JSON.parse(simulationDataStr);
-    console.log(parsedData);
+    console.log(Buffer.byteLength(parsedData, 'utf8'));
     const membraneVoltage = parsedData.data.membrane_voltage;
 
     let timePoints = parsedData.data.timepoints;

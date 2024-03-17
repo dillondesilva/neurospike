@@ -17,7 +17,7 @@ async function hello_python(content) {
   });
 
   pyodide.setStdout({ batched: (string) => {
-    console.log(string);
+    console.log(new Blob([string]).size);
     window.electron.ipcRenderer.sendMessage('run-code', [string]);
   } });
 

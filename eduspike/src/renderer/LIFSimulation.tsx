@@ -195,7 +195,7 @@ export default function LIFSimulation() {
       setUpdatedStatus(true);
       const dataStartingIndex = arg.indexOf('{');
       await setSimulationDataStr(arg.substring(dataStartingIndex, arg.length));
-      console.log(simulationDataStr);
+      console.log(new Blob([simulationDataStr]).size);
       updateVisualisation();
     }
   });
