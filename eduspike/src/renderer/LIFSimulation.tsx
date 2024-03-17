@@ -65,7 +65,6 @@ function TestMesh(data, active) {
   const [isCurrentOn, setCurrentState] = useState(false);
 
   window.electron.ipcRenderer.on('run-code', async (arg: string) => {
-    console.log(arg);
     if (arg.includes('{')) {
       setNewTimepoint(timepoints[0]);
     }
@@ -195,7 +194,6 @@ export default function LIFSimulation() {
       setUpdatedStatus(true);
       const dataStartingIndex = arg.indexOf('{');
       await setSimulationDataStr(arg.substring(dataStartingIndex, arg.length));
-      console.log(new Blob([simulationDataStr]).size);
       updateVisualisation();
     }
   });
