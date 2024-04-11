@@ -19,7 +19,7 @@ export default function ModeSelection() {
           justifyContent: 'center',
         }}
       >
-        <h1>🧠 Neurospike Education 🧠</h1>
+        <h1>🧠 Eduspike 🧠</h1>
       </Box>
       <Box
         sx={{
@@ -34,14 +34,15 @@ export default function ModeSelection() {
           playgroundRef="/lif"
         />
         <ModeOptionCard
+          title="Hodgkin-Huxley Model Playground"
+          description={playgroundDescriptions.hhSpike}
+          playgroundRef='/hh'
+        />
+        <ModeOptionCard
           title="AdEx Model Playground"
           description={playgroundDescriptions.adex}
           playgroundRef='/adex'
         />
-        {/* <ModeOptionCard
-          title="HH Spike Playground"
-          description={playgroundDescriptions.hhSpike}
-        /> */}
       </Box>
     </div>
   );

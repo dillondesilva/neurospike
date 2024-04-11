@@ -32,6 +32,8 @@ export default function LIFPlayground() {
     navigate('/');
   };
 
+  const codeString = "";
+
   return (
     <div className="playgroundWrapper">
       <ThemeProvider theme={darkTheme}>
@@ -77,7 +79,7 @@ export default function LIFPlayground() {
             >
               <LIFControlPanel />
             </Container>
-            <EditorComponent />
+            <EditorComponent codeString={codeString}/>
           </Stack>
         </Grid>
         <Grid item>

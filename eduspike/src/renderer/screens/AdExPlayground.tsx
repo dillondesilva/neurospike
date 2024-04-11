@@ -15,6 +15,7 @@ import LIFPlotting from 'renderer/LIFPlotting';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
+import { adexDefaultCodeString } from 'renderer/defaultCodeStrings';
 
 // Following code for theme from MUI example
 const darkTheme = createTheme({
@@ -31,6 +32,27 @@ export default function AdExPlayground() {
   const returnHome = () => {
     navigate('/');
   };
+
+  const codeString = `"""
+AdEx Model Sample
+
+The following is some sample code for how you can use
+the in-built neurospikelib AdEx model to run your simulation
+"""
+from neurospikelib.adex import AdEx
+
+# Now perform same computation using neurospikelib
+# Note that taum is equivalent to product of R and C
+pulses = [{
+    "start": 0,
+    "end": 1000,
+    "amp": 19
+}]
+
+v, time_vec = AdEx.simulate(resting_v=-72, membrane_c=15, 
+membrane_r=1, simulation_duration=1000, resolution=1, 
+pulses=pulses, initial_v=-70, v_reset=-75, threshold_v=-55, 
+sharpness=2, a=0.1, b=0.75, tau_w=400)`;
 
   return (
     <div className="playgroundWrapper">
@@ -77,7 +99,7 @@ export default function AdExPlayground() {
             >
               <LIFControlPanel />
             </Container>
-            <EditorComponent />
+            <EditorComponent codeString={adexDefaultCodeString}/>
           </Stack>
         </Grid>
         <Grid item>
