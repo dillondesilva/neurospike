@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import '../App.css';
 import EditorComponent from 'renderer/EditorComponent';
-import LIFControlPanel from 'renderer/LIFControlPanel';
+import AdExControlPanel from 'renderer/AdExControlPanel';
 import LIFSimulation from 'renderer/LIFSimulation';
 import LIFPlotting from 'renderer/LIFPlotting';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -97,7 +97,7 @@ sharpness=2, a=0.1, b=0.75, tau_w=400)`;
                 borderRadius: '10px',
               }}
             >
-              <LIFControlPanel />
+              <AdExControlPanel />
             </Container>
             <EditorComponent codeString={adexDefaultCodeString}/>
           </Stack>

@@ -74,6 +74,7 @@ export default function EditorComponent({ codeString }) {
     height: '45vh',
     basicSetup: {
       foldGutter: true,
+      indentOnInput: false
     },
     onChange: (value) => {
       setEditorContent(value);

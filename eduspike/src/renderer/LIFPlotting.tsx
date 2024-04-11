@@ -55,6 +55,13 @@ const options = {
       },
     },
   },
+  elements:{
+    point:{
+        borderWidth: 0,
+        radius: 10,
+        backgroundColor: 'rgba(0,0,0,0)'
+    }
+  }
 };
 
 export default function LIFPlotting() {
