@@ -11,36 +11,32 @@ export default function ModeSelection() {
   };
 
   return (
-    <div className="modeSelectionWrapper">
-      <Box
-        sx={{
-          textAlign: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <h1>🧠 Neurospike Education 🧠</h1>
-      </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'nowrap',
-        }}
-      >
-        <ModeOptionCard
-          title="LIF Model Playground"
-          description={playgroundDescriptions.lif}
-          playgroundRef="/lif"
-        />
-        {/* <ModeOptionCard
-          title="EIF Model Playground"
-          description={playgroundDescriptions.eif}
-        /> */}
-        {/* <ModeOptionCard
-          title="HH Spike Playground"
-          description={playgroundDescriptions.hhSpike}
-        /> */}
-      </Box>
+    <div>
+      <div class="grid grid-cols-2 gap-4 h-screen">
+
+        <div class="container p-16 content-center">
+          <div>
+            <img src='logo-white-bg.png' className='w-3/12' alt="logo"/>
+            <h1 className="text-4xl">Welcome to <h1 className="font-bold">Eduspike</h1></h1>
+            <p className="mt-4">Understanding computational neurons has never been more intuitive.</p>
+          </div>
+          <div>
+            <p className='pt-12'>Built by</p>
+            <div className='pt-4'>
+              <img src='dillon.jpg' className='w-1/12 rounded-full' alt="logo"></img>
+            </div>
+          </div>
+        </div> 
+
+        <div class="container p-16 content-center overflow-y">
+          <div className='pt-6'>
+            <ModeOptionCard title="LIF Playground" description={playgroundDescriptions.lif}/>
+          </div>
+          <div className='pt-6'>
+            <ModeOptionCard title="AdEx Playground" description={playgroundDescriptions.lif}/>
+          </div>
+        </div> 
+      </div>
     </div>
   );
 }

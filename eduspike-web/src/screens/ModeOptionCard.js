@@ -13,7 +13,7 @@ export default function ModeOptionCard(props: {
 
   return (
     <div>
-      <Box
+      {/* <Box
         sx={{
           padding: '1.5vw',
         }}
@@ -37,7 +37,20 @@ export default function ModeOptionCard(props: {
             </Button>
           </CardContent>
         </Card>
-      </Box>
+      </Box> */}
+      <div className='grid grid-cols-3 w-full h-[293px] rounded-[20px] bg-[#010A22]'>
+        <div></div>
+        <div className='col-span-2 p-6 content-center'>
+          <h1 className='text-2xl text-[#D0DCFF] font-bold'>{props.title}</h1>
+          <p className='pt-2 text-[#D0DCFF]'>{props.description}</p>
+          <div className='flex content-center justify-center mt-4 h-8 w-4/12 \
+          bg-[#D0DCFF] rounded-lg hover:bg-green'>
+            <button>
+              <p className='font-bold '>EXPLORE</p>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

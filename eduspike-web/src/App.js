@@ -2,15 +2,17 @@ import logo from './logo.svg';
 import './App.css';
 import {
   BrowserRouter as Router,
-  Switch,
+  Routes,
   Route,
-  Link
 } from "react-router-dom";
+import ModeSelection from './screens/ModeSelection';
 
 function App() {
   return (
     <Router>
-      <Link to="/">Home</Link>
+      <Routes>
+        <Route path="/" element={<ModeSelection />} />
+      </Routes>
     </Router>
   );
 }
