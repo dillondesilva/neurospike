@@ -14,14 +14,15 @@ async function hello_python(content) {
     indexURL: './pyodide/',
   });
 
-  pyodide.setStdout({ batched: (string) => {
-    console.log(string);
-    window.electron.ipcRenderer.sendMessage('run-code', [string]);
-  } });
+  pyodide.setStdout({
+    batched: (string) => {
+      window.electron.ipcRenderer.sendMessage('run-code', [string]);
+    },
+  });
 
-  await pyodide.loadPackage("numpy");
+  await pyodide.loadPackage('numpy');
   await pyodide.loadPackage('./pyodide/neurospikelib-0.1.0-py3-none-any.whl');
-  console.log("now running python");
+  console.log('now running python');
   let val = await pyodide.runPythonAsync(content);
   return val;
 }
@@ -40,7 +41,6 @@ function CodeStatusElement(props: any) {
   };
 
   window.electron.ipcRenderer.on('run-code', async (arg: string) => {
-    console.log(arg);
     setIsCodeRunning(false);
   });
 
@@ -62,9 +62,9 @@ function CodeStatusElement(props: any) {
   return <CircularProgress sx={{ zIndex: 15, float: 'right' }} />;
 }
 
-export default function EditorComponent() {
+export default function EditorComponent({ codeString }) {
   const editor = useRef();
-  const [editorContent, setEditorContent] = useState(code);
+  const [editorContent, setEditorContent] = useState(codeString);
 
   const { setContainer } = useCodeMirror({
     container: editor.current,
@@ -72,6 +72,10 @@ export default function EditorComponent() {
     theme: vscodeDark,
     value: editorContent,
     height: '45vh',
+    basicSetup: {
+      foldGutter: true,
+      indentOnInput: false
+    },
     onChange: (value) => {
       setEditorContent(value);
     },

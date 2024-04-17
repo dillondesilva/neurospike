@@ -1,7 +1,6 @@
 from .lif_output import LIFOutput
 
 import numpy as np
-import json
 import sys
 
 DEFAULT_NUM_TIMEPOINTS = 101
@@ -27,7 +26,7 @@ class LIF:
     """
 
     @staticmethod
-    def visualize_custom_lif(membrane_v_vec, time_vec, current_vec):
+    def visualize_custom_lif(membrane_v_vec, time_vec, current_vec, threshold_v=-55):
         '''
         Creates EduSpike compatible output based on values from custom 
         LIF model
@@ -39,16 +38,18 @@ class LIF:
 
         # Create output instance
         simulation_output = LIFOutput()
-        simulation_output.set_membrane_voltage(membrane_v_vec)
+        simulation_output.set_membrane_voltage(membrane_v_vec, threshold_v)
         simulation_output.set_timepoints(time_vec)
         simulation_output.set_injected_current(current_vec)
         sys.stdout.write(simulation_output.jsonify())
-
+        sys.stdout.write('\n')
 
     @staticmethod
     def simulate(
         threshold_v=DEFAULT_THRESHOLD_VOLTAGE,
         resting_v=DEFAULT_RESTING_VOLTAGE,
+        initial_v=DEFAULT_RESTING_VOLTAGE,
+        v_reset=DEFAULT_RESTING_VOLTAGE,
         membrane_c=DEFAULT_MEMBRANE_CAPACITANCE,
         membrane_r=DEFAULT_MEMBRANE_RESISTANCE,
         simulation_duration=DEFAULT_SIMULATION_DURATION,
@@ -63,13 +64,15 @@ class LIF:
             - Membrane resistance (Ohms)
             - Pulses object
         """
-        num_points = simulation_duration * resolution
-        current_vec = np.zeros(num_points)
+        num_points = (simulation_duration * resolution)
+        if num_points == 0:
+            return [[], []]
+
         membrane_v_vec = np.zeros(num_points)
-        membrane_v_vec[0] = resting_v
-        dt = (simulation_duration / (num_points - 1))
+        membrane_v_vec[0] = initial_v
+        dt = simulation_duration / num_points
         time_vec = np.linspace(0, simulation_duration, num_points)
-        v_reset = resting_v
+        current_vec = np.zeros(len(time_vec))
 
         for pulse in pulses:
             pulse_start = pulse["start"]
@@ -79,7 +82,7 @@ class LIF:
             # Determining indices to apply pulse
             pulse_start_idx = pulse_start * resolution
             pulse_end_idx = pulse_end * resolution
-            pulse_app_indices = [range(pulse_start_idx, pulse_end_idx + 1)]
+            pulse_app_indices = [range(pulse_start_idx, pulse_end_idx)]
             pulse_vec = np.zeros(len(pulse_app_indices))
             pulse_vec.fill(pulse_amplitude)
             np.put(current_vec, pulse_app_indices, pulse_vec)
@@ -102,3 +105,4 @@ class LIF:
         simulation_output.set_injected_current(current_vec)
         sys.stdout.write(simulation_output.jsonify())
         sys.stdout.write('\n')
+        return [membrane_v_vec, time_vec]

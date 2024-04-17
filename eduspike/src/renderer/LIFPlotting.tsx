@@ -55,6 +55,13 @@ const options = {
       },
     },
   },
+  elements:{
+    point:{
+        borderWidth: 0,
+        radius: 10,
+        backgroundColor: 'rgba(0,0,0,0)'
+    }
+  }
 };
 
 export default function LIFPlotting() {
@@ -63,10 +70,7 @@ export default function LIFPlotting() {
   const [isPlotUpdated, setIsPlotUpdated] = useState(false);
 
   const updatePlotData = () => {
-    console.log('Updating plot data');
-    console.log(simulationDataStr);
     const parsedData = JSON.parse(simulationDataStr);
-    console.log(parsedData);
     const membraneVoltage = parsedData.data.membrane_voltage;
 
     let timePoints = parsedData.data.timepoints;

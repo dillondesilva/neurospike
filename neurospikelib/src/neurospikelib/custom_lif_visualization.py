@@ -7,7 +7,7 @@
 ## Import packages and specify some settings ##
 ###############################################
 # Import packages
-from neurospikelib.lif import visualize_custom_lif
+from neurospikelib.lif import LIF
 import numpy as np
 
 ###############################################
@@ -34,4 +34,4 @@ V=(V0-EL-I0)*np.exp(-time/taum)+EL+I0
 # Porting to Neurospike
 current = np.zeros(len(time))
 current.fill(I0)
-visualize_custom_lif(V, time.tolist(), current)
+LIF.visualize_custom_lif(V, time.tolist(), current)

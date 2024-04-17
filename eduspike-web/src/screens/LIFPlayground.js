@@ -15,7 +15,6 @@ import LIFPlotting from 'renderer/LIFPlotting';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
-import { lifDefaultCodeString } from 'renderer/defaultCodeStrings';
 
 // Following code for theme from MUI example
 const darkTheme = createTheme({
@@ -32,8 +31,6 @@ export default function LIFPlayground() {
   const returnHome = () => {
     navigate('/');
   };
-
-  const codeString = "";
 
   return (
     <div className="playgroundWrapper">
@@ -80,7 +77,7 @@ export default function LIFPlayground() {
             >
               <LIFControlPanel />
             </Container>
-            <EditorComponent codeString={lifDefaultCodeString}/>
+            <EditorComponent />
           </Stack>
         </Grid>
         <Grid item>

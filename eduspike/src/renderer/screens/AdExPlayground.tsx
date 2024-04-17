@@ -9,13 +9,13 @@ import {
 } from '@mui/material';
 import '../App.css';
 import EditorComponent from 'renderer/EditorComponent';
-import LIFControlPanel from 'renderer/LIFControlPanel';
+import AdExControlPanel from 'renderer/AdExControlPanel';
 import LIFSimulation from 'renderer/LIFSimulation';
 import LIFPlotting from 'renderer/LIFPlotting';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
-import { lifDefaultCodeString } from 'renderer/defaultCodeStrings';
+import { adexDefaultCodeString } from 'renderer/defaultCodeStrings';
 
 // Following code for theme from MUI example
 const darkTheme = createTheme({
@@ -27,13 +27,32 @@ const darkTheme = createTheme({
   },
 });
 
-export default function LIFPlayground() {
+export default function AdExPlayground() {
   const navigate = useNavigate();
   const returnHome = () => {
     navigate('/');
   };
 
-  const codeString = "";
+  const codeString = `"""
+AdEx Model Sample
+
+The following is some sample code for how you can use
+the in-built neurospikelib AdEx model to run your simulation
+"""
+from neurospikelib.adex import AdEx
+
+# Now perform same computation using neurospikelib
+# Note that taum is equivalent to product of R and C
+pulses = [{
+    "start": 0,
+    "end": 1000,
+    "amp": 19
+}]
+
+v, time_vec = AdEx.simulate(resting_v=-72, membrane_c=15, 
+membrane_r=1, simulation_duration=1000, resolution=1, 
+pulses=pulses, initial_v=-70, v_reset=-75, threshold_v=-55, 
+sharpness=2, a=0.1, b=0.75, tau_w=400)`;
 
   return (
     <div className="playgroundWrapper">
@@ -57,7 +76,7 @@ export default function LIFPlayground() {
             >
               <HomeIcon />
             </IconButton>
-            <p>Leaky Integrate and Fire (LIF) Playground</p>
+            <p>Adaptive Exponential Integrate-and-Fire (AdEx) Playground</p>
           </Toolbar>
         </AppBar>
       </ThemeProvider>
@@ -78,9 +97,9 @@ export default function LIFPlayground() {
                 borderRadius: '10px',
               }}
             >
-              <LIFControlPanel />
+              <AdExControlPanel />
             </Container>
-            <EditorComponent codeString={lifDefaultCodeString}/>
+            <EditorComponent codeString={adexDefaultCodeString}/>
           </Stack>
         </Grid>
         <Grid item>

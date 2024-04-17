@@ -28,7 +28,7 @@ class LIFOutput:
             "membrane_color_v": list(),
         }
 
-    def set_membrane_voltage(self, membrane_voltage, threshold_v):
+    def set_membrane_voltage(self, membrane_voltage, threshold_v=-55):
         """
         Set membrane voltage for LIFOutput and corresponding visualization
         """

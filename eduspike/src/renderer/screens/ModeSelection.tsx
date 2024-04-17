@@ -8,6 +8,7 @@ export default function ModeSelection() {
     eif: 'See how factoring in exponential changes to membrane voltage produce more accurate integrate-and-fire models',
     hhSpike:
       'Use the Hodgkin-Huxley Model to explore the behaviour of different ion channels during nerve impulse propagation',
+    adex: 'Improve the realism of the integrate-and-fire model by introducing positive feedback loops into your model',
   };
 
   return (
@@ -18,7 +19,7 @@ export default function ModeSelection() {
           justifyContent: 'center',
         }}
       >
-        <h1>🧠 Neurospike Education 🧠</h1>
+        <h1>🧠 Eduspike 🧠</h1>
       </Box>
       <Box
         sx={{
@@ -32,14 +33,16 @@ export default function ModeSelection() {
           description={playgroundDescriptions.lif}
           playgroundRef="/lif"
         />
-        {/* <ModeOptionCard
-          title="EIF Model Playground"
-          description={playgroundDescriptions.eif}
-        /> */}
-        {/* <ModeOptionCard
-          title="HH Spike Playground"
+        <ModeOptionCard
+          title="Hodgkin-Huxley Model Playground"
           description={playgroundDescriptions.hhSpike}
-        /> */}
+          playgroundRef='/hh'
+        />
+        <ModeOptionCard
+          title="AdEx Model Playground"
+          description={playgroundDescriptions.adex}
+          playgroundRef='/adex'
+        />
       </Box>
     </div>
   );
