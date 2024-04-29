@@ -28,9 +28,9 @@ export default function ModeSelection() {
           </div>
         </div> 
 
-        <div class="container p-16 content-center overflow-y">
+        <div class="container p-16 content-center self-center">
           <div className='pt-6'>
-            <ModeOptionCard title="LIF Playground" description={playgroundDescriptions.lif}/>
+            <ModeOptionCard title="LIF Playground" description={playgroundDescriptions.lif} playgroundRef="/lif"/>
           </div>
           <div className='pt-6'>
             <ModeOptionCard title="AdEx Playground" description={playgroundDescriptions.lif}/>

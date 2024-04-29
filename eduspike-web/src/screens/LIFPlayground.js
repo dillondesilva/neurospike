@@ -8,13 +8,14 @@ import {
   Typography,
 } from '@mui/material';
 import '../App.css';
-import EditorComponent from 'renderer/EditorComponent';
-import LIFControlPanel from 'renderer/LIFControlPanel';
-import LIFSimulation from 'renderer/LIFSimulation';
-import LIFPlotting from 'renderer/LIFPlotting';
+import EditorComponent from '../components/EditorComponent';
+import LIFControlPanel from '../components/LIFControlPanel';
+import LIFSimulation from '../components/LIFSimulation';
+import LIFPlotting from '../components/LIFPlotting';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
+import PythonEditor from 'codehelium';
 
 // Following code for theme from MUI example
 const darkTheme = createTheme({
@@ -77,7 +78,8 @@ export default function LIFPlayground() {
             >
               <LIFControlPanel />
             </Container>
-            <EditorComponent />
+            <PythonEditor height="39vh" width="45vw"/>
+            {/* <EditorComponent /> */}
           </Stack>
         </Grid>
         <Grid item>

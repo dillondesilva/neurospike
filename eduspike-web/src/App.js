@@ -6,12 +6,14 @@ import {
   Route,
 } from "react-router-dom";
 import ModeSelection from './screens/ModeSelection';
+import LIFPlayground from './screens/LIFPlayground';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<ModeSelection />} />
+        <Route path="/lif" element={<LIFPlayground />} />
       </Routes>
     </Router>
   );
