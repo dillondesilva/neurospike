@@ -64,55 +64,45 @@ const options = {
   }
 };
 
-export default function LIFPlotting() {
-  const [simulationDataStr, setSimulationDataStr] = useState('');
+export default function LIFPlotting(props) {
   const [plotData, setPlotData] = useState(seedData);
   const [isPlotUpdated, setIsPlotUpdated] = useState(false);
 
   const updatePlotData = () => {
-    const parsedData = JSON.parse(simulationDataStr);
-    const membraneVoltage = parsedData.data.membrane_voltage;
-
-    let timePoints = parsedData.data.timepoints;
-    timePoints = timePoints.map((timepoint: number) => {
-      return Number(timepoint.toFixed(0));
-    });
-
-    const newPlotData = {
-      labels: timePoints,
-      datasets: [
-        {
-          label: 'Transmembrane Potential',
-          data: membraneVoltage,
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-        },
-        // {
-        //   label: 'Applied Current',
-        //   data: appliedCurrent,
-        //   fill: false,
-        //   borderColor: 'rgb(255, 0, 0)',
-        // },
-      ],
-    };
-
-    setPlotData(newPlotData);
+    try {
+      console.log(props.simulationDataStr)
+      const parsedData = JSON.parse(props.simulationDataStr[0]);
+      console.log(parsedData)
+      const membraneVoltage = parsedData.data.membrane_voltage;
+  
+      let timePoints = parsedData.data.timepoints;
+      timePoints = timePoints.map((timepoint) => {
+        return Number(timepoint.toFixed(0));
+      });
+  
+      const newPlotData = {
+        labels: timePoints,
+        datasets: [
+          {
+            label: 'Transmembrane Potential',
+            data: membraneVoltage,
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+          },
+        ],
+      };
+  
+      setPlotData(newPlotData);  
+    } catch (e) {
+      console.log(e)
+    }
+  
   };
 
-  // window.electron.ipcRenderer.on('run-code', async (arg: string) => {
-  //   if (arg.includes('{')) {
-  //     setIsPlotUpdated(true);
-  //     const dataStartingIndex = arg.indexOf('{');
-  //     setSimulationDataStr(arg.substring(dataStartingIndex, arg.length));
-  //   }
-  // });
-
   useEffect(() => {
-    if (isPlotUpdated) {
       updatePlotData();
-    }
-    // updatePlotData();
-  }, [simulationDataStr, isPlotUpdated]);
+    // updatePlotData
+  }, [props.simulationDataStr]);
 
   return (
     <Container

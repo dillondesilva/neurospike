@@ -12,10 +12,12 @@ import EditorComponent from '../components/EditorComponent';
 import LIFControlPanel from '../components/LIFControlPanel';
 import LIFSimulation from '../components/LIFSimulation';
 import LIFPlotting from '../components/LIFPlotting';
+import PyodideWorker from '../components/PyodideWorker';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
 import PythonEditor from 'codehelium';
+import { useEffect, useState } from 'react';
 
 // Following code for theme from MUI example
 const darkTheme = createTheme({
@@ -28,6 +30,14 @@ const darkTheme = createTheme({
 });
 
 export default function LIFPlayground() {
+  const [ pyodideInstance, setPyodideInstance ] = useState(null);
+  const [ consoleOutputs, setConsoleOutputs ] = useState([]);
+
+  useEffect(() => {
+    console.log("Output change");
+    console.log(consoleOutputs);
+  }, [consoleOutputs, setConsoleOutputs]);
+
   const navigate = useNavigate();
   const returnHome = () => {
     navigate('/');
@@ -35,6 +45,7 @@ export default function LIFPlayground() {
 
   return (
     <div className="playgroundWrapper">
+      <PyodideWorker setterPyodideInstance={setPyodideInstance}/>
       <ThemeProvider theme={darkTheme}>
         <AppBar
           position="static"
@@ -78,7 +89,8 @@ export default function LIFPlayground() {
             >
               <LIFControlPanel />
             </Container>
-            <PythonEditor height="39vh" width="45vw"/>
+            <PythonEditor height="39vh" width="45vw" 
+            pyodideInstance={pyodideInstance} consoleOutputSetter={setConsoleOutputs}/>
             {/* <EditorComponent /> */}
           </Stack>
         </Grid>
@@ -95,7 +107,7 @@ export default function LIFPlayground() {
                 justifyContent: 'center',
               }}
             >
-              <LIFPlotting />
+              <LIFPlotting simulationDataStr={consoleOutputs} />
             </Container>
             <Container
               sx={{

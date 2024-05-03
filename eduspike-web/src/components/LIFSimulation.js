@@ -211,7 +211,7 @@ export default function LIFSimulation() {
         position: 'relative',
         height: '100%',
         width: '100%',
-        padding: '0!important',
+        padding: '1x',
         display: 'flex',
         justifyContent: 'center',
       }}
