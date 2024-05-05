@@ -98,7 +98,7 @@ function TestMesh(data, active) {
   let tick = 0;
   useFrame(({ clock }) => {
     if (data.active) {
-      if (tick === 6) {
+      if (tick === 3) {
         updateTimepoint();
       } else {
         tick += 1;
@@ -143,9 +143,9 @@ function TestMesh(data, active) {
         anchorX="center" // default
         anchorY="middle" // default
       >
-        {timeText}
-        {'\n\n'}
         {currentMembraneVText}
+        {'\n\n'}
+        {timeText}
       </Text>
       <mesh ref={testRef} visible position={[0, 0, 0]}>
         <torusGeometry args={[0.03, 1.7, 20, 100]} />
@@ -171,9 +171,7 @@ function TestMesh(data, active) {
   );
 }
 
-export default function LIFSimulation() {
-  const [simulationDataStr, setSimulationDataStr] = useState('');
-  const [isUpdated, setUpdatedStatus] = useState(false);
+export default function LIFSimulation(props) {
   const [isActive, setActiveState] = useState(true);
   const [visualization, setData] = useState(INITIAL_LIF_VISUALISATION_DATA);
 
@@ -185,63 +183,40 @@ export default function LIFSimulation() {
   }
 
   const updateVisualisation = () => {
-    const parsedData = JSON.parse(simulationDataStr);
-    setData(parsedData);
+    try {
+      const parsedData = JSON.parse(props.simulationDataStr[0]);
+      setData(parsedData);
+
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  // window.electron.ipcRenderer.on('run-code', async (arg: string) => {
-  //   if (arg.includes('{')) {
-  //     setUpdatedStatus(true);
-  //     const dataStartingIndex = arg.indexOf('{');
-  //     await setSimulationDataStr(arg.substring(dataStartingIndex, arg.length));
-  //     updateVisualisation();
-  //   }
-  // });
-
   useEffect(() => {
-    if (isUpdated) {
-      updateVisualisation();
-    }
-    // updatePlotData();
-  }, [simulationDataStr, isUpdated]);
+    updateVisualisation();
+  }, [props.simulationDataStr]);
 
   return (
-    <Container
-      sx={{
-        position: 'relative',
-        height: '100%',
-        width: '100%',
-        padding: '1x',
-        display: 'flex',
-        justifyContent: 'center',
-      }}
-    >
-      <Container
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          height: '100%',
-          padding: '0!important',
-        }}
-      >
+    // <Container
+    //   // sx={{
+    //   //   position: 'relative',
+    //   //   height: '100%',
+    //   //   width: '100%',
+    //   //   display: 'flex',
+    //   //   justifyContent: 'center',
+    //   // }}
+    //   className="rounded-[20px] px-0"
+    // >
+    <div className="w-[45vw] h-[45vh] overflow-hidden \
+    grid place-items-center rounded-[20px] relative">
+      <div className="w-[45vw] h-[47vh] grid place-items-center">
         <Canvas>
           <ambientLight intensity={1.5} />
           <TestMesh data={visualization} active={isActive} />
         </Canvas>
-      </Container>
-      <Container
-        sx={{
-          position: 'absolute',
-          zIndex: 10,
-          padding: 0,
-          bottom: 10,
-          width: '70%',
-          display: 'flex',
-          justifyContent: 'space-evenly',
-        }}
-      >
-        <IconButton
+      </div>
+      <div className="z-[10] absolute bottom-[2%]">
+      <IconButton
           edge="start"
           color="inherit"
           aria-label="menu"
@@ -251,7 +226,30 @@ export default function LIFSimulation() {
         >
           {playButton}
         </IconButton>
-      </Container>
-    </Container>
+      </div>
+    </div>
+      // <Container
+      //   sx={{
+      //     position: 'absolute',
+      //     zIndex: 10,
+      //     padding: 0,
+      //     bottom: 10,
+      //     width: '70%',
+      //     display: 'flex',
+      //     justifyContent: 'space-evenly',
+      //   }}
+      // >
+      //   <IconButton
+      //     edge="start"
+      //     color="inherit"
+      //     aria-label="menu"
+      //     onClick={() => {
+      //       setActiveState(!isActive);
+      //     }}
+      //   >
+      //     {playButton}
+      //   </IconButton>
+      // </Container>
+    // </Container>
   );
 }

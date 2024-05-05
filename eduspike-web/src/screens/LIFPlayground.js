@@ -5,6 +5,10 @@ import {
   Container,
   Toolbar,
   IconButton,
+  Divider,
+  Drawer,
+  List,
+  ListItem
 } from '@mui/material';
 import '../App.css';
 import LIFControlPanel from '../components/LIFControlPanel';
@@ -13,11 +17,12 @@ import LIFPlotting from '../components/LIFPlotting';
 import PyodideWorker from '../components/PyodideWorker';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import HomeIcon from '@mui/icons-material/Home';
+import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import PythonEditor from 'codehelium';
 import { Loading } from 'react-loading-dot'
 import { lifDefaultCodeString } from '../defaultCodeStrings';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 // Following code for theme from MUI example
 const darkTheme = createTheme({
@@ -33,7 +38,8 @@ export default function LIFPlayground() {
   const [ pyodideInstance, setPyodideInstance ] = useState();
   const [ consoleOutputs, setConsoleOutputs ] = useState([]);
   const [ isPyodideLoaded, setPyodideLoaded ] = useState(false);
-
+  const [ menuOpen, setMenuOpen ] = useState(false);
+  const editor = useRef();
   // if(!componentMounted){
   //   return (
   //     <div className="content-center">
@@ -82,6 +88,32 @@ export default function LIFPlayground() {
           }}
         >
           <Toolbar>
+            <div>
+            <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            onClick={() => setMenuOpen(!menuOpen)}
+            sx={{ mr: 1.5 }}
+            >
+            <MenuIcon />
+            </IconButton>
+            <Drawer open={menuOpen} onClose={() => setMenuOpen(false)}>
+              <List>
+                <ListItem>
+                  <h1 class="text-xl font-bold">LIF Sandbox</h1>
+                </ListItem>
+                <Divider />
+                <ListItem>
+                  <button onClick={() => {editor.initialValue = "hello"}}>
+                    Exercise 1: Zero Step Current
+                  </button>
+                </ListItem>
+                <ListItem>Exercise 2: Exploring Tau</ListItem>
+              </List>
+            </Drawer>
+            </div>
             <IconButton
               edge="start"
               color="inherit"
@@ -91,7 +123,7 @@ export default function LIFPlayground() {
             >
               <HomeIcon />
             </IconButton>
-            <p>Leaky Integrate and Fire (LIF) Playground</p>
+            <p>Leaky Integrate and Fire (LIF) Sandbox</p>
           </Toolbar>
         </AppBar>
       <Grid
@@ -121,6 +153,7 @@ export default function LIFPlayground() {
               pyodideInstance={pyodideInstance} 
               consoleOutputSetter={setConsoleOutputs}
               initialValue={lifDefaultCodeString}
+              ref={editor}
             />
             {/* <EditorComponent /> */}
           </Stack>
@@ -140,18 +173,18 @@ export default function LIFPlayground() {
             >
               <LIFPlotting simulationDataStr={consoleOutputs} />
             </Container>
-            <Container
+            {/* <Container
               sx={{
                 height: '45vh',
                 width: '45vw',
-                border: '1px solid #e0e0e0',
                 borderRadius: '10px',
                 padding: '0!important',
+                borderRadius: '20px',
                 overflowY: 'auto',
               }}
-            >
-              <LIFSimulation />
-            </Container>
+            > */}
+              <LIFSimulation simulationDataStr={consoleOutputs}/>
+            {/* </Container> */}
           </Stack>
         </Grid>
       </Grid>

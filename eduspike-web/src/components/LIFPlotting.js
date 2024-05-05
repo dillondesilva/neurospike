@@ -119,7 +119,7 @@ export default function LIFPlotting(props) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          paddingBottom: '0.5vh',
+          paddingBottom: '0.2vh',
         }}
       >
         <Line data={plotData} options={options} />

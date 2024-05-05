@@ -30,10 +30,10 @@ export default function ModeSelection() {
 
         <div class="container p-16 content-center self-center">
           <div className='pt-6'>
-            <ModeOptionCard title="LIF Playground" description={playgroundDescriptions.lif} playgroundRef="/lif"/>
+            <ModeOptionCard title="LIF Sandbox" description={playgroundDescriptions.lif} playgroundRef="/lif"/>
           </div>
           <div className='pt-6'>
-            <ModeOptionCard title="AdEx Playground" description={playgroundDescriptions.lif}/>
+            <ModeOptionCard title="AdEx Sandbox" description={playgroundDescriptions.lif}/>
           </div>
         </div> 
       </div>
