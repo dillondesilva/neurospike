@@ -5,10 +5,8 @@ import {
   Container,
   Toolbar,
   IconButton,
-  Typography,
 } from '@mui/material';
 import '../App.css';
-import EditorComponent from '../components/EditorComponent';
 import LIFControlPanel from '../components/LIFControlPanel';
 import LIFSimulation from '../components/LIFSimulation';
 import LIFPlotting from '../components/LIFPlotting';
@@ -17,6 +15,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
 import PythonEditor from 'codehelium';
+import { Loading } from 'react-loading-dot'
+import { lifDefaultCodeString } from '../defaultCodeStrings';
 import { useEffect, useState } from 'react';
 
 // Following code for theme from MUI example
@@ -30,8 +30,18 @@ const darkTheme = createTheme({
 });
 
 export default function LIFPlayground() {
-  const [ pyodideInstance, setPyodideInstance ] = useState(null);
+  const [ pyodideInstance, setPyodideInstance ] = useState();
   const [ consoleOutputs, setConsoleOutputs ] = useState([]);
+  const [ isPyodideLoaded, setPyodideLoaded ] = useState(false);
+
+  // if(!componentMounted){
+  //   return (
+  //     <div className="content-center">
+  //       <h1>Just hold on</h1>
+  //     </div>
+  //   )
+  // }
+
 
   useEffect(() => {
     console.log("Output change");
@@ -43,17 +53,32 @@ export default function LIFPlayground() {
     navigate('/');
   };
 
+  if(pyodideInstance == null) {
+    return (
+      <div className="h-[100vh] w-[100vw] content-center text-center">
+        <PyodideWorker setterPyodideInstance={setPyodideInstance}/>
+          <div className="flex flex-row">
+            {/* <div>
+              <h1 className="animate-bounce text-4xl font-bold">🧠 is loading LIF sandbox</h1>
+            </div> */}
+            <div>
+              <Loading background="#000000" size="0.5em" margin="0.3em"/>
+            </div>
+          </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="playgroundWrapper">
-      <PyodideWorker setterPyodideInstance={setPyodideInstance}/>
-      <ThemeProvider theme={darkTheme}>
+    <div className="playgroundWrapper overscroll-none overflow-y-hidden">
         <AppBar
           position="static"
-          color="primary"
+          className="bg-[#010A22]"
           sx={{
             height: '6vh',
             justifyContent: 'center',
             boxShadow: 0,
+            backgroundColor: '#010A22'
           }}
         >
           <Toolbar>
@@ -69,7 +94,6 @@ export default function LIFPlayground() {
             <p>Leaky Integrate and Fire (LIF) Playground</p>
           </Toolbar>
         </AppBar>
-      </ThemeProvider>
       <Grid
         container
         spacing={0}
@@ -83,14 +107,21 @@ export default function LIFPlayground() {
               sx={{
                 height: '42vh',
                 width: '45vw',
-                border: '1px solid #e0e0e0',
-                borderRadius: '10px',
+                padding: '0!important'
               }}
             >
-              <LIFControlPanel />
+              <LIFControlPanel 
+                pyodideInstance={pyodideInstance}  
+                consoleOutputSetter={setConsoleOutputs}
+              />
             </Container>
-            <PythonEditor height="39vh" width="45vw" 
-            pyodideInstance={pyodideInstance} consoleOutputSetter={setConsoleOutputs}/>
+            <PythonEditor 
+              height="39vh" 
+              width="45vw" 
+              pyodideInstance={pyodideInstance} 
+              consoleOutputSetter={setConsoleOutputs}
+              initialValue={lifDefaultCodeString}
+            />
             {/* <EditorComponent /> */}
           </Stack>
         </Grid>

@@ -26,7 +26,7 @@ async function hello_python(content) {
   return val;
 }
 
-function CodeStatusElement(props: any) {
+function CodeStatusElement(props) {
   const [isCodeRunning, setIsCodeRunning] = useState(false);
   const runCode = () => {
     setIsCodeRunning(true);

@@ -1,32 +1,6 @@
-import {
-  Button,
-  ToggleButton,
-  ToggleButtonGroup,
-  Slider,
-  Stack,
-  Container,
-  Tooltip,
-} from '@mui/material';
-
 import { useState, useRef } from 'react';
-import { loadPyodide } from 'pyodide';
-
-async function hello_python(content) {
-  const pyodide = await loadPyodide({
-    indexURL: './pyodide/',
-  });
-
-  pyodide.setStdout({ batched: (string) => {
-    console.log(new Blob([string]).size);
-    window.electron.ipcRenderer.sendMessage('run-code', [string]);
-  } });
-
-  await pyodide.loadPackage("numpy");
-  await pyodide.loadPackage('./pyodide/neurospikelib-0.1.0-py3-none-any.whl');
-  console.log("now running python");
-  let val = await pyodide.runPythonAsync(content);
-  return val;
-}
+import ParameterSlider from './ParameterSlider';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 function getSimulationCode(
   inputCurrent,
@@ -51,7 +25,7 @@ const INITIAL_THRESHOLD_VOLTAGE = -55;
 const INITIAL_SIMULATION_DURATION = 100;
 const INITIAL_PULSE_DELAY = 0;
 
-export default function LIFControlPanel() {
+export default function LIFControlPanel(props) {
   const [inputCurrent, setInputCurrent] = useState(INITIAL_INPUT_CURRENT);
   const [pulseDuration, setPulseDuration] = useState(INITIAL_PULSE_DURATION);
   const [thresholdVoltage, setThresholdVoltage] = useState(
@@ -68,7 +42,7 @@ export default function LIFControlPanel() {
   const simulationDurationSlider = useRef();
   const pulseDelaySlider = useRef();
 
-  const runSimulation = () => {
+  const runSimulation = async () => {
     const codeString = getSimulationCode(
       inputCurrent,
       pulseDuration,
@@ -77,9 +51,33 @@ export default function LIFControlPanel() {
       pulseDelay
     );
 
-    hello_python(codeString);
+    // Execute code string
+    let execData = {
+      logs: [],
+    }
 
-    // window.electron.ipcRenderer.sendMessage('run-code', [codeString]);
+    props.pyodideInstance.setStdout({
+        batched: (msg) => {
+            let outputLine = msg;
+            execData.logs.push(outputLine);
+        }
+    });
+
+    props.pyodideInstance.setStderr({
+        batched: (msg) => {
+            let outputLine = msg;
+            execData.logs.push(outputLine);
+        }
+    });
+
+    try {
+        await props.pyodideInstance.runPythonAsync(codeString);
+    } catch (e) {
+        let outputLine = e.message;
+        execData.logs.push(outputLine);
+    }
+
+    props.consoleOutputSetter(execData.logs);
   };
 
   const inputCurrentTooltipText =
@@ -96,146 +94,62 @@ export default function LIFControlPanel() {
     'Control when to introduce the pulse into the simulation';
 
   return (
-    <div>
-      <Stack
-        direction="row"
-        spacing={4}
-        sx={{
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Tooltip title={inputCurrentTooltipText} placement="right">
-          <p>Input current (nA):</p>
-        </Tooltip>
-        <Slider
-          sx={{
-            width: '20vw',
-          }}
-          min={0}
-          max={3}
-          step={0.1}
-          value={inputCurrent}
-          onChange={(_, newValue) => setInputCurrent(newValue)}
-          valueLabelDisplay="auto"
+    <div className="bg-[#010A22] justify-center \
+    h-full w-full rounded-[20px] p-6 flex flex-col">
+      <div>
+        <ParameterSlider 
+          parameterName={"Input current (nA)"}
+          tooltipText={inputCurrentTooltipText} 
           ref={inputCurrentSlider}
+          defaultValue={inputCurrent} 
+          setter={setInputCurrent}
+          rangeData={[0, 5, 0.1]}
         />
-      </Stack>
-      <Stack
-        direction="row"
-        spacing={4}
-        sx={{
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Tooltip title={pulseDurationTooltipText} placement="right">
-          <p>Pulse duration (ms):</p>
-        </Tooltip>
-        <Slider
-          sx={{
-            width: '20vw',
-          }}
-          min={0}
-          max={100}
-          step={10}
-          value={pulseDuration}
-          valueLabelDisplay="auto"
-          onChange={(_, newValue) => setPulseDuration(newValue)}
+        <ParameterSlider 
+          parameterName={"Pulse duration (ms)"}
+          tooltipText={pulseDurationTooltipText}
           ref={pulseDurationSlider}
+          defaultValue={pulseDuration}
+          setter={setPulseDuration}
+          rangeData={[0, 100, 10]}
         />
-      </Stack>
-      <Stack
-        direction="row"
-        spacing={4}
-        sx={{
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Tooltip title={membraneThresholdTooltipText} placement="right">
-          <p>Membrane threshold (mV):</p>
-        </Tooltip>
-        <Slider
-          sx={{
-            width: '20vw',
-          }}
-          min={-60}
-          max={30}
-          value={thresholdVoltage}
-          step={10}
-          valueLabelDisplay="auto"
-          onChange={(_, newValue) => setThresholdVoltage(newValue)}
+        <ParameterSlider 
+          parameterName={"Membrane threshold (mV)"}
+          tooltipText={membraneThresholdTooltipText}
           ref={membraneThresholdSlider}
+          defaultValue={thresholdVoltage}
+          setter={setThresholdVoltage}
+          rangeData={[-60, 30, 10]}
         />
-      </Stack>
-      <Stack
-        direction="row"
-        spacing={4}
-        sx={{
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Tooltip title={simulationDurationTooltipText} placement="right">
-          <p>Simultation duration (ms):</p>
-        </Tooltip>
-        <Slider
-          sx={{
-            width: '20vw',
-          }}
-          min={100}
-          max={500}
-          step={10}
-          value={simulationDuration}
-          valueLabelDisplay="auto"
-          onChange={(_, newValue) => setSimulationDuration(newValue)}
+        <ParameterSlider 
+          parameterName={"Simulation duration (ms)"}
+          tooltipText={simulationDurationTooltipText}
           ref={simulationDurationSlider}
+          defaultValue={simulationDuration}
+          setter={setSimulationDuration}
+          rangeData={[100, 500, 10]} 
         />
-      </Stack>
-      <Stack
-        direction="row"
-        spacing={4}
-        sx={{
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Tooltip title={pulseEntrypointTooltipText} placement="right">
-          <p>Pulse entrypoint (ms):</p>
-        </Tooltip>
-        <Slider
-          sx={{
-            width: '20vw',
-          }}
-          min={0}
-          max={100}
-          step={10}
-          value={pulseDelay}
-          valueLabelDisplay="auto"
-          onChange={(_, newValue) => setPulseDelay(newValue)}
+        <ParameterSlider 
+          parameterName={"Pulse entrypoint (ms)"}
+          tooltipText={pulseEntrypointTooltipText}
           ref={pulseDelaySlider}
+          defaultValue={pulseDelay}
+          setter={setPulseDelay}
+          rangeData={[0, 100, 10]} 
         />
-      </Stack>
-      <Stack
-        direction="row"
-        spacing={10}
-        sx={{
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          paddingTop: '7vh',
-        }}
-      >
-        <Button
-          variant="outlined"
-          sx={{
-            height: '5vh',
-          }}
+      </div>
+      <div className="pt-6">
+        <button
+          className="rounded-md px-2 \
+          border-2 justify-center place-content-center \
+          flex flex-row float-right hover:bg-[white] \
+          text-white hover:text-[#010A22]"
           onClick={runSimulation}
         >
+          <PlayArrowIcon className="pr-1" />
           <p>Run Simulation</p>
-        </Button>
-      </Stack>
+        </button>
+      </div>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import ModeOptionCard from './ModeOptionCard';
 
 export default function ModeSelection() {
-  const playgroundDescriptions: object = {
+  const playgroundDescriptions = {
     lif: 'Explore the simplest integrate-and-fire model by stimulating a neuron to form an action potential',
     eif: 'See how factoring in exponential changes to membrane voltage produce more accurate integrate-and-fire models',
     hhSpike:
