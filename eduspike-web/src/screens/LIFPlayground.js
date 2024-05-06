@@ -21,8 +21,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import PythonEditor from 'codehelium';
 import { Loading } from 'react-loading-dot'
-import { lifDefaultCodeString } from '../defaultCodeStrings';
 import { useEffect, useState, useRef } from 'react';
+import { lifDefaultCodeString } from '../defaultCodeStrings';
+import { lifZeroStepExerciseString } from '../defaultCodeStrings';
 
 // Following code for theme from MUI example
 const darkTheme = createTheme({
@@ -34,25 +35,21 @@ const darkTheme = createTheme({
   },
 });
 
-export default function LIFPlayground() {
+export default function LIFPlayground(props) {
   const [ pyodideInstance, setPyodideInstance ] = useState();
   const [ consoleOutputs, setConsoleOutputs ] = useState([]);
-  const [ isPyodideLoaded, setPyodideLoaded ] = useState(false);
+  const [ editorValue, setEditorValue ] = useState(lifDefaultCodeString);
+  const [ editorInitialText, setEditorInitialText ] = useState(lifDefaultCodeString);
   const [ menuOpen, setMenuOpen ] = useState(false);
-  const editor = useRef();
-  // if(!componentMounted){
-  //   return (
-  //     <div className="content-center">
-  //       <h1>Just hold on</h1>
-  //     </div>
-  //   )
-  // }
-
 
   useEffect(() => {
     console.log("Output change");
     console.log(consoleOutputs);
   }, [consoleOutputs, setConsoleOutputs]);
+
+  useEffect(() => {
+    console.log("rerendering")
+  }, [editorInitialText])
 
   const navigate = useNavigate();
   const returnHome = () => {
@@ -61,14 +58,18 @@ export default function LIFPlayground() {
 
   if(pyodideInstance == null) {
     return (
-      <div className="h-[100vh] w-[100vw] content-center text-center">
+      <div className="h-[100vh] w-[100vw] content-center text-center align-cent">
         <PyodideWorker setterPyodideInstance={setPyodideInstance}/>
-          <div className="flex flex-row">
-            {/* <div>
-              <h1 className="animate-bounce text-4xl font-bold">🧠 is loading LIF sandbox</h1>
-            </div> */}
+          <div className="flex flex-row justify-center">
+            <div className="pr-1"> 
+              <img 
+                src="logo-transparent-bg.png" 
+                className="w-[5vw] animate-bounce"
+                alt="logo"
+              ></img>
+            </div>
             <div>
-              <Loading background="#000000" size="0.5em" margin="0.3em"/>
+              <h1 className=" text-4xl font-bold">:   Setting things up</h1>
             </div>
           </div>
       </div>
@@ -99,14 +100,17 @@ export default function LIFPlayground() {
             >
             <MenuIcon />
             </IconButton>
-            <Drawer open={menuOpen} onClose={() => setMenuOpen(false)}>
+            <Drawer 
+              open={menuOpen} 
+              onClose={() => setMenuOpen(false)}
+            >
               <List>
                 <ListItem>
-                  <h1 class="text-xl font-bold">LIF Sandbox</h1>
+                  <h1 class="text-xl font-bold w-[18vw]">LIF Sandbox</h1>
                 </ListItem>
                 <Divider />
                 <ListItem>
-                  <button onClick={() => {editor.initialValue = "hello"}}>
+                  <button onClick={() => {setEditorValue(lifZeroStepExerciseString)}}>
                     Exercise 1: Zero Step Current
                   </button>
                 </ListItem>
@@ -152,10 +156,10 @@ export default function LIFPlayground() {
               width="45vw" 
               pyodideInstance={pyodideInstance} 
               consoleOutputSetter={setConsoleOutputs}
-              initialValue={lifDefaultCodeString}
-              ref={editor}
+              initialValue={editorInitialText}
+              editorValue={editorValue}
+              editorValueSetter={setEditorValue}
             />
-            {/* <EditorComponent /> */}
           </Stack>
         </Grid>
         <Grid item>

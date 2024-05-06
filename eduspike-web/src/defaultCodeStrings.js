@@ -41,5 +41,22 @@ membrane_r=1, simulation_duration=100, resolution=10,
 pulses=pulses, initial_v=-70, v_reset=-75, threshold_v=-55)
 `;
 
+const lifZeroStepExerciseString = `"""
+LIF EXERCISE: ZERO STEP CURRENT
 
-export { adexDefaultCodeString, lifDefaultCodeString };
+Let's find out what happens when we don't stimulate our LIF neuron.
+"""
+
+from neurospikelib.lif import LIF
+
+v, time_vec = LIF.simulate(resting_v=-72, membrane_c=15,
+membrane_r=1, simulation_duration=100, resolution=10, 
+pulses=pulses, initial_v=-70, v_reset=-75, threshold_v=-55)
+`
+
+
+export { 
+  adexDefaultCodeString, 
+  lifDefaultCodeString, 
+  lifZeroStepExerciseString 
+};

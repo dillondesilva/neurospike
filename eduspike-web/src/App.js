@@ -13,7 +13,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<ModeSelection />} />
-        <Route path="/lif" element={<LIFPlayground />} />
+        <Route path="/lif" element={<LIFPlayground mode={"default"} />} />
+        <Route path="/lif/zero-step-current" element={<LIFPlayground mode={"default"} />} />
       </Routes>
     </Router>
   );
