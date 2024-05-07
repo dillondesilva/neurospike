@@ -2,6 +2,10 @@ import '../App.css';
 import { Box } from '@mui/material';
 import ModeOptionCard from './ModeOptionCard';
 
+function openAuthor() {
+  window.open("https://dillondesilva.github.io/", "_blank")
+}
+
 export default function ModeSelection() {
   const playgroundDescriptions = {
     lif: 'Explore the simplest integrate-and-fire model by stimulating a neuron to form an action potential',
@@ -22,8 +26,10 @@ export default function ModeSelection() {
           </div>
           <div>
             <p className='pt-12'>Built by</p>
-            <div className='pt-4'>
-              <img src='dillon.jpg' className='w-1/12 rounded-full' alt="logo"></img>
+            <div className='pt-4 hover:opacity-75'>
+              <button className='w-full' onClick={() => openAuthor('dillon')}>
+                <img src='dillon.jpg' className='w-1/12 rounded-full' alt="logo"></img>
+              </button>
             </div>
           </div>
         </div> 

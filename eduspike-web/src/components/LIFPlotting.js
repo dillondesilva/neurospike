@@ -62,6 +62,9 @@ let options = {
         borderWidth: 0,
         radius: 10,
         backgroundColor: 'rgba(0,0,0,0)'
+    },
+    line: {
+        tension : 0.2  // smooth lines
     }
   }
 };
@@ -83,7 +86,7 @@ export default function LIFPlotting(props) {
       const voltageMin = Math.min(...membraneVoltage);
       const voltageMax = Math.max(...membraneVoltage);
       const deltaToPlotMax = Math.abs(Math.abs(voltageMax) - Math.abs(voltageMin)) * 0.1;
-      newPlotOptions.scales.y.min = Math.min(...membraneVoltage);
+      newPlotOptions.scales.y.min = Math.min(...membraneVoltage) - deltaToPlotMax;
       newPlotOptions.scales.y.max = Math.max(...membraneVoltage) + deltaToPlotMax;
   
       let timePoints = parsedData.data.timepoints;

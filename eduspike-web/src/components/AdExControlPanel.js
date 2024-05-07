@@ -156,7 +156,7 @@ export default function AdExControlPanel(props) {
       <div className="pt-6">
         <button
           className="rounded-md px-2 \
-          border-2 justify-center place-content-center \
+          border-2 border-white justify-center place-content-center \
           flex flex-row float-right hover:bg-[white] \
           text-white hover:text-[#010A22]"
           onClick={runSimulation}

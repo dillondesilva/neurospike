@@ -68,9 +68,6 @@ export default function LIFPlayground(props) {
                 alt="logo"
               ></img>
             </div>
-            <div>
-              <h1 className=" text-4xl font-bold">:   Setting things up</h1>
-            </div>
           </div>
       </div>
     )

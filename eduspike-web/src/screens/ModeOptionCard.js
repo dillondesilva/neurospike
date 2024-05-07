@@ -15,7 +15,7 @@ export default function ModeOptionCard(props) {
         <div className='col-span-2 p-9 content-center'>
           <h1 className='text-2xl text-[#D0DCFF] font-bold'>{props.title}</h1>
           <p className='pt-2 text-[#D0DCFF]'>{props.description}</p>
-          <div className='animate-bounce flex float-right justify-center mt-4 h-8 w-[10vw] \
+          <div className='animate-pulse flex float-right justify-center mt-4 h-8 w-[10vw] \
           bg-[#D0DCFF] rounded-lg hover:bg-[#010A22] hover:text-[#D0DCFF] \
           hover:bg-emerald-500'>
             <button onClick={handlePlaygroundSelect}>

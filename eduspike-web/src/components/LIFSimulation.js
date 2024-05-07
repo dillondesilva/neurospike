@@ -173,16 +173,6 @@ export default function LIFSimulation(props) {
   }, [props.simulationDataStr]);
 
   return (
-    // <Container
-    //   // sx={{
-    //   //   position: 'relative',
-    //   //   height: '100%',
-    //   //   width: '100%',
-    //   //   display: 'flex',
-    //   //   justifyContent: 'center',
-    //   // }}
-    //   className="rounded-[20px] px-0"
-    // >
     <div className="w-[45vw] h-[45vh] overflow-hidden \
     grid place-items-center rounded-[20px] relative">
       <div className="w-[45vw] h-[47vh] grid place-items-center">
@@ -204,28 +194,5 @@ export default function LIFSimulation(props) {
         </IconButton>
       </div>
     </div>
-      // <Container
-      //   sx={{
-      //     position: 'absolute',
-      //     zIndex: 10,
-      //     padding: 0,
-      //     bottom: 10,
-      //     width: '70%',
-      //     display: 'flex',
-      //     justifyContent: 'space-evenly',
-      //   }}
-      // >
-      //   <IconButton
-      //     edge="start"
-      //     color="inherit"
-      //     aria-label="menu"
-      //     onClick={() => {
-      //       setActiveState(!isActive);
-      //     }}
-      //   >
-      //     {playButton}
-      //   </IconButton>
-      // </Container>
-    // </Container>
   );
 }
