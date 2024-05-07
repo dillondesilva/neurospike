@@ -1,28 +1,10 @@
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import { Text } from '@react-three/drei';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import {
-  Button,
-  Container,
-  Slider,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  IconButton,
-} from '@mui/material';
+import { IconButton } from '@mui/material';
 
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-
-// const INITIAL_LIF_VISUALISATION_DATA = {
-//   membrane_voltage: [-70],
-//   intracellular_color_v: [[255, 255, 255]],
-//   extracellular_color_v: [[255, 255, 255]],
-//   membrane_color_v: [[10, 250, 255]],
-//   timepoints: [0],
-// };
 
 const INITIAL_LIF_VISUALISATION_DATA = {
   data: {
@@ -67,7 +49,7 @@ function TestMesh(data, active) {
 
   useEffect(() => {
     setNewTimepoint(timepoints[0]);
-  }, [timepoints, data])
+  }, [timepoints])
 
   const updateTimepoint = () => {
     if (currentTimepoint === timepoints.length - 1) {
@@ -83,9 +65,10 @@ function TestMesh(data, active) {
     setICColor(newICColor);
     setECColor(newECColor);
     setMembraneColor(newMembraneColor);
-    setMembraneV(Math.round(membraneVoltageData[currentTimepoint] * 100) / 100);
+    setMembraneV((Math.round(membraneVoltageData[currentTimepoint] * 100) / 100).toFixed(2));
     setMembraneVText(`Transmembrane Potential: ${currentMembraneV} mV`);
-    setTimeText(`Time: ${currentTimepoint} ms`);
+    let formattedTime = (Math.round(timepoints[currentTimepoint] * 100) / 100).toFixed(2);
+    setTimeText(`Time: ${formattedTime} ms`);
 
     // if (data.data.data.stim_pulse_train[currentTimepoint] === 1) {
     //   setCurrentState(true);
@@ -138,10 +121,11 @@ function TestMesh(data, active) {
       <Text
         ref={ecText}
         scale={[0.175, 0.175, 0.175]}
-        position={[-2.5, 1.25, 2]}
+        position={[-2.25, 1.5, 2]}
         color="black" // default
         anchorX="center" // default
         anchorY="middle" // default
+        fontWeight={"bold"}
       >
         {currentMembraneVText}
         {'\n\n'}
@@ -159,14 +143,6 @@ function TestMesh(data, active) {
         <boxGeometry args={[25, 15, 3]} />
         <meshStandardMaterial />
       </mesh>
-      {/* <mesh>
-        <primitive
-          object={geom.scene}
-          scale={[0.08, 0.08, 0.08]}
-          rotation={[-Math.PI / 2, Math.PI, Math.PI / 2]}
-          position={[1.5, 0, 0]}
-        />
-      </mesh> */}
     </mesh>
   );
 }

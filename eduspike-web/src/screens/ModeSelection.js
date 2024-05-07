@@ -33,7 +33,7 @@ export default function ModeSelection() {
             <ModeOptionCard title="LIF Sandbox" description={playgroundDescriptions.lif} playgroundRef="/lif"/>
           </div>
           <div className='pt-6'>
-            <ModeOptionCard title="AdEx Sandbox" description={playgroundDescriptions.lif}/>
+            <ModeOptionCard title="AdEx Sandbox" description={playgroundDescriptions.lif} playgroundRef="/adex"/>
           </div>
         </div> 
       </div>
