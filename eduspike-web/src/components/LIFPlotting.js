@@ -12,7 +12,7 @@ import {
   Legend,
 } from 'chart.js';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import { Line } from 'react-chartjs-2';
 
@@ -38,7 +38,7 @@ const seedData = {
   ],
 };
 
-const options = {
+let options = {
   scales: {
     x: {
       beginAtZero: true,
@@ -53,6 +53,8 @@ const options = {
         display: true,
         text: 'Transmembrane Voltage (mV)',
       },
+      min: -75,
+      max: 10
     },
   },
   elements:{
@@ -66,14 +68,23 @@ const options = {
 
 export default function LIFPlotting(props) {
   const [plotData, setPlotData] = useState(seedData);
-  const [isPlotUpdated, setIsPlotUpdated] = useState(false);
+  const [plotOptions, setPlotOptions] = useState(options);
+  const plotRef = useRef();
+
 
   const updatePlotData = () => {
     try {
       console.log(props.simulationDataStr)
       const parsedData = JSON.parse(props.simulationDataStr[0]);
       console.log(parsedData)
-      const membraneVoltage = parsedData.data.membrane_voltage;
+      const membraneVoltage = Array.from(parsedData.data.membrane_voltage);
+      
+      let newPlotOptions = options;
+      const voltageMin = Math.min(...membraneVoltage);
+      const voltageMax = Math.max(...membraneVoltage);
+      const deltaToPlotMax = Math.abs(Math.abs(voltageMax) - Math.abs(voltageMin)) * 0.1;
+      newPlotOptions.scales.y.min = Math.min(...membraneVoltage);
+      newPlotOptions.scales.y.max = Math.max(...membraneVoltage) + deltaToPlotMax;
   
       let timePoints = parsedData.data.timepoints;
       timePoints = timePoints.map((timepoint) => {
@@ -93,6 +104,13 @@ export default function LIFPlotting(props) {
       };
   
       setPlotData(newPlotData);  
+      setPlotOptions(newPlotOptions);
+      console.log(plotRef);
+
+      // Setting the options like this is unsafe.
+      // Need to refactor in future
+      plotRef.current.options = newPlotOptions;
+      plotRef.current.update();
     } catch (e) {
       console.log(e)
     }
@@ -122,7 +140,7 @@ export default function LIFPlotting(props) {
           paddingBottom: '0.2vh',
         }}
       >
-        <Line data={plotData} options={options} />
+        <Line ref={plotRef} data={plotData} options={plotOptions} />
       </Container>
     </Container>
   );

@@ -38,6 +38,7 @@ const INITIAL_LIF_VISUALISATION_DATA = {
 };
 
 function TestMesh(data, active) {
+
   const testRef = useRef();
   const ecRef = useRef();
   const ecText = useRef();
@@ -64,11 +65,9 @@ function TestMesh(data, active) {
   const [timeText, setTimeText] = useState('Time: 0 ms');
   const [isCurrentOn, setCurrentState] = useState(false);
 
-  // window.electron.ipcRenderer.on('run-code', async (arg: string) => {
-  //   if (arg.includes('{')) {
-  //     setNewTimepoint(timepoints[0]);
-  //   }
-  // });
+  useEffect(() => {
+    setNewTimepoint(timepoints[0]);
+  }, [timepoints, data])
 
   const updateTimepoint = () => {
     if (currentTimepoint === timepoints.length - 1) {
@@ -105,6 +104,7 @@ function TestMesh(data, active) {
       }
 
       if (testRef.current) {
+        console.log(currentICColor);
         testRef.current.material.color.r = currentICColor[0] / 255;
         testRef.current.material.color.g = currentICColor[1] / 255;
         testRef.current.material.color.b = currentICColor[2] / 255;

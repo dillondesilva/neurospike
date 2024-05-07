@@ -230,7 +230,7 @@ return (
         }}
     >
         <Tooltip title={simulationDurationTooltipText} placement="right">
-            <p>Na⁺ Conductance (mS):</p>
+            <p>Leak⁺ Conductance (mS):</p>
         </Tooltip>
         <Slider
             sx={{
