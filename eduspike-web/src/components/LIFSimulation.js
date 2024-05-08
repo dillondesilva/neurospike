@@ -87,7 +87,6 @@ function TestMesh(data, active) {
       }
 
       if (testRef.current) {
-        console.log(currentICColor);
         testRef.current.material.color.r = currentICColor[0] / 255;
         testRef.current.material.color.g = currentICColor[1] / 255;
         testRef.current.material.color.b = currentICColor[2] / 255;

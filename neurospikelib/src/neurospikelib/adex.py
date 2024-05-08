@@ -87,7 +87,7 @@ class AdEx:
             # Handle reset for peak voltage
             if membrane_v_vec[i + 1] >= v_peak:
                 membrane_v_vec[i + 1] = v_reset
-                # membrane_v_vec[i] = threshold_v
+                membrane_v_vec[i] = v_peak
                 w[i + 1] = w[i + 1] + b
         
         # Create output instance

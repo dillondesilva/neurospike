@@ -89,13 +89,16 @@ class LIF:
 
         # Determining time constant
         tau = membrane_r * membrane_c
-        spike_times = []
+        spike_times = np.empty(shape=(1,))
+        v_peak = threshold_v + 80
+
         # Forward Euler solver
         for i in range(len(membrane_v_vec) - 1):
             membrane_v_vec[i + 1] = ((dt/tau) * ((resting_v - membrane_v_vec[i]) + (membrane_r * current_vec[i]))) + membrane_v_vec[i]
             # Handle spiking
             if membrane_v_vec[i+1] >= threshold_v:
-                spike_times.append(time_vec[i + 1])
+                np.append(spike_times, time_vec[i])
+                membrane_v_vec[i] = v_peak
                 membrane_v_vec[i + 1] = v_reset
 
         # Create output instance
@@ -103,6 +106,7 @@ class LIF:
         simulation_output.set_membrane_voltage(membrane_v_vec, threshold_v)
         simulation_output.set_timepoints(time_vec)
         simulation_output.set_injected_current(current_vec)
+        simulation_output.set_spike_times(spike_times)
         sys.stdout.write(simulation_output.jsonify())
         sys.stdout.write('\n')
         return [membrane_v_vec, time_vec]

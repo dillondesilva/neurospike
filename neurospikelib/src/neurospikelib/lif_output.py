@@ -20,6 +20,7 @@ class LIFOutput:
             "membrane_voltage": list(),
             "timepoints": list(),
             "injected_current": list(),
+            "spike_times": list()
         }
 
         self.visualization = {
@@ -59,6 +60,12 @@ class LIFOutput:
         Set current injection vector for LIFOutput
         """
         self.data["injected_current"] = injected_current.tolist()
+    
+    def set_spike_times(self, spike_times):
+        """
+        Set spike times for LIF
+        """
+        self.data["spike_times"] = spike_times.tolist()
 
     def _create_visualization_data(
         self, membrane_voltage, normalized_v_data, threshold_v, 

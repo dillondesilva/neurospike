@@ -14,7 +14,7 @@ import {
 
 import { useEffect, useState, useRef } from 'react';
 
-import { Line } from 'react-chartjs-2';
+import { Line, Scatter } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale,
@@ -59,9 +59,10 @@ let options = {
   },
   elements:{
     point:{
-        borderWidth: 0,
+        borderWidth: 0.5,
         radius: 10,
-        backgroundColor: 'rgba(0,0,0,0)'
+        pointBackgroundColor: 'rgb(255,0,0)',
+        pointBorderColor: 'rgb(255,0,0)'
     },
     line: {
         tension : 0.2  // smooth lines
@@ -71,9 +72,20 @@ let options = {
 
 export default function LIFPlotting(props) {
   const [plotData, setPlotData] = useState(seedData);
+  const [spikeData, setSpikeData] = useState(seedData);
   const [plotOptions, setPlotOptions] = useState(options);
+  const [vMax, setVMax] = useState(5);
   const plotRef = useRef();
 
+  const customRadius = (ctx) => {
+    console.log(vMax);
+    if (ctx.raw >= vMax) {
+      console.log("hit");
+      return 3;
+    }
+
+    return 0;
+  }
 
   const updatePlotData = () => {
     try {
@@ -81,13 +93,16 @@ export default function LIFPlotting(props) {
       const parsedData = JSON.parse(props.simulationDataStr[0]);
       console.log(parsedData)
       const membraneVoltage = Array.from(parsedData.data.membrane_voltage);
-      
+      const spikeTimes = Array.from(parsedData.data.spike_times);
+      console.log(spikeTimes);
       let newPlotOptions = options;
       const voltageMin = Math.min(...membraneVoltage);
       const voltageMax = Math.max(...membraneVoltage);
+      setVMax(voltageMax);
       const deltaToPlotMax = Math.abs(Math.abs(voltageMax) - Math.abs(voltageMin)) * 0.1;
       newPlotOptions.scales.y.min = Math.min(...membraneVoltage) - deltaToPlotMax;
       newPlotOptions.scales.y.max = Math.max(...membraneVoltage) + deltaToPlotMax;
+      newPlotOptions.elements.point.radius = customRadius;
   
       let timePoints = parsedData.data.timepoints;
       timePoints = timePoints.map((timepoint) => {
@@ -102,11 +117,23 @@ export default function LIFPlotting(props) {
             data: membraneVoltage,
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
-          },
+          }
         ],
       };
+
+      const newSpikeData = {
+        labels: spikeTimes,
+        datasets: [
+          {
+            data: [10],
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+          },
+        ],
+      }
   
       setPlotData(newPlotData);  
+      setSpikeData(newSpikeData);
       setPlotOptions(newPlotOptions);
       console.log(plotRef);
 
