@@ -1,5 +1,6 @@
 {
   "name": "eduspike-web",
+  "homepage": "https://neurospikedev.github.io/neurospike/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
