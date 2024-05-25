@@ -1,6 +1,4 @@
-import { Container, IconButton } from '@mui/material';
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import { Container } from '@mui/material';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,7 +12,7 @@ import {
 
 import { useEffect, useState, useRef } from 'react';
 
-import { Line, Scatter } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale,
@@ -90,6 +88,7 @@ export default function LIFPlotting(props) {
   const updatePlotData = () => {
     try {
       console.log(props.simulationDataStr)
+      console.log(spikeData);
       const parsedData = JSON.parse(props.simulationDataStr[0]);
       console.log(parsedData)
       const membraneVoltage = Array.from(parsedData.data.membrane_voltage);
