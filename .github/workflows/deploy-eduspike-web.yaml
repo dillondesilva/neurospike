@@ -17,8 +17,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
-    run:
-      working-directory: ./eduspike-web
+      run:
+        working-directory: ./eduspike-web
 
     strategy:
       matrix:
