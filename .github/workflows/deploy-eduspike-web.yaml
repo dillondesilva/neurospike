@@ -12,6 +12,8 @@ on:
 defaults:
   run:
     working-directory: ./eduspike-web
+env:
+  CI: ""
 
 jobs:
   build:
