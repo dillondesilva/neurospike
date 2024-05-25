@@ -3,7 +3,7 @@ name: Eduspike Web Deployment # name of the workflo
 on:
   push:
     branches:
-      - eduspike-deployments # branch name
+      - main # branch name
 
 jobs:
   deploy-react-to-gh-pages:
