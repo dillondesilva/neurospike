@@ -14,10 +14,6 @@ defaults:
     working-directory: ./eduspike-web
 
 jobs:
-  defaults:
-    run:
-      working-directory: ./eduspike-web
-
   build:
     runs-on: ubuntu-latest
     defaults:
