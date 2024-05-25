@@ -79,10 +79,10 @@ export default function LIFPlotting(props) {
 
   const customRadius = (ctx) => {
     console.log(vMax);
-    if (ctx.raw >= vMax) {
-      console.log("hit");
-      return 3;
-    }
+    // if (ctx.raw === vMax) {
+    //   console.log("hit");
+    //   return 3;
+    // }
 
     return 0;
   }
