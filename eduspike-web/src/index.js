@@ -4,12 +4,19 @@ import './index.css';
 import App from './App';
 import { HashRouter } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
+import MediaQuery from 'react-responsive';
+import MobileLandingPage from './MobileLandingPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
   <HashRouter>
-    <App />
+    <MediaQuery maxWidth={1224}>
+      <MobileLandingPage />
+    </MediaQuery>
+    <MediaQuery minWidth={1224}>
+      <App />
+    </MediaQuery>
   </HashRouter>
   /* </React.StrictMode> */
 );

@@ -20,7 +20,6 @@ import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import PythonEditor from 'codehelium';
-import { Loading } from 'react-loading-dot'
 import { useEffect, useState, useRef } from 'react';
 import { adexDefaultCodeString } from '../defaultCodeStrings';
 
