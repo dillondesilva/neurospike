@@ -11,7 +11,7 @@ import AdExPlayground from './screens/AdExPlayground';
 function App() {
   return (
       <Routes>
-        <Route path="/" element={<ModeSelection />} />
+        <Route path="/*" element={<ModeSelection />} />
         <Route path="/lif" element={<LIFPlayground/>} />
         <Route path="/adex" element={<AdExPlayground />} />
       </Routes>
