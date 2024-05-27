@@ -1,6 +1,6 @@
 {
   "name": "eduspike-web",
-  "homepage": "https://neurospikedev.github.io/neurospike/",
+  "homepage": ".",
   "version": "0.1.0",
   "dependencies": {
     "@codemirror/lang-python": "^6.1.5",
