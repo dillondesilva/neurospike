@@ -10,7 +10,7 @@ export default function ModeSelection() {
   const playgroundDescriptions = {
     lif: 'Explore the simplest integrate-and-fire model by stimulating a neuron to form an action potential',
     eif: 'See how factoring in exponential changes to membrane voltage produce more accurate integrate-and-fire models',
-    hhSpike:
+    hh:
       'Use the Hodgkin-Huxley Model to explore the behaviour of different ion channels during nerve impulse propagation',
   };
 
@@ -40,6 +40,9 @@ export default function ModeSelection() {
           </div>
           <div className='pt-6'>
             <ModeOptionCard title="AdEx Sandbox" description={playgroundDescriptions.lif} playgroundRef="/adex"/>
+          </div>
+          <div className='pt-6'>
+            <ModeOptionCard title="Hodgkin-Huxley Sandbox" description={playgroundDescriptions.hh} playgroundRef="/hh"/>
           </div>
         </div> 
       </div>

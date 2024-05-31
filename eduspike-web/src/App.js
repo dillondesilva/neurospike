@@ -6,6 +6,7 @@ import {
 import ModeSelection from './screens/ModeSelection';
 import LIFPlayground from './screens/LIFPlayground';
 import AdExPlayground from './screens/AdExPlayground';
+import HHPlayground from './screens/HHPlayground';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/*" element={<ModeSelection />} />
         <Route path="/lif" element={<LIFPlayground/>} />
         <Route path="/adex" element={<AdExPlayground />} />
+        <Route path="/hh" element={<HHPlayground />} />
       </Routes>
   );
 }
