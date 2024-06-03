@@ -6,6 +6,7 @@ import { IconButton } from '@mui/material';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import Channel from './cellVisualisation/Channel';
+import Membrane from './cellVisualisation/Membrane';
 
 const INITIAL_LIF_VISUALISATION_DATA = {
   data: {
@@ -175,7 +176,9 @@ export function HHSimulation(props) {
   return (
     <div className="w-[45vw] h-[45vh] overflow-hidden \
     grid place-items-center rounded-[20px] relative">
+        <Membrane />
         <Channel />
+        <Membrane />
     </div>
   );
 }
