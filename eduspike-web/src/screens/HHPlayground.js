@@ -102,7 +102,7 @@ import {
               >
                 <List>
                   <ListItem>
-                    <h1 class="text-xl font-bold w-[18vw]">AdEx Sandbox</h1>
+                    <h1 class="text-xl font-bold w-[18vw]">Hodgkin-Huxley Sandbox</h1>
                   </ListItem>
                   <Divider />
                   <ListItem>
@@ -123,7 +123,7 @@ import {
               >
                 <HomeIcon />
               </IconButton>
-              <p>Adaptive Exponential Integrate and Fire (AdEx) Sandbox</p>
+              <p>Hodgkin-Huxley Sandbox</p>
             </Toolbar>
           </AppBar>
         <Grid
