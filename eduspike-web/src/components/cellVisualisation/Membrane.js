@@ -33,15 +33,14 @@ function sketch(p5) {
 }
 
 function sketchChannel(p5, x, y) {
-    let gateColor = p5.color(255, 100, 90);
+    let gateColor = p5.color(0, 190, 0);
     let gateColor2 = p5.color(20, 200, 90);
     p5.push()
     p5.translate(0, Math.sin(p5.frameCount / 16));
     
     // p5.fill(gateColor2);
     // p5.noStroke();
-    // p5.rect(x - 50, y, x + 50, y + 10)
-
+    // p5.rect(x - 50, y, x + 50, y + 10);
 
     // p5.fill(gateColor2);
     // p5.noStroke();
@@ -49,11 +48,11 @@ function sketchChannel(p5, x, y) {
 
     p5.fill(gateColor);
     p5.noStroke();
-    p5.rect(x - 35, y - 20, 10, 150);
+    p5.rect(x - 35, y - 20, 10, 145);
 
     p5.fill(gateColor);
     p5.noStroke();
-    p5.rect(x + 50, y - 20, 10, 150);
+    p5.rect(x + 50, y - 20, 10, 145);
     p5.pop();
 }
 
