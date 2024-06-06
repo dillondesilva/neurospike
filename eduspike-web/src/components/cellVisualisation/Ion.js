@@ -17,6 +17,8 @@ class Ion {
 
     drawIon(p5Context) {
         p5Context.push();
+        p5Context.noStroke();
+        p5Context.translate(Math.random(), Math.random());
         p5Context.fill(this.ionColor);
         p5Context.circle(this.x, this.y, this.ionSize);
         p5Context.pop();
