@@ -1,7 +1,14 @@
 import { ReactP5Wrapper } from "@p5-wrapper/react";
+import SodiumIon from "./SodiumIon";
+import IonCollection from "./IonCollection";
 
 function sketch(p5) {
     p5.setup = () => p5.createCanvas(500, 300, p5.WEBGL);
+    let simulationIons = new IonCollection(6, 6, 16);
+
+    // simSodiumIons.forEach((emptyItem) => {
+    //   emptyItem = new SodiumIon([100, 200], [100,200]);
+    // })
     
     p5.draw = () => {
       p5.background(180, 200, 255);
@@ -27,7 +34,15 @@ function sketch(p5) {
     //   sketchPhospholipidPair(p5, 32, 110);
     //   p5.noFill();
     //   sketchPhospholipidPair(p5, 64, 110);
+
       sketchChannel(p5, 30, 0);
+      simulationIons.sodiumIons.forEach((sodiumIon) => {
+        sodiumIon.drawIon(p5);
+      })
+      
+      simulationIons.potassiumIons.forEach((potassiumIon) => {
+        potassiumIon.drawIon(p5);
+      })
     
     };
 }
@@ -88,9 +103,9 @@ function sketchPhospholipidPair(p5, x, y) {
 }
 
 export default function Membrane() {
-    return (
-        <div>
-            <ReactP5Wrapper sketch={sketch} />
-        </div>
-    )
+  return (
+      <div>
+          <ReactP5Wrapper sketch={sketch} />
+      </div>
+  )
 }
