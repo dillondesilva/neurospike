@@ -35,9 +35,9 @@ class HHOutput:
             "membrane_color_v": list(),
         }
 
-    def set_membrane_voltage(self, membrane_voltage, threshold_v=-55):
+    def set_membrane_voltage(self, membrane_voltage):
         """
-        Set membrane voltage for LIFOutput and corresponding visualization
+        Set membrane voltage for HHOutput and corresponding visualization
         """
         reshaped_membrane_voltage = np.reshape(
             membrane_voltage, (len(membrane_voltage), 1)
@@ -45,15 +45,15 @@ class HHOutput:
 
         min_v = np.min(list(membrane_voltage))
 
-        normalized_v_data = (reshaped_membrane_voltage - min_v) / (threshold_v - min_v)
-        intracellular_color_v, extracellular_color_v, membrane_color_v = self._create_visualization_data(
-            membrane_voltage, normalized_v_data, threshold_v
-        )
+        # normalized_v_data = (reshaped_membrane_voltage - min_v) / (threshold_v - min_v)
+        # intracellular_color_v, extracellular_color_v, membrane_color_v = self._create_visualization_data(
+        #     membrane_voltage, normalized_v_data, threshold_v
+        # )
 
         self.data["membrane_voltage"] = membrane_voltage.tolist()
-        self.visualization["intracellular_color_v"] = intracellular_color_v.tolist()
-        self.visualization["extracellular_color_v"] = extracellular_color_v.tolist()
-        self.visualization["membrane_color_v"] = membrane_color_v.tolist()
+        # self.visualization["intracellular_color_v"] = intracellular_color_v.tolist()
+        # self.visualization["extracellular_color_v"] = extracellular_color_v.tolist()
+        # self.visualization["membrane_color_v"] = membrane_color_v.tolist()
 
     def set_timepoints(self, timepoints):
         """
@@ -74,7 +74,7 @@ class HHOutput:
         self.data["spike_times"] = spike_times.tolist()
 
     def _create_visualization_data(
-        self, membrane_voltage, normalized_v_data, threshold_v, 
+        self, membrane_voltage, normalized_v_data, 
         ic_initial_color=RGB_WHITE, ec_initial_color=RGB_WHITE,
         ic_final_color=(132, 215, 206), 
         ec_final_color=(238, 129, 238), 

@@ -20,15 +20,14 @@ DEFAULT_RESOLUTION = 10
 
 class LIF:
     """
-    Leaky Integrate and Fire Simulation Module for Neurospike. Operates
-    as a wrapper around brian2 and neurodynex3 libraries to provide
+    Leaky Integrate and Fire Simulation Module for Neurospike. Provides
     LIF Model support for Neurospike simulation app
     """
 
     @staticmethod
     def visualize_custom_lif(membrane_v_vec, time_vec, current_vec, threshold_v=-55):
         '''
-        Creates EduSpike compatible output based on values from custom 
+        Creates Neurospike compatible output based on values from custom 
         LIF model
         '''
         # Reformat as numpy lists
