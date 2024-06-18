@@ -11,9 +11,8 @@ import {
     ListItem
   } from '@mui/material';
   import '../App.css';
-  import AdExControlPanel from '../components/AdExControlPanel';
-  import LIFSimulation from '../components/LIFSimulation';
-  import LIFPlotting from '../components/LIFPlotting';
+  import HHControlPanel from '../components/HHControlPanel';
+  import HHPlotting from '../components/HHPlotting';
   import PyodideWorker from '../components/PyodideWorker';
   import { createTheme } from '@mui/material/styles';
   import HomeIcon from '@mui/icons-material/Home';
@@ -23,7 +22,7 @@ import {
   import { useEffect, useState, useRef } from 'react';
   import { adexDefaultCodeString } from '../defaultCodeStrings';
   import { HHSimulation } from '../components/HHSimulation';
-  
+
   // Following code for theme from MUI example
   const darkTheme = createTheme({
     palette: {
@@ -142,7 +141,7 @@ import {
                   padding: '0!important'
                 }}
               >
-                <AdExControlPanel 
+                <HHControlPanel 
                   pyodideInstance={pyodideInstance}  
                   consoleOutputSetter={setConsoleOutputs}
                 />
@@ -171,7 +170,7 @@ import {
                   justifyContent: 'center',
                 }}
               >
-                <LIFPlotting simulationDataStr={consoleOutputs} />
+                <HHPlotting simulationDataStr={consoleOutputs} />
               </Container>
                 <HHSimulation simulationDataStr={consoleOutputs}/>
             </Stack>
