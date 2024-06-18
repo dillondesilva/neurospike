@@ -57,10 +57,10 @@ let options = {
   },
   elements:{
     point:{
-        borderWidth: 0.5,
+        // borderWidth: 0.5,
         radius: 10,
-        pointBackgroundColor: 'rgb(255,0,0)',
-        pointBorderColor: 'rgb(255,0,0)'
+        // pointBackgroundColor: 'rgb(255,0,0)',
+        // pointBorderColor: 'rgb(255,0,0)'
     },
     line: {
         tension : 0.2  // smooth lines
@@ -68,9 +68,8 @@ let options = {
   }
 };
 
-export default function LIFPlotting(props) {
+export default function HHPlotting(props) {
   const [plotData, setPlotData] = useState(seedData);
-  const [spikeData, setSpikeData] = useState(seedData);
   const [plotOptions, setPlotOptions] = useState(options);
   const [vMax, setVMax] = useState(5);
   const plotRef = useRef();
@@ -88,12 +87,9 @@ export default function LIFPlotting(props) {
   const updatePlotData = () => {
     try {
       console.log(props.simulationDataStr)
-      console.log(spikeData);
       const parsedData = JSON.parse(props.simulationDataStr[0]);
       console.log(parsedData)
       const membraneVoltage = Array.from(parsedData.data.membrane_voltage);
-      const spikeTimes = Array.from(parsedData.data.spike_times);
-      console.log(spikeTimes);
       let newPlotOptions = options;
       const voltageMin = Math.min(...membraneVoltage);
       const voltageMax = Math.max(...membraneVoltage);
@@ -121,19 +117,8 @@ export default function LIFPlotting(props) {
         ],
       };
 
-      const newSpikeData = {
-        labels: spikeTimes,
-        datasets: [
-          {
-            data: [10],
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-          },
-        ],
-      }
-      
+     
       setPlotData(newPlotData);  
-      setSpikeData(newSpikeData);
       setPlotOptions(newPlotOptions);
       console.log(plotRef);
 
