@@ -41,6 +41,25 @@ membrane_r=1, simulation_duration=100, resolution=10,
 pulses=pulses, initial_v=-70, v_reset=-75, threshold_v=-55)
 `;
 
+const hhDefaultCodeString = `"""
+Hodgkin-Huxley (HH) Model Sample
+
+The following is some sample code for how you can use
+the in-built neurospikelib HH model to run your simulations
+"""
+
+from neurospikelib.hh import HHModel
+
+# Now perform same computation using neurospikelib
+# Note that taum is equivalent to product of R and C
+pulses = [{
+  "start": 25,
+  "end": 50,
+  "amp": 20
+}]
+
+v, time_vec = HHModel.simulate(simulation_duration=100, pulses=pulses)`
+
 const lifZeroStepExerciseString = `"""
 LIF EXERCISE: ZERO STEP CURRENT
 
@@ -58,5 +77,6 @@ pulses=pulses, initial_v=-70, v_reset=-75, threshold_v=-55)
 export { 
   adexDefaultCodeString, 
   lifDefaultCodeString, 
+  hhDefaultCodeString,
   lifZeroStepExerciseString 
 };

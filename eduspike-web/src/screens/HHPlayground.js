@@ -20,7 +20,7 @@ import {
   import { useNavigate } from 'react-router-dom';
   import PythonEditor from 'codehelium';
   import { useEffect, useState, useRef } from 'react';
-  import { adexDefaultCodeString } from '../defaultCodeStrings';
+  import { hhDefaultCodeString } from '../defaultCodeStrings';
   import { HHSimulation } from '../components/HHSimulation';
 
   // Following code for theme from MUI example
@@ -36,8 +36,8 @@ import {
   export default function AdExPlayground(props) {
     const [ pyodideInstance, setPyodideInstance ] = useState();
     const [ consoleOutputs, setConsoleOutputs ] = useState([]);
-    const [ editorValue, setEditorValue ] = useState(adexDefaultCodeString);
-    const [ editorInitialText, setEditorInitialText ] = useState(adexDefaultCodeString);
+    const [ editorValue, setEditorValue ] = useState(hhDefaultCodeString);
+    const [ editorInitialText, setEditorInitialText ] = useState(hhDefaultCodeString);
     const [ menuOpen, setMenuOpen ] = useState(false);
   
     useEffect(() => {
