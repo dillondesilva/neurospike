@@ -9,7 +9,7 @@ DEFAULT_RGB_THRESHOLD_POTENTIAL = (4, 217, 255)
 
 class HHOutput:
     """
-    Formatting of simulation output for LIF model
+    Formatting of simulation output for HH model
     """
 
     def __init__(self):
@@ -25,8 +25,7 @@ class HHOutput:
             "leak_current": list(),
             "n": list(),
             "m": list(),
-            "h": list(),
-            "spike_times": list()
+            "h": list()
         }
 
         self.visualization = {
@@ -44,44 +43,55 @@ class HHOutput:
         )
 
         min_v = np.min(list(membrane_voltage))
+        max_v = np.max(list(membrane_voltage))
 
-        # normalized_v_data = (reshaped_membrane_voltage - min_v) / (threshold_v - min_v)
-        # intracellular_color_v, extracellular_color_v, membrane_color_v = self._create_visualization_data(
-        #     membrane_voltage, normalized_v_data, threshold_v
-        # )
+        normalized_v_data = (reshaped_membrane_voltage - min_v) / (max_v - min_v)
+        intracellular_color_v, extracellular_color_v, membrane_color_v = self._create_visualization_data(
+            membrane_voltage, normalized_v_data, max_v
+        )
 
         self.data["membrane_voltage"] = membrane_voltage.tolist()
-        # self.visualization["intracellular_color_v"] = intracellular_color_v.tolist()
-        # self.visualization["extracellular_color_v"] = extracellular_color_v.tolist()
-        # self.visualization["membrane_color_v"] = membrane_color_v.tolist()
+        self.visualization["intracellular_color_v"] = intracellular_color_v.tolist()
+        self.visualization["extracellular_color_v"] = extracellular_color_v.tolist()
+        self.visualization["membrane_color_v"] = membrane_color_v.tolist()
 
     def set_timepoints(self, timepoints):
         """
-        Set timepoints for LIFOutput
+        Set timepoints for HHOutput
         """
         self.data["timepoints"] = timepoints.tolist()
 
+    def set_gating_variables(self, n_vec, m_vec, h_vec):
+        """
+        Set gating variable values 
+        """
+        self.data["n"] = n_vec.tolist()
+        self.data["m"] = m_vec.tolist()
+        self.data["h"] = h_vec.tolist()
+
+    def set_ion_currents(self, leak_current_v, na_current_v, k_current_v):
+        """
+        Set gating variable values 
+        """
+        self.data["na_current"] = na_current_v.tolist()
+        self.data["k_current"] = k_current_v.tolist()
+        self.data["leak_current"] = leak_current_v.tolist()
+
     def set_injected_current(self, injected_current):
         """
-        Set current injection vector for LIFOutput
+        Set current injection vector for HHOutput
         """
         self.data["injected_current"] = injected_current.tolist()
-    
-    def set_spike_times(self, spike_times):
-        """
-        Set spike times for LIF
-        """
-        self.data["spike_times"] = spike_times.tolist()
 
     def _create_visualization_data(
-        self, membrane_voltage, normalized_v_data, 
+        self, membrane_voltage, normalized_v_data, max_v, 
         ic_initial_color=RGB_WHITE, ec_initial_color=RGB_WHITE,
         ic_final_color=(132, 215, 206), 
         ec_final_color=(238, 129, 238), 
         membrane_initial_color=DEFAULT_RGB_RESTING_POTENTIAL, 
         threshold_color=DEFAULT_RGB_THRESHOLD_POTENTIAL,
     ):
-        """Calculate colors to create visualization for LIF simulation"""
+        """Calculate colors to create visualization for HH simulation"""
 
         # Determining change in membrane color
         membrane_color_v = np.array(membrane_initial_color)
@@ -106,13 +116,10 @@ class HHOutput:
         ec_color_v = ec_initial_color_v + (ec_color_distance * normalized_v_data)
 
         for i in range(len(normalized_v_data)):
-            if membrane_voltage[i] >= threshold_v:
+            if membrane_voltage[i] >= max_v:
                 membrane_color[i] = RGB_WHITE
                 ic_color_v[i] = RGB_WHITE
                 ec_color_v[i] = RGB_WHITE
-
-        # intracellular_color_v = base_color_v + color_time_v
-        # extracellular_color_v = final_color_v - color_time_v
 
         return (ic_color_v, ec_color_v, membrane_color)
 

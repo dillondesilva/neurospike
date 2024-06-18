@@ -101,11 +101,11 @@ class LIF:
                 membrane_v_vec[i + 1] = v_reset
 
         # Create output instance
-        simulation_output = LIFOutput()
-        simulation_output.set_membrane_voltage(membrane_v_vec, threshold_v)
-        simulation_output.set_timepoints(time_vec)
-        simulation_output.set_injected_current(current_vec)
-        simulation_output.set_spike_times(spike_times)
-        sys.stdout.write(simulation_output.jsonify())
-        sys.stdout.write('\n')
+        # simulation_output = LIFOutput()
+        # simulation_output.set_membrane_voltage(membrane_v_vec, threshold_v)
+        # simulation_output.set_timepoints(time_vec)
+        # simulation_output.set_injected_current(current_vec)
+        # simulation_output.set_spike_times(spike_times)
+        # sys.stdout.write(simulation_output.jsonify())
+        # sys.stdout.write('\n')
         return [membrane_v_vec, time_vec]

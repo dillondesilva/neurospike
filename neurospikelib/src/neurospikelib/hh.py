@@ -1,4 +1,4 @@
-from hh_output import HHOutput
+from .hh_output import HHOutput
 
 import numpy as np
 import sys
@@ -30,19 +30,13 @@ DEFAULT_CONDUCTANCE_LEAK = 0.3
 
 class HHModel:
     """
-    Hodg_kin-Huxley Simulation Module for Neurospike. Provides
+    Hodgkin-Huxley Simulation Module for Neurospike. Provides
     HH Model support for Neurospike simulation app
     """
     @staticmethod
     def simulate(
         initial_v=DEFAULT_RESTING_VOLTAGE,
         membrane_c=DEFAULT_MEMBRANE_CAPACITANCE,
-        e_na=DEFAULT_REVERSAL_POTENTIAL_NA,
-        e_k=DEFAULT_REVERSAL_POTENTIAL_K,
-        e_leak=DEFAULT_CONDUCTANCE_LEAK,
-        g_na=DEFAULT_CONDUCTANCE_NA,
-        g_k=DEFAULT_CONDUCTANCE_K,
-        g_leak=DEFAULT_CONDUCTANCE_LEAK,
         simulation_duration=DEFAULT_SIMULATION_DURATION,
         resolution=DEFAULT_RESOLUTION,
         pulses=list()
@@ -75,6 +69,14 @@ class HHModel:
             pulse_vec = np.zeros(len(pulse_app_indices))
             pulse_vec.fill(pulse_amplitude)
             np.put(current_vec, pulse_app_indices, pulse_vec)
+        
+        e_na=DEFAULT_REVERSAL_POTENTIAL_NA
+        e_k=DEFAULT_REVERSAL_POTENTIAL_K
+        e_leak=DEFAULT_CONDUCTANCE_LEAK
+
+        g_na=DEFAULT_CONDUCTANCE_NA
+        g_k=DEFAULT_CONDUCTANCE_K
+        g_leak=DEFAULT_CONDUCTANCE_LEAK
 
         # The following code is attributed to Robert Rosenbaum
         # and his work which can be found at the following repo:
@@ -115,6 +117,10 @@ class HHModel:
         # Toal ion currents
         Iion = lambda n,m,h,V: IL(V)+IK(n,V)+INa(m,h,V)
 
+        leaky_current_v = np.zeros(len(time_vec))
+        na_current_v = np.zeros(len(time_vec))
+        k_current_v = np.zeros(len(time_vec))
+
         # Euler solver
         V=np.zeros_like(time_vec)
         n=np.zeros_like(time_vec)
@@ -131,14 +137,18 @@ class HHModel:
             m[i+1]=m[i]+dt*((1-m[i])*alpham(V[i])-m[i]*betam(V[i]))
             h[i+1]=h[i]+dt*((1-h[i])*alphah(V[i])-h[i]*betah(V[i]))
 
-            # Update membrane potential
+            # Update membrane potential and ion current vectors
             V[i+1]=V[i]+dt*(Iion(n[i],m[i],h[i],V[i])+current_vec[i])/membrane_c
+            leaky_current_v[i] = IL(V[i])
+            
 
         # Create output instance
         simulation_output = HHOutput()
         simulation_output.set_membrane_voltage(V)
         simulation_output.set_timepoints(time_vec)
         simulation_output.set_injected_current(current_vec)
+        simulation_output.set_gating_variables(n, m, h)
+        simulation_output.set_ion_currents(leaky_current_v, na_current_v, k_current_v)
         sys.stdout.write(simulation_output.jsonify())
         sys.stdout.write('\n')
         return [V, time_vec]

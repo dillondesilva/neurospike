@@ -91,11 +91,11 @@ class AdEx:
                 w[i + 1] = w[i + 1] + b
         
         # Create output instance
-        simulation_output = LIFOutput()
-        simulation_output.set_membrane_voltage(membrane_v_vec, v_peak)
-        simulation_output.set_timepoints(time_vec)
-        simulation_output.set_injected_current(current_vec)
-        sys.stdout.write(simulation_output.jsonify())
-        sys.stdout.write('\n')
+        # simulation_output = LIFOutput()
+        # simulation_output.set_membrane_voltage(membrane_v_vec, v_peak)
+        # simulation_output.set_timepoints(time_vec)
+        # simulation_output.set_injected_current(current_vec)
+        # sys.stdout.write(simulation_output.jsonify())
+        # sys.stdout.write('\n')
         print(dt)
         return [membrane_v_vec, time_vec]
