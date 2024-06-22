@@ -8,20 +8,25 @@ import {
     Divider,
     Drawer,
     List,
-    ListItem
+    ListItem,
+    Button,
+    ToggleButtonGroup,
+    ToggleButton
   } from '@mui/material';
-  import '../App.css';
-  import HHControlPanel from '../components/HHControlPanel';
-  import HHPlotting from '../components/HHPlotting';
-  import PyodideWorker from '../components/PyodideWorker';
-  import { createTheme } from '@mui/material/styles';
-  import HomeIcon from '@mui/icons-material/Home';
-  import MenuIcon from '@mui/icons-material/Menu';
-  import { useNavigate } from 'react-router-dom';
-  import PythonEditor from 'codehelium';
-  import { useEffect, useState, useRef } from 'react';
-  import { hhDefaultCodeString } from '../defaultCodeStrings';
-  import { HHSimulation } from '../components/HHSimulation';
+import '../App.css';
+import HHControlPanel from '../components/HHControlPanel';
+import HHPlotting from '../components/HHPlotting';
+import PyodideWorker from '../components/PyodideWorker';
+import { createTheme } from '@mui/material/styles';
+import HomeIcon from '@mui/icons-material/Home';
+import MenuIcon from '@mui/icons-material/Menu';
+import { useNavigate } from 'react-router-dom';
+import PythonEditor from 'codehelium';
+import { useEffect, useState, useRef } from 'react';
+import { hhDefaultCodeString } from '../defaultCodeStrings';
+import { HHSimulation } from '../components/HHSimulation';
+import LIFSimulation from '../components/LIFSimulation';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
   // Following code for theme from MUI example
   const darkTheme = createTheme({
@@ -39,6 +44,15 @@ import {
     const [ editorValue, setEditorValue ] = useState(hhDefaultCodeString);
     const [ editorInitialText, setEditorInitialText ] = useState(hhDefaultCodeString);
     const [ menuOpen, setMenuOpen ] = useState(false);
+    const [ visualMode, setVisualMode] = useState("AP");
+    
+    const handleVisualToggle = () => {
+      if (visualMode === "AP") {
+        setVisualMode("Ion");
+      } else {
+        setVisualMode("AP");
+      }
+    }
   
     useEffect(() => {
       console.log("Output change");
@@ -72,7 +86,7 @@ import {
     }
   
     return (
-      <div className="playgroundWrapper overscroll-none overflow-y-hidden">
+      <div className="playgroundWrapper h-screen overscroll-none overflow-hidden">
           <AppBar
             position="static"
             className="bg-[#010A22]"
@@ -131,6 +145,7 @@ import {
           padding={2}
           alignSelf="center"
           justifyContent="space-evenly"
+          className="overscroll-none"
         >
           <Grid item>
             <Stack spacing={2}>
@@ -172,7 +187,25 @@ import {
               >
                 <HHPlotting simulationDataStr={consoleOutputs} />
               </Container>
-                <HHSimulation simulationDataStr={consoleOutputs}/>
+              <Container sx={{
+                position: 'relative',
+                paddingLeft: '0!important',
+                paddingRight: '0!important'
+              }}>
+                {visualMode === "AP"
+                  ? <LIFSimulation simulationDataStr={consoleOutputs}/>
+                  : <HHSimulation simulationDataStr={consoleOutputs}/>
+                }
+                <div className="absolute top-[88%] right-[5%]">
+                  {/* From Flowbites */}
+                  <label class="inline-flex items-center mb-5 cursor-pointer"> 
+                    <input type="checkbox" value="" class="sr-only peer" onChange={() => handleVisualToggle()}/>
+                    <div class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                    <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Ion currents</span>
+                  </label>
+                </div>
+                {/* </div> */}
+              </Container>
             </Stack>
           </Grid>
         </Grid>

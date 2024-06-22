@@ -58,7 +58,7 @@ let options = {
   elements:{
     point:{
         // borderWidth: 0.5,
-        radius: 10,
+        radius: 1,
         // pointBackgroundColor: 'rgb(255,0,0)',
         // pointBorderColor: 'rgb(255,0,0)'
     },
@@ -97,7 +97,7 @@ export default function HHPlotting(props) {
       const deltaToPlotMax = Math.abs(Math.abs(voltageMax) - Math.abs(voltageMin)) * 0.1;
       newPlotOptions.scales.y.min = Math.min(...membraneVoltage) - deltaToPlotMax;
       newPlotOptions.scales.y.max = Math.max(...membraneVoltage) + deltaToPlotMax;
-      newPlotOptions.elements.point.radius = customRadius;
+      // newPlotOptions.elements.point.radius = customRadius;
   
       let timePoints = parsedData.data.timepoints;
 
