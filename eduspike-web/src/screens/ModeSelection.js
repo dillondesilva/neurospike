@@ -11,7 +11,7 @@ export default function ModeSelection() {
     lif: 'Explore the simplest integrate-and-fire model by stimulating a neuron to form an action potential',
     eif: 'See how factoring in exponential changes to membrane voltage produce more accurate integrate-and-fire models',
     hh:
-      'Use the Hodgkin-Huxley Model to explore the behaviour of different ion channels during nerve impulse propagation',
+      'Explore how several different ion currents contribute to an action potential',
   };
 
   return (
