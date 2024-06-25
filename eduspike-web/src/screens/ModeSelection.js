@@ -11,7 +11,7 @@ export default function ModeSelection() {
     lif: 'Explore the simplest integrate-and-fire model by stimulating a neuron to form an action potential',
     eif: 'See how factoring in exponential changes to membrane voltage produce more accurate integrate-and-fire models',
     hh:
-      'Explore how several different ion currents contribute to an action potential',
+      'Explore how several different ion currents contribute to an action potential. This sandbox is still under development',
   };
 
   return (
