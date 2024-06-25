@@ -53,8 +53,8 @@ class HHModel:
         if num_points == 0:
             return [[], []]
 
-        dt = simulation_duration / num_points
-        time_vec = np.linspace(0, simulation_duration, num_points)
+        dt = 0.01
+        time_vec = np.arange(0, simulation_duration, dt)
         current_vec = np.zeros(len(time_vec))
 
         for pulse in pulses:
@@ -63,12 +63,13 @@ class HHModel:
             pulse_amplitude = pulse["amp"]
 
             # Determining indices to apply pulse
-            pulse_start_idx = pulse_start * resolution
-            pulse_end_idx = pulse_end * resolution
+            pulse_start_idx = pulse_start * 100
+            pulse_end_idx = pulse_end * 100
             pulse_app_indices = [range(pulse_start_idx, pulse_end_idx)]
             pulse_vec = np.zeros(len(pulse_app_indices))
             pulse_vec.fill(pulse_amplitude)
             np.put(current_vec, pulse_app_indices, pulse_vec)
+        
         
         e_na=DEFAULT_REVERSAL_POTENTIAL_NA
         e_k=DEFAULT_REVERSAL_POTENTIAL_K
@@ -151,4 +152,4 @@ class HHModel:
         simulation_output.set_ion_currents(leaky_current_v, na_current_v, k_current_v)
         sys.stdout.write(simulation_output.jsonify())
         sys.stdout.write('\n')
-        return [V, time_vec]
+        return simulation_output

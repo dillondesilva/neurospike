@@ -8,11 +8,14 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-NEURON = "^8.2.3"
+python = "^3.10"
+numpy = "^2.0.0"
+matplotlib = "^3.9.0"
+seaborn = "^0.13.2"
+scipy = "^1.14.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^8.2"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
