@@ -177,7 +177,7 @@ export function HHSimulation(props) {
     <div className="w-[45vw] h-[45vh] overflow-hidden \
     grid place-items-center rounded-[20px] relative">
         <Membrane />
-        <Channel />
+        {/* <Channel /> */}
         <Membrane />
     </div>
   );

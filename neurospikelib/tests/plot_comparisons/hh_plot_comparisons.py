@@ -109,7 +109,7 @@ pulses = [{
     "amp": 20
 }]
 
-sim_out = HHModel.simulate(simulation_duration=30, pulses=pulses, resolution=10)
+sim_out = HHModel.simulate(simulation_duration=30, pulses=pulses)
 
 # Make figure
 sim_t = sim_out.data["timepoints"]

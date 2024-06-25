@@ -38,7 +38,6 @@ class HHModel:
         initial_v=DEFAULT_RESTING_VOLTAGE,
         membrane_c=DEFAULT_MEMBRANE_CAPACITANCE,
         simulation_duration=DEFAULT_SIMULATION_DURATION,
-        resolution=DEFAULT_RESOLUTION,
         pulses=list()
     ):
         """
@@ -49,8 +48,8 @@ class HHModel:
             - Membrane resistance (Ohms)
             - Pulses object
         """
-        num_points = (simulation_duration * resolution)
-        if num_points == 0:
+        # num_points = (simulation_duration * DEFAULT_RESOLUTION)
+        if simulation_duration <= 0.1:
             return [[], []]
 
         dt = 0.01
@@ -140,9 +139,11 @@ class HHModel:
 
             # Update membrane potential and ion current vectors
             V[i+1]=V[i]+dt*(Iion(n[i],m[i],h[i],V[i])+current_vec[i])/membrane_c
-            leaky_current_v[i] = IL(V[i])
+        
+        leaky_current_v = IL(V)
+        na_current_v = INa(m, h, V)
+        k_current_v = IK(n, V)
             
-
         # Create output instance
         simulation_output = HHOutput()
         simulation_output.set_membrane_voltage(V)
