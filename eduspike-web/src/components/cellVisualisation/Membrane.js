@@ -6,7 +6,7 @@ import SodiumChannel from "./SodiumChannel";
 function sketch(p5) {
     p5.setup = () => p5.createCanvas(500, 300, p5.WEBGL);
     let simulationIons = new IonCollection(6, 6, 16);
-    let naChannel = new SodiumChannel(0, 0, 100, 125, "#ffad21")
+    let naChannel = new SodiumChannel(0, 0, 80, 125, "#ffad21")
     naChannel.triggerInactivationGate();
     naChannel.triggerActivationGate();
 
