@@ -1,10 +1,14 @@
 import { ReactP5Wrapper } from "@p5-wrapper/react";
 import SodiumIon from "./SodiumIon";
 import IonCollection from "./IonCollection";
+import SodiumChannel from "./SodiumChannel";
 
 function sketch(p5) {
     p5.setup = () => p5.createCanvas(500, 300, p5.WEBGL);
     let simulationIons = new IonCollection(6, 6, 16);
+    let naChannel = new SodiumChannel(0, 0, 100, 125, "#ffad21")
+    naChannel.triggerInactivationGate();
+    naChannel.triggerActivationGate();
 
     // simSodiumIons.forEach((emptyItem) => {
     //   emptyItem = new SodiumIon([100, 200], [100,200]);
@@ -20,6 +24,8 @@ function sketch(p5) {
       p5.rect(-250, -15, 500, 140);
 
       p5.pop();
+
+
       for (let i=-8; i < 0; i++) {
         p5.noFill();
         sketchPhospholipidPair(p5, i * 30 + 2, 110);
@@ -27,13 +33,7 @@ function sketch(p5) {
       for (let i=4; i < 9; i++) {
         p5.noFill();
         sketchPhospholipidPair(p5, i * 30 + 2, 110);
-      } 
-    //   p5.noFill();
-    //   sketchPhospholipidPair(p5, 0, 110);
-    //   p5.noFill();
-    //   sketchPhospholipidPair(p5, 32, 110);
-    //   p5.noFill();
-    //   sketchPhospholipidPair(p5, 64, 110);
+      }
 
       sketchChannel(p5, 30, 0);
       simulationIons.sodiumIons.forEach((sodiumIon) => {
@@ -43,7 +43,9 @@ function sketch(p5) {
       simulationIons.potassiumIons.forEach((potassiumIon) => {
         potassiumIon.drawIon(p5);
       })
-    
+      
+      naChannel.updateGates();
+      naChannel.draw(p5);
     };
 }
 

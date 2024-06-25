@@ -53,12 +53,12 @@ from neurospikelib.hh import HHModel
 # Now perform same computation using neurospikelib
 # Note that taum is equivalent to product of R and C
 pulses = [{
-  "start": 25,
-  "end": 50,
-  "amp": 20
+  "start": 10,
+  "end": 15,
+  "amp": 3
 }]
 
-v, time_vec = HHModel.simulate(simulation_duration=100, pulses=pulses)`
+v, time_vec = HHModel.simulate(simulation_duration=25, pulses=pulses)`
 
 const lifZeroStepExerciseString = `"""
 LIF EXERCISE: ZERO STEP CURRENT

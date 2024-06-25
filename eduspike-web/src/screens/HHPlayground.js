@@ -13,7 +13,6 @@ import {
     ToggleButtonGroup,
     ToggleButton
   } from '@mui/material';
-import '../App.css';
 import HHControlPanel from '../components/HHControlPanel';
 import HHPlotting from '../components/HHPlotting';
 import PyodideWorker from '../components/PyodideWorker';
@@ -45,6 +44,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
     const [ editorInitialText, setEditorInitialText ] = useState(hhDefaultCodeString);
     const [ menuOpen, setMenuOpen ] = useState(false);
     const [ visualMode, setVisualMode] = useState("AP");
+    const [ plotMode, setPlotMode ] = useState("AP");
     
     const handleVisualToggle = () => {
       if (visualMode === "AP") {
@@ -53,9 +53,16 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
         setVisualMode("AP");
       }
     }
+
+    const handlePlotToggle = () => {
+      if (plotMode === "AP") {
+        setPlotMode("Ion");
+      } else {
+        setPlotMode("AP");
+      }
+    }
   
     useEffect(() => {
-      console.log("Output change");
       console.log(consoleOutputs);
     }, [consoleOutputs, setConsoleOutputs]);
   
@@ -183,9 +190,20 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
                   borderRadius: '10px',
                   alignContent: 'center',
                   justifyContent: 'center',
+                  position: 'relative',
+                  paddingLeft: '0!important',
+                  paddingRight: '0!important'
                 }}
               >
-                <HHPlotting simulationDataStr={consoleOutputs} />
+                <HHPlotting simulationDataStr={consoleOutputs} plotMode={plotMode}/>
+                <div className="absolute top-[88%] right-[5%]">
+                  {/* From Flowbites */}
+                  <label class="inline-flex items-center mb-5 cursor-pointer"> 
+                    <input type="checkbox" value="" class="sr-only peer" onChange={() => handlePlotToggle()}/>
+                    <div class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                    <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Ion currents</span>
+                  </label>
+                </div>
               </Container>
               <Container sx={{
                 position: 'relative',
