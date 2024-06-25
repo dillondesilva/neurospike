@@ -1,6 +1,3 @@
-from neuron import h
-from neuron.units import mV, ms
-
 import numpy as np 
 import sys
 import json
