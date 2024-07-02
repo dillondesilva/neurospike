@@ -18,7 +18,6 @@ class Channel {
     updateGates() {
         for (let gate of this.gates) {
             gate.updateGateState();
-            console.log(gate);
         }
     }
 

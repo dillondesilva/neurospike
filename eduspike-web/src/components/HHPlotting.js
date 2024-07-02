@@ -124,9 +124,7 @@ export default function HHPlotting(props) {
         // Need to refactor in future
         plotRef.current.options = newPlotOptions;
         plotRef.current.update();  
-        console.log("UPdated")  
       } else {
-        console.log(parsedData)
         const naCurrent = Array.from(parsedData.data.na_current);
         const kCurrent = Array.from(parsedData.data.k_current);
         const leakCurrent = Array.from(parsedData.data.leak_current);

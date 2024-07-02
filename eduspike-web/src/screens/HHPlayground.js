@@ -62,9 +62,9 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
       }
     }
   
-    useEffect(() => {
-      console.log(consoleOutputs);
-    }, [consoleOutputs, setConsoleOutputs]);
+    // useEffect(() => {
+    //   console.log(consoleOutputs);
+    // }, [consoleOutputs, setConsoleOutputs]);
   
     useEffect(() => {
       console.log("rerendering")

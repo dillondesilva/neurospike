@@ -8,20 +8,16 @@ class IonCollection {
         this.chlorineIons = [];
 
         for (let idx=0; idx < nSodiumIons; idx++) {
-            let currentInstance = new SodiumIon([-200, 200], [-100, -50]);
+            let currentInstance = new SodiumIon([-400, 400], [-200, -30]);
             while (this.#checkInstanceOverlap(currentInstance) !== true) {
-                currentInstance = new SodiumIon([-200, 200], [-100, -50]);
+                currentInstance = new SodiumIon([-400, 400], [-200, -30]);
             }
 
             this.sodiumIons.push(currentInstance);
         }
         for (let idx=0; idx < nPotassiumIons; idx++) {
-            this.potassiumIons.push(new PotassiumIon([-200, 200], [-100, -50]));
+            this.potassiumIons.push(new PotassiumIon([-400, 400], [-200, -30]));
         }
-        // for (let idx=0; idx < nChlorineIons; idx++) {
-        //     sodiumIons[idx] = new SodiumIon([-100, 100], [-100, 0]);
-        // }
-
     }
 
     #checkInstanceOverlap(ionInstance) {
