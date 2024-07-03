@@ -48,10 +48,6 @@ class SodiumIonChannelPair extends IonChannelPair {
         // Check if they have exited channel
         for (let ion of this.ions) {
             if (ion.y > this.canvasHeight / 2) {
-                // ion.y = -this.canvasHeight / 2 - (this.canvasHeight * 0.1);
-                // ion.x = (-this.canvasWidth / 2) + (Math.random() * this.canvasWidth);
-                // ion.updateVelocity(0, 4);
-                // ion.inScene = false;
                 ion.y = ion.originY;
                 ion.x = ion.originX;
                 ion.updateVelocity(0, 0);

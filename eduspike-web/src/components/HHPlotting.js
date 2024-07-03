@@ -86,13 +86,8 @@ export default function HHPlotting(props) {
 
   const updatePlotData = () => {
     try {
-      const parsedData = JSON.parse(props.simulationDataStr[0]);
-      let timePoints = parsedData.data.timepoints;
-
-      timePoints = timePoints.map((timepoint) => {
-        return Number(timepoint.toFixed(0));
-      });
       if (props.plotMode === "AP") {
+        const parsedData = JSON.parse(props.simulationDataStr[0]);
         const membraneVoltage = Array.from(parsedData.data.membrane_voltage);
         let newPlotOptions = options;
         const voltageMin = Math.min(...membraneVoltage);
@@ -102,7 +97,13 @@ export default function HHPlotting(props) {
         newPlotOptions.scales.y.min = Math.min(...membraneVoltage) - deltaToPlotMax;
         newPlotOptions.scales.y.max = Math.max(...membraneVoltage) + deltaToPlotMax;
         // newPlotOptions.elements.point.radius = customRadius;
+    
+        let timePoints = parsedData.data.timepoints;
 
+        timePoints = timePoints.map((timepoint) => {
+          return Number(timepoint.toFixed(0));
+        });
+    
         const newPlotData = {
           labels: timePoints,
           datasets: [
@@ -115,59 +116,54 @@ export default function HHPlotting(props) {
           ],
         };
 
-        console.log("UPdated")  
         setPlotData(newPlotData);  
         setPlotOptions(newPlotOptions);
-        console.log(plotRef);
 
         // Setting the options like this is unsafe.
         // Need to refactor in future
         plotRef.current.options = newPlotOptions;
         plotRef.current.update();  
       } else {
-        const naCurrent = Array.from(parsedData.data.na_current);
-        const kCurrent = Array.from(parsedData.data.k_current);
-        const leakCurrent = Array.from(parsedData.data.leak_current);
-        let newPlotOptions = options;
-        const voltageMin = Math.min(...naCurrent, ...kCurrent, ...leakCurrent);
-        const voltageMax = Math.max(...naCurrent, ...kCurrent, ...leakCurrent);
-        setVMax(voltageMax);
-        newPlotOptions.scales.y.min = voltageMin - (Math.abs(voltageMin) * 0.1);
-        newPlotOptions.scales.y.max = voltageMax + (0.1 * voltageMax);
-        newPlotOptions.scales.y.title.text = "Ion Currents (mA)"
-        const newPlotData = {
-          labels: timePoints,
-          datasets: [
-            {
-              label: 'Na+ Current',
-              data: naCurrent,
-              fill: false,
-              borderColor: 'rgb(255, 0, 0)',
-            },
-            {
-              label: 'K+ Current',
-              data: kCurrent,
-              fill: false,
-              borderColor: 'rgb(10, 255, 12)',
-            },
-            {
-              label: 'Leaky Current',
-              data: leakCurrent,
-              fill: false,
-              borderColor: 'rgb(25, 25, 10)',
-            },
-          ],
-        };
- 
-        setPlotData(newPlotData);  
-        setPlotOptions(newPlotOptions);
-
-        // Setting the options like this is unsafe.
-        // Need to refactor in future
-        plotRef.current.options = newPlotOptions;
-        plotRef.current.update();  
+        console.log("ion")
       }
-   
+      // const parsedData = JSON.parse(props.simulationDataStr[0]);
+      // const membraneVoltage = Array.from(parsedData.data.membrane_voltage);
+      // let newPlotOptions = options;
+      // const voltageMin = Math.min(...membraneVoltage);
+      // const voltageMax = Math.max(...membraneVoltage);
+      // setVMax(voltageMax);
+      // const deltaToPlotMax = Math.abs(Math.abs(voltageMax) - Math.abs(voltageMin)) * 0.1;
+      // newPlotOptions.scales.y.min = Math.min(...membraneVoltage) - deltaToPlotMax;
+      // newPlotOptions.scales.y.max = Math.max(...membraneVoltage) + deltaToPlotMax;
+      // // newPlotOptions.elements.point.radius = customRadius;
+  
+      // let timePoints = parsedData.data.timepoints;
+
+      // timePoints = timePoints.map((timepoint) => {
+      //   return Number(timepoint.toFixed(0));
+      // });
+  
+      // const newPlotData = {
+      //   labels: timePoints,
+      //   datasets: [
+      //     {
+      //       label: 'Transmembrane Potential',
+      //       data: membraneVoltage,
+      //       fill: false,
+      //       borderColor: 'rgb(75, 192, 192)',
+      //     }
+      //   ],
+      // };
+
+     
+      // setPlotData(newPlotData);  
+      // setPlotOptions(newPlotOptions);
+      // console.log(plotRef);
+
+      // // Setting the options like this is unsafe.
+      // // Need to refactor in future
+      // plotRef.current.options = newPlotOptions;
+      // plotRef.current.update();
     } catch (e) {
       console.log(e)
     }
@@ -177,7 +173,7 @@ export default function HHPlotting(props) {
   useEffect(() => {
       updatePlotData();
     // updatePlotData
-  }, [props.plotMode, props.simulationDataStr]);
+  }, [props.simulationDataStr]);
 
   return (
     <Container

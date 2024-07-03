@@ -6,35 +6,38 @@ import PotassiumChannel from "./PotassiumChannel";
 import LeakChannel from "./LeakChannel";
 import SodiumIonChannelPair from "./SodiumIonChannelPair";
 import PotassiumIonChannelPair from "./PotassiumIonChannelPair";
+import LeakIonChannelPair from "./LeakIonChannelPair";
 
 function sketch(p5) {
-    p5.setup = () => p5.createCanvas(800, 500, p5.WEBGL);
-    let simulationIons = new IonCollection(200, 200, 200);
-    let naChannel = new SodiumChannel(0, 0, 60, 85, "#ffad21");
-    let kChannel = new PotassiumChannel(-150, 0, 60, 85, "#a0a0de");
-    let leakChannel = new LeakChannel(150, 0, 60, 85, "#ff0fa9");
+    let font;
+    p5.preload = () => {
+      font = p5.loadFont('fonts/Roboto/Roboto-Black.ttf');
+    }
+    p5.setup = () => {
+      p5.createCanvas(800, 500, p5.WEBGL);
+      p5.textFont(font);
+    }
+
+    let simulationIons = new IonCollection(400, 400, 400);
+    let naChannel = new SodiumChannel(0, -30, 60, 85, "#ffad21");
+    let kChannel = new PotassiumChannel(-120, -30, 60, 85, "#a0a0de");
+    let leakChannel = new LeakChannel(-250, -30, 60, 85, "#0002a0");
     p5.simulationData = {};
     // naChannel.triggerInactivationGate();
     naChannel.triggerActivationGate();
 
     p5.updateWithProps = props => {
-      console.log(props);
       if (props.simulationData) {
-        console.log(props.simulationData);
         p5.simulationData = props.simulationData.data;
       }
-        // console.log(props.simulationData)
-        // if (props.simulationData.data.m > 0.5 && !naChannel.isActivationOpen()) {
-        //   naChannel.triggerActivationGate();
-        // } else if (props.simulationData.m > 0.5 && naChannel.isActivationOpen()) {
-        //   naChannel.triggerActivationGate();
-        // }
     };
 
     kChannel.triggerActivationGate();
 
     let naIonChannelPair = new SodiumIonChannelPair(naChannel, simulationIons.sodiumIons, 800, 500);
-    let kIonChannelPair = new PotassiumIonChannelPair(kChannel, simulationIons.potassiumIons, 800, 500)
+    let kIonChannelPair = new PotassiumIonChannelPair(kChannel, simulationIons.potassiumIons, 800, 500);
+    let leakIonChannelPair = new LeakIonChannelPair(leakChannel, simulationIons.leakIons, 800, 500)
+
     let currTimepoint = 0;
     // simSodiumIons.forEach((emptyItem) => {
     //   emptyItem = new SodiumIon([100, 200], [100,200]);
@@ -42,11 +45,13 @@ function sketch(p5) {
     
     p5.draw = () => {
       p5.background(180, 200, 255);
-      // console.log(simulationData);
       if (Object.keys(p5.simulationData).length > 5) {
-        currTimepoint += 1;
-        console.log(p5.simulationData.timepoints[currTimepoint]);
-        console.log('n is', p5.simulationData.n[currTimepoint], 'm is', p5.simulationData.m[currTimepoint], 'h is', p5.simulationData.h[currTimepoint])
+        if (currTimepoint === p5.simulationData.timepoints.length) {
+          currTimepoint = 0;
+        } else {
+          currTimepoint += 1;
+        }
+        
         if (p5.simulationData.m[currTimepoint] > 0.9 && !naChannel.isActivationOpen()) {
           naChannel.triggerActivationGate();
         } else if (p5.simulationData.m[currTimepoint] < 0.1 && naChannel.isActivationOpen()) {
@@ -94,22 +99,24 @@ function sketch(p5) {
       p5.translate(-80, -50);
       naIonChannelPair.handleIonsMotion();
       kIonChannelPair.handleIonsMotion();
+      leakIonChannelPair.handleIonsMotion();
+
       naIonChannelPair.draw(p5);
+      leakIonChannelPair.draw(p5);
       kIonChannelPair.draw(p5);
-
-      // simulationIons.potassiumIons.forEach((potassiumIon) => {
-      //   potassiumIon.draw(p5);
-      // })
-
-      // simulationIons.leak.forEach((potassiumIon) => {
-      //   potassiumIon.draw(p5);
-      // })
       
       naChannel.updateGates();
       kChannel.updateGates();
 
-      naChannel.draw(p5);
-      kChannel.draw(p5);
+      p5.fill(0);
+      p5.textSize(10);
+      let formattedTime = (Math.round(p5.simulationData.timepoints[currTimepoint] * 100) / 100).toFixed(2);
+      let formattedV = (Math.round(p5.simulationData.membrane_voltage[currTimepoint] * 100) / 100).toFixed(2);
+      
+      p5.text(`Time: ${formattedTime} ms`, 150, 50);
+      p5.text(`Vₘ: ${formattedV} mV`, 150, 70);
+      p5.text(`Time: ${formattedTime} ms`, 150, 50);
+      p5.text(`Time: ${formattedTime} ms`, 150, 50);
       p5.pop();
       // leakChannel.draw(p5);
     };

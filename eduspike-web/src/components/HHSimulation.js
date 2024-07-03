@@ -35,7 +35,6 @@ export function HHSimulation(props) {
   const updateVisualisation = () => {
     try {
       const parsedData = JSON.parse(props.simulationDataStr[0]);
-      console.log(parsedData.data)
       setData(parsedData);
 
     } catch (e) {
