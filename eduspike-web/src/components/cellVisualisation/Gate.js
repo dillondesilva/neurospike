@@ -2,7 +2,7 @@ class Gate {
     constructor(initialX, initialY, channelWidth, initialGateWidth=0, initialGateHeight=10) {
         this.x = initialX;
         this.y = initialY;
-        this.isOpen = false;
+        this.isOpen = true;
         this.channelWidth = channelWidth;
         this.gateWidth = initialGateWidth;
         this.gateHeight = initialGateHeight;
@@ -16,9 +16,9 @@ class Gate {
     }
 
     updateGateState() {
-        if (this.gateWidth < this.channelWidth / 2 && this.isOpen) {
+        if (this.gateWidth < this.channelWidth / 2 && !this.isOpen) {
             this.gateWidth += this.rate;
-        } else if (this.gateWidth > 0 && !this.isOpen) {
+        } else if (this.gateWidth > 0 && this.isOpen) {
             this.gateWidth -= this.rate;
         }
     }

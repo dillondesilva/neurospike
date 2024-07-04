@@ -13,14 +13,18 @@ HHModel.simulate(pulses=[{
       "start": ${pulseDelay},
       "end": ${pulseDelay + pulseDuration},
       "amp": ${inputCurrent}
+<<<<<<< HEAD
+  }], simulation_duration=${simulationDuration})`;
+=======
   }], resolution=100, simulation_duration=${simulationDuration})`;
+>>>>>>> f7e675acda5e1efca29450048f6b817ffbaebe26
 
   return codeString;
 }
 
 const INITIAL_INPUT_CURRENT = 2;
 const INITIAL_PULSE_DURATION = 20;
-const INITIAL_SIMULATION_DURATION = 100;
+const INITIAL_SIMULATION_DURATION = 20;
 const INITIAL_PULSE_DELAY = 0;
 
 export default function HHControlPanel(props) {
@@ -109,7 +113,11 @@ export default function HHControlPanel(props) {
           ref={simulationDurationSlider}
           defaultValue={simulationDuration}
           setter={setSimulationDuration}
+<<<<<<< HEAD
+          rangeData={[5, 30, 1]} 
+=======
           rangeData={[100, 500, 10]} 
+>>>>>>> f7e675acda5e1efca29450048f6b817ffbaebe26
         />
         <ParameterSlider 
           parameterName={"Pulse entrypoint (ms)"}
@@ -117,7 +125,11 @@ export default function HHControlPanel(props) {
           ref={pulseDelaySlider}
           defaultValue={pulseDelay}
           setter={setPulseDelay}
+<<<<<<< HEAD
+          rangeData={[5, 25, 1]} 
+=======
           rangeData={[0, 100, 10]} 
+>>>>>>> f7e675acda5e1efca29450048f6b817ffbaebe26
         />
       </div>
       <div className="pt-6">

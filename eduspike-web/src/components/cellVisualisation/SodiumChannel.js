@@ -22,6 +22,17 @@ class SodiumChannel extends Channel {
     triggerInactivationGate() {
         this.inactivationGate.triggerGate();
     }
+<<<<<<< HEAD
+
+    isActivationOpen() {
+        return this.activationGate.isOpen;
+    }
+    
+    isInactivationOpen() {
+        return this.inactivationGate.isOpen;
+    }
+=======
+>>>>>>> f7e675acda5e1efca29450048f6b817ffbaebe26
 }
 
 export default SodiumChannel;

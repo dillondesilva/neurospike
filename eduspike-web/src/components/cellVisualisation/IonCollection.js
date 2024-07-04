@@ -1,27 +1,28 @@
 import SodiumIon from "./SodiumIon";
 import PotassiumIon from "./PotassiumIon";
+import LeakIon from "./LeakIon";
 
 class IonCollection {
-    constructor(nSodiumIons, nPotassiumIons, nChlorineIons) {
+    constructor(nSodiumIons, nPotassiumIons, nLeakIons) {
         this.sodiumIons = [];
         this.potassiumIons = [];
-        this.chlorineIons = [];
+        this.leakIons = [];
 
         for (let idx=0; idx < nSodiumIons; idx++) {
-            let currentInstance = new SodiumIon([-200, 200], [-100, -50]);
+            let currentInstance = new SodiumIon([-800, 800], [-200, -70]);
             while (this.#checkInstanceOverlap(currentInstance) !== true) {
-                currentInstance = new SodiumIon([-200, 200], [-100, -50]);
+                currentInstance = new SodiumIon([-800, 800], [-200, -70]);
             }
 
             this.sodiumIons.push(currentInstance);
         }
         for (let idx=0; idx < nPotassiumIons; idx++) {
-            this.potassiumIons.push(new PotassiumIon([-200, 200], [-100, -50]));
+            this.potassiumIons.push(new PotassiumIon([-800, 800], [-200, -70]));
         }
-        // for (let idx=0; idx < nChlorineIons; idx++) {
-        //     sodiumIons[idx] = new SodiumIon([-100, 100], [-100, 0]);
-        // }
 
+        for (let idx=0; idx < nLeakIons; idx++) {
+            this.leakIons.push(new LeakIon([-800, 800], [-200, -70]));
+        }
     }
 
     #checkInstanceOverlap(ionInstance) {

@@ -2,50 +2,133 @@ import { ReactP5Wrapper } from "@p5-wrapper/react";
 import SodiumIon from "./SodiumIon";
 import IonCollection from "./IonCollection";
 import SodiumChannel from "./SodiumChannel";
+import PotassiumChannel from "./PotassiumChannel";
+import LeakChannel from "./LeakChannel";
+import SodiumIonChannelPair from "./SodiumIonChannelPair";
+import PotassiumIonChannelPair from "./PotassiumIonChannelPair";
+import LeakIonChannelPair from "./LeakIonChannelPair";
 
 function sketch(p5) {
-    p5.setup = () => p5.createCanvas(500, 300, p5.WEBGL);
-    let simulationIons = new IonCollection(6, 6, 16);
-    let naChannel = new SodiumChannel(0, 0, 80, 125, "#ffad21")
-    naChannel.triggerInactivationGate();
+    let font;
+    p5.preload = () => {
+      font = p5.loadFont('fonts/Roboto/Roboto-Black.ttf');
+    }
+    p5.setup = () => {
+      p5.createCanvas(800, 500, p5.WEBGL);
+      p5.textFont(font);
+    }
+
+    let simulationIons = new IonCollection(400, 400, 400);
+    let naChannel = new SodiumChannel(0, -30, 60, 85, "#ffad21");
+    let kChannel = new PotassiumChannel(-120, -30, 60, 85, "#a0a0de");
+    let leakChannel = new LeakChannel(-250, -30, 60, 85, "#0002a0");
+    p5.simulationData = {};
+    // naChannel.triggerInactivationGate();
     naChannel.triggerActivationGate();
 
+    p5.updateWithProps = props => {
+      if (props.simulationData) {
+        p5.simulationData = props.simulationData.data;
+      }
+    };
+
+    kChannel.triggerActivationGate();
+
+    let naIonChannelPair = new SodiumIonChannelPair(naChannel, simulationIons.sodiumIons, 800, 500);
+    let kIonChannelPair = new PotassiumIonChannelPair(kChannel, simulationIons.potassiumIons, 800, 500);
+    let leakIonChannelPair = new LeakIonChannelPair(leakChannel, simulationIons.leakIons, 800, 500)
+
+    let currTimepoint = 0;
     // simSodiumIons.forEach((emptyItem) => {
     //   emptyItem = new SodiumIon([100, 200], [100,200]);
     // })
     
     p5.draw = () => {
       p5.background(180, 200, 255);
+      if (Object.keys(p5.simulationData).length > 5) {
+        if (currTimepoint === p5.simulationData.timepoints.length) {
+          currTimepoint = 0;
+        } else {
+          currTimepoint += 1;
+        }
+        
+        if (p5.simulationData.m[currTimepoint] > 0.9 && !naChannel.isActivationOpen()) {
+          naChannel.triggerActivationGate();
+        } else if (p5.simulationData.m[currTimepoint] < 0.1 && naChannel.isActivationOpen()) {
+          naChannel.triggerActivationGate();
+        }
+
+        if (p5.simulationData.h[currTimepoint] > 0.4  && !naChannel.isInactivationOpen()) {
+          naChannel.triggerInactivationGate();
+        } else if (p5.simulationData.h[currTimepoint] < 0.1 && naChannel.isInactivationOpen()) {
+          naChannel.triggerInactivationGate();
+        }
+
+        if (p5.simulationData.n[currTimepoint] > 0.7 && !kChannel.isActivationOpen() 
+            && !naChannel.isInactivationOpen()) {
+          kChannel.triggerActivationGate();
+        } else if (p5.simulationData.n[currTimepoint] < 0.5 && kChannel.isActivationOpen()) {
+          kChannel.triggerActivationGate();
+        }
+
+        let formattedN = (Math.round(p5.simulationData.n[currTimepoint] * 100) / 100).toFixed(2);
+        let formattedM = (Math.round(p5.simulationData.m[currTimepoint] * 100) / 100).toFixed(2);
+        let formattedH = (Math.round(p5.simulationData.h[currTimepoint] * 100) / 100).toFixed(2);
+        
+        p5.push();
+        p5.translate(-80, -50);
+        p5.fill(0)
+        p5.text(`n: ${formattedN}`, 100, 20);
+        p5.text(`m: ${formattedM}`, 100, 40);
+        p5.text(`h: ${formattedH}`, 100, 60);
+        p5.pop();
+      }
+
+
+      // p5.push();
+
+      // p5.noStroke();
+      // p5.translate(0, Math.sin(p5.frameCount / 16));
+      // p5.fill(230, 205, 190)
+      // p5.rect(-250, -15, 500, 140);
+
+      // p5.pop();
+
+
+      // for (let i=-8; i < 0; i++) {
+      //   p5.noFill();
+      //   sketchPhospholipidPair(p5, i * 30 + 2, 110);
+      // }
+      // for (let i=4; i < 9; i++) {
+      //   p5.noFill();
+      //   sketchPhospholipidPair(p5, i * 30 + 2, 110);
+      // }
+
+      // simulationIons.sodiumIons.forEach((sodiumIon) => {
+      //   sodiumIon.drawIon(p5);
+      // })
       p5.push();
+      p5.translate(-80, -50);
+      naIonChannelPair.handleIonsMotion();
+      kIonChannelPair.handleIonsMotion();
+      leakIonChannelPair.handleIonsMotion();
 
-      p5.noStroke();
-      p5.translate(0, Math.sin(p5.frameCount / 16));
-      p5.fill(230, 205, 190)
-      p5.rect(-250, -15, 500, 140);
-
-      p5.pop();
-
-
-      for (let i=-8; i < 0; i++) {
-        p5.noFill();
-        sketchPhospholipidPair(p5, i * 30 + 2, 110);
-      }
-      for (let i=4; i < 9; i++) {
-        p5.noFill();
-        sketchPhospholipidPair(p5, i * 30 + 2, 110);
-      }
-
-      sketchChannel(p5, 30, 0);
-      simulationIons.sodiumIons.forEach((sodiumIon) => {
-        sodiumIon.drawIon(p5);
-      })
-      
-      simulationIons.potassiumIons.forEach((potassiumIon) => {
-        potassiumIon.drawIon(p5);
-      })
+      naIonChannelPair.draw(p5);
+      leakIonChannelPair.draw(p5);
+      kIonChannelPair.draw(p5);
       
       naChannel.updateGates();
-      naChannel.draw(p5);
+      kChannel.updateGates();
+
+      p5.fill(0);
+      p5.textSize(12);
+      let formattedTime = (Math.round(p5.simulationData.timepoints[currTimepoint] * 100) / 100).toFixed(2);
+      let formattedV = (Math.round(p5.simulationData.membrane_voltage[currTimepoint] * 100) / 100).toFixed(2);
+
+      p5.text(`Transmembrane Potential: ${formattedV} mV`, 100, -20);
+      p5.text(`Time: ${formattedTime} ms`, 100, 0);
+      p5.pop();
+      // leakChannel.draw(p5);
     };
 }
 
@@ -104,10 +187,10 @@ function sketchPhospholipidPair(p5, x, y) {
     p5.pop();
 }
 
-export default function Membrane() {
+export default function Membrane(props) {
   return (
       <div>
-          <ReactP5Wrapper sketch={sketch} />
+          <ReactP5Wrapper sketch={sketch} simulationData={props.simulationData}/>
       </div>
   )
 }
