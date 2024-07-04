@@ -28,10 +28,10 @@ class PotassiumIonChannelPair extends IonChannelPair {
         } else {
             // Ensure ion motion is continued
             for (let ion of this.ions) {
-                if (this.isIonInYBounds(ion) === 0 && this.isIonInXBounds(ion) === 0
-                    && ion.y > (this.channel.activationGate.y) - 150) {
+                if (this.isIonInXBounds(ion) === 0 && 
+                (ion.y < (this.channel.activationGate.y) && ion.y > (this.channel.activationGate.y) - 30)) {
                     ion.updateVelocity(0, -4);
-                } else if (this.isIonInYBounds(ion) !== 0 || this.isIonInXBounds(ion) !== 0) {
+                } else if (ion.y < this.channel.activationGate.y - 30) {
                     ion.updateVelocity(0, 0);
                 }
             }
