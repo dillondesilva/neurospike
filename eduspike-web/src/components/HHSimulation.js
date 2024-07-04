@@ -49,15 +49,9 @@ export function HHSimulation(props) {
   return (
     <div className="w-[45vw] h-[45vh] overflow-hidden \
     grid place-items-center rounded-[20px] relative">
-<<<<<<< HEAD
         <Membrane simulationData={visualisationData} />
         {/* <Channel /> */}
         {/* <Membrane /> */}
-=======
-        <Membrane />
-        {/* <Channel /> */}
-        <Membrane />
->>>>>>> f7e675acda5e1efca29450048f6b817ffbaebe26
     </div>
   );
 }
