@@ -38,7 +38,8 @@ class HHModel:
         initial_v=DEFAULT_RESTING_VOLTAGE,
         membrane_c=DEFAULT_MEMBRANE_CAPACITANCE,
         simulation_duration=DEFAULT_SIMULATION_DURATION,
-        pulses=list()
+        pulses=list(),
+        sim_out=True
     ):
         """
         Runs HH model simulation given the following data:
@@ -151,6 +152,9 @@ class HHModel:
         simulation_output.set_injected_current(current_vec)
         simulation_output.set_gating_variables(n, m, h)
         simulation_output.set_ion_currents(leaky_current_v, na_current_v, k_current_v)
-        sys.stdout.write(simulation_output.jsonify())
-        sys.stdout.write('\n')
+       
+        if sim_out:
+            sys.stdout.write(simulation_output.jsonify())
+            sys.stdout.write('\n')
+
         return simulation_output

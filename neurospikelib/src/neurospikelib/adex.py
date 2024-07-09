@@ -45,7 +45,8 @@ class AdEx:
         tau_w=DEFAULT_TAU_W,
         simulation_duration=DEFAULT_SIMULATION_DURATION,
         resolution=DEFAULT_RESOLUTION,
-        pulses=[]
+        pulses=[],
+        sim_out=True
     ):
         """
         Runs Forward-Euler solver for AdEx model from given inputs
@@ -92,10 +93,12 @@ class AdEx:
         
         # Create output instance
         simulation_output = LIFOutput()
-        simulation_output.set_membrane_voltage(membrane_v_vec, v_peak)
+        simulation_output.set_membrane_voltage(membrane_v_vec, threshold_v)
         simulation_output.set_timepoints(time_vec)
         simulation_output.set_injected_current(current_vec)
-        sys.stdout.write(simulation_output.jsonify())
-        sys.stdout.write('\n')
-        print(dt)
+        
+        if sim_out:
+            sys.stdout.write(simulation_output.jsonify())
+            sys.stdout.write('\n')
+
         return [membrane_v_vec, time_vec]

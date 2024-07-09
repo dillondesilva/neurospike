@@ -53,7 +53,8 @@ class LIF:
         membrane_r=DEFAULT_MEMBRANE_RESISTANCE,
         simulation_duration=DEFAULT_SIMULATION_DURATION,
         resolution=DEFAULT_RESOLUTION,
-        pulses=list()
+        pulses=list(),
+        sim_out=True
     ):
         """
         Runs LIF model simulation given the following data:
@@ -106,6 +107,9 @@ class LIF:
         simulation_output.set_timepoints(time_vec)
         simulation_output.set_injected_current(current_vec)
         simulation_output.set_spike_times(spike_times)
-        sys.stdout.write(simulation_output.jsonify())
-        sys.stdout.write('\n')
+
+        if sim_out:
+            sys.stdout.write(simulation_output.jsonify())
+            sys.stdout.write('\n')
+            
         return [membrane_v_vec, time_vec]

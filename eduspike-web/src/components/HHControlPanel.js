@@ -101,7 +101,7 @@ export default function HHControlPanel(props) {
           ref={pulseDurationSlider}
           defaultValue={pulseDuration}
           setter={setPulseDuration}
-          rangeData={[0, 100, 10]}
+          rangeData={[0, 25, 1]}
         />
         <ParameterSlider 
           parameterName={"Simulation duration (ms)"}

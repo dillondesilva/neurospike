@@ -38,8 +38,8 @@ class LIFOutput:
         )
 
         min_v = np.min(list(membrane_voltage))
-
         normalized_v_data = (reshaped_membrane_voltage - min_v) / (threshold_v - min_v)
+
         intracellular_color_v, extracellular_color_v, membrane_color_v = self._create_visualization_data(
             membrane_voltage, normalized_v_data, threshold_v
         )
@@ -102,8 +102,8 @@ class LIFOutput:
         for i in range(len(normalized_v_data)):
             if membrane_voltage[i] >= threshold_v:
                 membrane_color[i] = RGB_WHITE
-                ic_color_v[i] = RGB_WHITE
-                ec_color_v[i] = RGB_WHITE
+                ic_color_v[i] = ic_final_color
+                ec_color_v[i] = ec_final_color
 
         # intracellular_color_v = base_color_v + color_time_v
         # extracellular_color_v = final_color_v - color_time_v
