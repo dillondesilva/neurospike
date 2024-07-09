@@ -87,17 +87,13 @@ export default function LIFPlotting(props) {
 
   const updatePlotData = () => {
     try {
-      console.log(props.simulationDataStr)
-      console.log(spikeData);
       const parsedData = JSON.parse(props.simulationDataStr[0]);
-      console.log(parsedData)
       const membraneVoltage = Array.from(parsedData.data.membrane_voltage);
       const spikeTimes = Array.from(parsedData.data.spike_times);
       console.log(spikeTimes);
       let newPlotOptions = options;
       const voltageMin = Math.min(...membraneVoltage);
       const voltageMax = Math.max(...membraneVoltage);
-      setVMax(voltageMax);
       const deltaToPlotMax = Math.abs(Math.abs(voltageMax) - Math.abs(voltageMin)) * 0.1;
       newPlotOptions.scales.y.min = Math.min(...membraneVoltage) - deltaToPlotMax;
       newPlotOptions.scales.y.max = Math.max(...membraneVoltage) + deltaToPlotMax;

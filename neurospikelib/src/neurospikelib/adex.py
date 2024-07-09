@@ -91,11 +91,18 @@ class AdEx:
                 membrane_v_vec[i] = v_peak
                 w[i + 1] = w[i + 1] + b
         
+        spike_times = np.empty(shape=(1,))
+        max_v = np.max(membrane_v_vec)
+        for i in range(len(membrane_v_vec)):
+            if membrane_v_vec[i] >= threshold_v and membrane_v_vec[i] == max_v:
+                np.append(spike_times, time_vec[i])
+
         # Create output instance
         simulation_output = LIFOutput()
         simulation_output.set_membrane_voltage(membrane_v_vec, threshold_v)
         simulation_output.set_timepoints(time_vec)
         simulation_output.set_injected_current(current_vec)
+        simulation_output.set_spike_times(spike_times)
         
         if sim_out:
             sys.stdout.write(simulation_output.jsonify())

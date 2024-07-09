@@ -45,6 +45,9 @@ function sketch(p5) {
     
     p5.draw = () => {
       p5.background(180, 200, 255);
+      p5.noStroke();
+      p5.fill(232, 220, 202);
+      p5.rect(-600, -80, 1200, 85)
       if (Object.keys(p5.simulationData).length > 5) {
         if (currTimepoint === p5.simulationData.timepoints.length) {
           currTimepoint = 0;
@@ -78,9 +81,9 @@ function sketch(p5) {
         p5.push();
         p5.translate(-80, -50);
         p5.fill(0)
-        p5.text(`n: ${formattedN}`, 100, 20);
-        p5.text(`m: ${formattedM}`, 100, 40);
-        p5.text(`h: ${formattedH}`, 100, 60);
+        p5.text(`n: ${formattedN}`, 100, 40);
+        p5.text(`m: ${formattedM}`, 100, 60);
+        p5.text(`h: ${formattedH}`, 100, 80);
         p5.pop();
       }
 
@@ -125,7 +128,7 @@ function sketch(p5) {
       let formattedTime = (Math.round(p5.simulationData.timepoints[currTimepoint] * 100) / 100).toFixed(2);
       let formattedV = (Math.round(p5.simulationData.membrane_voltage[currTimepoint] * 100) / 100).toFixed(2);
 
-      p5.text(`Transmembrane Potential: ${formattedV} mV`, 100, -20);
+      p5.text(`Transmembrane Potential: ${formattedV} mV`, 100, 20);
       p5.text(`Time: ${formattedTime} ms`, 100, 0);
       p5.pop();
       // leakChannel.draw(p5);

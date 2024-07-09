@@ -151,7 +151,9 @@ class HHModel:
         simulation_output.set_timepoints(time_vec)
         simulation_output.set_injected_current(current_vec)
         simulation_output.set_gating_variables(n, m, h)
-        simulation_output.set_ion_currents(leaky_current_v, na_current_v, k_current_v)
+
+        # Reverse polarity compared to Rosenbaum's implementation
+        simulation_output.set_ion_currents(-leaky_current_v, -na_current_v, -k_current_v)
        
         if sim_out:
             sys.stdout.write(simulation_output.jsonify())
