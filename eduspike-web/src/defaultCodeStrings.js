@@ -63,20 +63,47 @@ v, time_vec = HHModel.simulate(simulation_duration=25, pulses=pulses)`
 const lifZeroStepExerciseString = `"""
 LIF EXERCISE: ZERO STEP CURRENT
 
-Let's find out what happens when we don't stimulate our LIF neuron.
+Let's find out what happens when we 
+don't stimulate our LIF neuron.
 """
 
 from neurospikelib.lif import LIF
 
 v, time_vec = LIF.simulate(resting_v=-72, membrane_c=15,
-membrane_r=1, simulation_duration=100, resolution=10, 
-pulses=pulses, initial_v=-70, v_reset=-75, threshold_v=-55)
+membrane_r=1, simulation_duration=100, resolution=10,
+initial_v=-70, v_reset=-75, threshold_v=-55)
 `
+const lifExploringTauExerciseString = `"""
+LIF EXERCISE: EXPLORING TAU
+The time constant tau is the product
+of membrane resistance and capacitance.
 
+What happens when we change this? 
+"""
+
+from neurospikelib.lif import LIF
+
+pulses = [{
+  "start": 1,
+  "end": 100,
+  "amp": 15
+}]
+
+# Change mem_cap and mem_res to adjust value of tau
+# and see neuron response
+mem_cap = 5
+mem_res = 1
+
+v, time_vec = LIF.simulate(resting_v=-72, membrane_c=mem_cap,
+membrane_r=mem_res, simulation_duration=100, resolution=10,
+pulses=pulses, initial_v=-70, v_reset=-75, threshold_v=-55)
+
+`
 
 export { 
   adexDefaultCodeString, 
   lifDefaultCodeString, 
   hhDefaultCodeString,
-  lifZeroStepExerciseString 
+  lifZeroStepExerciseString,
+  lifExploringTauExerciseString
 };

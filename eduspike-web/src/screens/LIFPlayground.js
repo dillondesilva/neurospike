@@ -23,7 +23,7 @@ import PythonEditor from 'codehelium';
 import { Loading } from 'react-loading-dot'
 import { useEffect, useState, useRef } from 'react';
 import { lifDefaultCodeString } from '../defaultCodeStrings';
-import { lifZeroStepExerciseString } from '../defaultCodeStrings';
+import { lifZeroStepExerciseString, lifExploringTauExerciseString } from '../defaultCodeStrings';
 
 // Following code for theme from MUI example
 const darkTheme = createTheme({
@@ -111,7 +111,11 @@ export default function LIFPlayground(props) {
                     Exercise 1: Zero Step Current
                   </button>
                 </ListItem>
-                <ListItem>Exercise 2: Exploring Tau</ListItem>
+                <ListItem>
+                  <button onClick={() => {setEditorValue(lifExploringTauExerciseString); setMenuOpen(false)}}>
+                    Exercise 2: Exploring Tau
+                  </button>
+                </ListItem>
               </List>
             </Drawer>
             </div>
