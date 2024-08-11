@@ -22,7 +22,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import PythonEditor from 'codehelium';
 import { useEffect, useState, useRef } from 'react';
-import { hhDefaultCodeString } from '../defaultCodeStrings';
+import { hhDefaultCodeString, 
+  hhMinStimExerciseString } from '../defaultCodeStrings';
 import { HHSimulation } from '../components/HHSimulation';
 import LIFSimulation from '../components/LIFSimulation';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -126,11 +127,10 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
                   </ListItem>
                   <Divider />
                   <ListItem>
-                    <button onClick={() => {setEditorValue(""); setMenuOpen(false)}}>
-                      Exercise 1: Zero Step Current
+                    <button onClick={() => {setEditorValue(hhMinStimExerciseString); setMenuOpen(false)}}>
+                      Exercise 1: Minimum Current Amplitude
                     </button>
                   </ListItem>
-                  <ListItem>Exercise 2: Exploring Tau</ListItem>
                 </List>
               </Drawer>
               </div>

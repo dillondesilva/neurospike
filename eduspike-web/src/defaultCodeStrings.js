@@ -100,10 +100,50 @@ pulses=pulses, initial_v=-70, v_reset=-75, threshold_v=-55)
 
 `
 
+const hhMinStimExerciseString = `
+"""
+HH MODEL EXERCISE: MINIMUM STIMULATION CURRENT
+
+The goal of this exercise is to determine the
+minimum amount of current to generate an action
+potential in the HH model.
+
+Can you think of an efficient algorithm to help find
+minimum_curr_amplitude (instead of brute-force)?
+"""
+
+from neurospikelib.hh import HHModel
+
+minimum_curr_amplitude = 100
+
+pulses = [{
+  "start": 2,
+  "end": 5,
+  "amp": minimum_curr_amplitude
+}]
+
+hh_data = HHModel.simulate(
+  simulation_duration=10, 
+  pulses=pulses,
+  # Comment the sim_out param to output simulations
+  # in the UI
+  sim_out=False
+)
+
+print(f"Minimum amplitude for AP: {minimum_curr_amplitude} nA")
+
+# TIP: Access HH simulation data through the data property
+# which is just a Python dictionary
+print(hh_data.data.keys())
+print(hh_data.data)
+
+`;
+
 export { 
   adexDefaultCodeString, 
   lifDefaultCodeString, 
   hhDefaultCodeString,
   lifZeroStepExerciseString,
-  lifExploringTauExerciseString
+  lifExploringTauExerciseString,
+  hhMinStimExerciseString
 };
