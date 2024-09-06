@@ -44,6 +44,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
     const [ editorValue, setEditorValue ] = useState(hhDefaultCodeString);
     const [ editorInitialText, setEditorInitialText ] = useState(hhDefaultCodeString);
     const [ menuOpen, setMenuOpen ] = useState(false);
+    const [ time, setTime ] = useState(0);
     const [ visualMode, setVisualMode] = useState("AP");
     const [ plotMode, setPlotMode ] = useState("AP");
     
@@ -62,11 +63,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
         setPlotMode("AP");
       }
     }
-  
-    // useEffect(() => {
-    //   console.log(consoleOutputs);
-    // }, [consoleOutputs, setConsoleOutputs]);
-  
+ 
     useEffect(() => {
       console.log("rerendering")
     }, [editorInitialText])

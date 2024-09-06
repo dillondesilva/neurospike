@@ -32,6 +32,14 @@ const seedData = {
       data: [],
       fill: false,
       borderColor: 'rgb(75, 192, 192)',
+      yAxisID: 'y',
+    },
+    {
+      label: 'Current',
+      data: [],
+      fill: false,
+      borderColor: 'rgb(255, 102, 102)',
+      yAxisID: 'y1',
     },
   ],
 };
@@ -54,13 +62,26 @@ let options = {
       min: -75,
       max: 10
     },
+    y1: {
+      label: 'Current',
+      type: 'linear',
+      title: {
+        display: true,
+        text: 'Stimulating Current (pA)',
+      },
+      display: true,
+      position: 'right',
+      grid: {
+        drawOnChartArea: false, // only want the grid lines for one axis to show up
+      },
+    },
   },
   elements:{
     point:{
         borderWidth: 0.5,
         radius: 10,
         pointBackgroundColor: 'rgb(255,0,0)',
-        pointBorderColor: 'rgb(255,0,0)'
+        pointBorderColor: 'rgb(255,0,0)',
     },
     line: {
         tension : 0.2  // smooth lines
@@ -77,9 +98,11 @@ export default function LIFPlotting(props) {
 
   const customRadius = (ctx) => {
     console.log(vMax);
-    if (ctx.raw >= vMax) {
+    if (ctx.raw >= vMax && ctx.dataset.yAxisID === "y") {
       console.log("hit");
       return 3;
+    } else if (ctx.dataset.yAxisID === "y1") {
+      return 0;
     }
 
     return 0;
@@ -89,14 +112,18 @@ export default function LIFPlotting(props) {
     try {
       const parsedData = JSON.parse(props.simulationDataStr[0]);
       const membraneVoltage = Array.from(parsedData.data.membrane_voltage);
+      const injectedCurrent = Array.from(parsedData.data.injected_current);
       const spikeTimes = Array.from(parsedData.data.spike_times);
-      console.log(spikeTimes);
+
       let newPlotOptions = options;
       const voltageMin = Math.min(...membraneVoltage);
       const voltageMax = Math.max(...membraneVoltage);
+      const currentMax = Math.max(...injectedCurrent);
+
       const deltaToPlotMax = Math.abs(Math.abs(voltageMax) - Math.abs(voltageMin)) * 0.1;
       newPlotOptions.scales.y.min = Math.min(...membraneVoltage) - deltaToPlotMax;
       newPlotOptions.scales.y.max = Math.max(...membraneVoltage) + deltaToPlotMax;
+      newPlotOptions.scales.y1.max = currentMax * 2;
       newPlotOptions.elements.point.radius = customRadius;
   
       let timePoints = parsedData.data.timepoints;
@@ -113,7 +140,15 @@ export default function LIFPlotting(props) {
             data: membraneVoltage,
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
-          }
+            yAxisID: 'y'
+          },
+          {
+            label: 'Current',
+            data: injectedCurrent,
+            fill: false,
+            borderColor: 'rgb(255, 102, 102)',
+            yAxisID: 'y1',
+          },
         ],
       };
 
@@ -124,6 +159,7 @@ export default function LIFPlotting(props) {
             data: [10],
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
+            yAxisID: 'y'
           },
         ],
       }

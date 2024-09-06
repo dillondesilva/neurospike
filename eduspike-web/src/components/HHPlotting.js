@@ -33,10 +33,28 @@ const seedData = {
       fill: false,
       borderColor: 'rgb(75, 192, 192)',
     },
+    {
+      label: 'Current',
+      data: [],
+      fill: false,
+      borderColor: 'rgb(255, 102, 102)',
+      yAxisID: 'y1',
+    },
   ],
 };
 
 let options = {
+  onClick: function(event, elements) {
+    // elements contains the clicked points
+    if (elements.length > 0) {
+        const element = elements[0];
+        const datasetIndex = element.datasetIndex;
+        const dataIndex = element.index;
+        const value = this.data.datasets[datasetIndex].data[dataIndex];
+        const label = this.data.labels[dataIndex];
+        alert(`Clicked point:\nLabel: ${label}\nValue: ${value}`);
+    }
+  },
   scales: {
     x: {
       beginAtZero: true,
@@ -53,6 +71,19 @@ let options = {
       },
       min: -75,
       max: 10
+    },
+    y1: {
+      label: 'Current',
+      type: 'linear',
+      title: {
+        display: true,
+        text: 'Stimulating Current (pA)',
+      },
+      display: true,
+      position: 'right',
+      grid: {
+        drawOnChartArea: false, // only want the grid lines for one axis to show up
+      },
     },
   },
   elements:{
@@ -74,10 +105,9 @@ export default function HHPlotting(props) {
   const [vMax, setVMax] = useState(5);
   const plotRef = useRef();
 
+
   const customRadius = (ctx) => {
-    console.log(vMax);
     if (ctx.raw >= vMax) {
-      console.log("hit");
       return 3;
     }
 
@@ -85,6 +115,7 @@ export default function HHPlotting(props) {
   }
 
   const updatePlotData = () => {
+
     try {
       const parsedData = JSON.parse(props.simulationDataStr[0]);
       let timePoints = parsedData.data.timepoints;
@@ -94,14 +125,18 @@ export default function HHPlotting(props) {
       });
       if (props.plotMode === "AP") {
         const membraneVoltage = Array.from(parsedData.data.membrane_voltage);
+        const injectedCurrent = Array.from(parsedData.data.injected_current);
+
         let newPlotOptions = options;
         const voltageMin = Math.min(...membraneVoltage);
         const voltageMax = Math.max(...membraneVoltage);
+        const currentMax = Math.max(...injectedCurrent);
         setVMax(voltageMax);
+
         const deltaToPlotMax = Math.abs(Math.abs(voltageMax) - Math.abs(voltageMin)) * 0.1;
         newPlotOptions.scales.y.min = Math.min(...membraneVoltage) - deltaToPlotMax;
         newPlotOptions.scales.y.max = Math.max(...membraneVoltage) + deltaToPlotMax;
-        // newPlotOptions.elements.point.radius = customRadius;
+        newPlotOptions.scales.y1.max = currentMax * 2;
 
         const newPlotData = {
           labels: timePoints,
@@ -111,22 +146,25 @@ export default function HHPlotting(props) {
               data: membraneVoltage,
               fill: false,
               borderColor: 'rgb(75, 192, 192)',
-            }
+            },
+            {
+              label: 'Current',
+              data: injectedCurrent,
+              fill: false,
+              borderColor: 'rgb(255, 102, 102)',
+              yAxisID: 'y1',
+            },
           ],
         };
 
-        console.log("UPdated")  
         setPlotData(newPlotData);  
         setPlotOptions(newPlotOptions);
-        console.log(plotRef);
 
         // Setting the options like this is unsafe.
         // Need to refactor in future
         plotRef.current.options = newPlotOptions;
         plotRef.current.update();  
-        console.log("UPdated")  
       } else {
-        console.log(parsedData)
         const naCurrent = Array.from(parsedData.data.na_current);
         const kCurrent = Array.from(parsedData.data.k_current);
         const leakCurrent = Array.from(parsedData.data.leak_current);
@@ -199,7 +237,7 @@ export default function HHPlotting(props) {
           paddingBottom: '0.2vh',
         }}
       >
-        <Line ref={plotRef} data={plotData} options={plotOptions} />
+        <Line ref={plotRef} data={plotData} options={plotOptions}  />
       </Container>
     </Container>
   );
