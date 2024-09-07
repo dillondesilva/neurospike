@@ -17,7 +17,7 @@ class IonCollection {
             this.sodiumIons.push(currentInstance);
         }
         for (let idx=0; idx < nPotassiumIons; idx++) {
-            this.potassiumIons.push(new PotassiumIon([-800, 800], [-200, -70]));
+            this.potassiumIons.push(new PotassiumIon([-800, 800], [80, 300]));
         }
 
         for (let idx=0; idx < nLeakIons; idx++) {

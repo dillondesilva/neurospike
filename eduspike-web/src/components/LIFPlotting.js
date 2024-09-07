@@ -97,9 +97,7 @@ export default function LIFPlotting(props) {
   const plotRef = useRef();
 
   const customRadius = (ctx) => {
-    console.log(vMax);
     if (ctx.raw >= vMax && ctx.dataset.yAxisID === "y") {
-      console.log("hit");
       return 3;
     } else if (ctx.dataset.yAxisID === "y1") {
       return 0;
@@ -167,7 +165,6 @@ export default function LIFPlotting(props) {
       setPlotData(newPlotData);  
       setSpikeData(newSpikeData);
       setPlotOptions(newPlotOptions);
-      console.log(plotRef);
 
       // Setting the options like this is unsafe.
       // Need to refactor in future
