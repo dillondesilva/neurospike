@@ -20,7 +20,7 @@ function sketch(p5) {
 
     let simulationIons = new IonCollection(400, 400, 400);
     let naChannel = new SodiumChannel(0, -30, 60, 85, "#ffad21");
-    let kChannel = new PotassiumChannel(-120, -30, 60, 85, "#a0a0de");
+    let kChannel = new PotassiumChannel(-120, -30, 60, 85, "#10d0de");
     let leakChannel = new LeakChannel(-250, -30, 60, 85, "#0002a0");
     p5.simulationData = {};
     // naChannel.triggerInactivationGate();

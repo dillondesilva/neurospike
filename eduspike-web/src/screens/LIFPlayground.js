@@ -107,13 +107,8 @@ export default function LIFPlayground(props) {
                 </ListItem>
                 <Divider />
                 <ListItem>
-                  <button onClick={() => {setEditorValue(lifZeroStepExerciseString); setMenuOpen(false)}}>
-                    Exercise 1: Zero Step Current
-                  </button>
-                </ListItem>
-                <ListItem>
                   <button onClick={() => {setEditorValue(lifExploringTauExerciseString); setMenuOpen(false)}}>
-                    Exercise 2: Exploring Tau
+                    Exercise 1: Exploring LIF Response
                   </button>
                 </ListItem>
               </List>

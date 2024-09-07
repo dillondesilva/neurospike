@@ -31,8 +31,8 @@ from neurospikelib.lif import LIF
 # Now perform same computation using neurospikelib
 # Note that taum is equivalent to product of R and C
 pulses = [{
-  "start": 0,
-  "end": 100,
+  "start": 20,
+  "end": 80,
   "amp": 19
 }]
 
@@ -74,29 +74,35 @@ membrane_r=1, simulation_duration=100, resolution=10,
 initial_v=-70, v_reset=-75, threshold_v=-55)
 `
 const lifExploringTauExerciseString = `"""
-LIF EXERCISE: EXPLORING TAU
-The time constant tau is the product
-of membrane resistance and capacitance.
+LIF EXERCISE: EXPLORING SPIKE RESPONSE
 
-What happens when we change this? 
+Run the following code and breakdown
+how the neuron is responding over time,
+including its behaviour under stimulation.
 """
 
 from neurospikelib.lif import LIF
 
 pulses = [{
-  "start": 1,
-  "end": 100,
-  "amp": 15
+  "start": 30,
+  "end": 50,
+  "amp": 2
+}, {
+  "start": 55,
+  "end": 65,
+  "amp": 4
+}, {
+  "start": 70,
+  "end": 90,
+  "amp": 10
 }]
 
-# Change mem_cap and mem_res to adjust value of tau
-# and see neuron response
-mem_cap = 5
-mem_res = 1
+mem_cap = 1
+mem_res = 5
 
 v, time_vec = LIF.simulate(resting_v=-72, membrane_c=mem_cap,
-membrane_r=mem_res, simulation_duration=100, resolution=10,
-pulses=pulses, initial_v=-70, v_reset=-75, threshold_v=-55)
+membrane_r=mem_res, simulation_duration=130, resolution=10,
+pulses=pulses, initial_v=-65, v_reset=-75, threshold_v=-55)
 
 `
 
