@@ -40,6 +40,10 @@ export default function AdExPlayground(props) {
   const [ editorInitialText, setEditorInitialText ] = useState(adexDefaultCodeString);
   const [ menuOpen, setMenuOpen ] = useState(false);
 
+  const [isActive, setActiveState] = useState(true);
+  const [currentTimepoint, setNewTimepoint] = useState(0);
+  const [ isFocusOn, setFocus ] = useState(false);
+
   useEffect(() => {
     console.log("Output change");
     console.log(consoleOutputs);
@@ -170,9 +174,22 @@ export default function AdExPlayground(props) {
                 justifyContent: 'center',
               }}
             >
-              <LIFPlotting simulationDataStr={consoleOutputs} />
+              <LIFPlotting 
+                setActiveState={setActiveState}
+                setNewTimepoint={setNewTimepoint}
+                simulationDataStr={consoleOutputs}
+                setFocus={setFocus}
+              />
             </Container>
-              <LIFSimulation simulationDataStr={consoleOutputs}/>
+              <LIFSimulation 
+                isActive={isActive}
+                isFocusOn={isFocusOn}
+                currentTimepoint={currentTimepoint}
+                setActiveState={setActiveState}
+                setFocus={setFocus}
+                setNewTimepoint={setNewTimepoint}
+                simulationDataStr={consoleOutputs}
+              />
           </Stack>
         </Grid>
       </Grid>

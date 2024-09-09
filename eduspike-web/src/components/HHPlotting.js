@@ -44,17 +44,6 @@ const seedData = {
 };
 
 let options = {
-  onClick: function(event, elements) {
-    // elements contains the clicked points
-    if (elements.length > 0) {
-        const element = elements[0];
-        const datasetIndex = element.datasetIndex;
-        const dataIndex = element.index;
-        const value = this.data.datasets[datasetIndex].data[dataIndex];
-        const label = this.data.labels[dataIndex];
-        alert(`Clicked point:\nLabel: ${label}\nValue: ${value}`);
-    }
-  },
   scales: {
     x: {
       beginAtZero: true,
@@ -213,6 +202,19 @@ export default function HHPlotting(props) {
     }
   
   };
+
+  useEffect(() => {
+    options.onClick = async (event, elements) => {
+      // elements contains the clicked points
+      if (elements.length > 0) {
+          const element = elements[0];
+          const dataIndex = element.index;
+          await props.setActiveState(false);
+          await props.setNewTimepoint(dataIndex);
+          await props.setFocus(true);
+      }
+    }
+  })
 
   useEffect(() => {
       updatePlotData();

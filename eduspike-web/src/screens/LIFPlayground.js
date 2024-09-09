@@ -15,15 +15,14 @@ import LIFControlPanel from '../components/LIFControlPanel';
 import LIFSimulation from '../components/LIFSimulation';
 import LIFPlotting from '../components/LIFPlotting';
 import PyodideWorker from '../components/PyodideWorker';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import PythonEditor from 'codehelium';
-import { Loading } from 'react-loading-dot'
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { lifDefaultCodeString } from '../defaultCodeStrings';
-import { lifZeroStepExerciseString, lifExploringTauExerciseString } from '../defaultCodeStrings';
+import { lifExploringTauExerciseString } from '../defaultCodeStrings';
 
 // Following code for theme from MUI example
 const darkTheme = createTheme({
@@ -41,6 +40,11 @@ export default function LIFPlayground(props) {
   const [ editorValue, setEditorValue ] = useState(lifDefaultCodeString);
   const [ editorInitialText, setEditorInitialText ] = useState(lifDefaultCodeString);
   const [ menuOpen, setMenuOpen ] = useState(false);
+  
+  const [isActive, setActiveState] = useState(true);
+  const [currentTimepoint, setNewTimepoint] = useState(0);
+  const [ isFocusOn, setFocus ] = useState(false);
+  
 
   useEffect(() => {
     console.log("Output change");
@@ -171,20 +175,22 @@ export default function LIFPlayground(props) {
                 justifyContent: 'center',
               }}
             >
-              <LIFPlotting simulationDataStr={consoleOutputs} />
+              <LIFPlotting
+                setActiveState={setActiveState}
+                setNewTimepoint={setNewTimepoint}
+                simulationDataStr={consoleOutputs}
+                setFocus={setFocus}
+              />
             </Container>
-            {/* <Container
-              sx={{
-                height: '45vh',
-                width: '45vw',
-                borderRadius: '10px',
-                padding: '0!important',
-                borderRadius: '20px',
-                overflowY: 'auto',
-              }}
-            > */}
-              <LIFSimulation simulationDataStr={consoleOutputs}/>
-            {/* </Container> */}
+              <LIFSimulation
+                isActive={isActive}
+                isFocusOn={isFocusOn}
+                currentTimepoint={currentTimepoint}
+                setActiveState={setActiveState}
+                setFocus={setFocus}
+                setNewTimepoint={setNewTimepoint}
+                simulationDataStr={consoleOutputs}
+              />
           </Stack>
         </Grid>
       </Grid>

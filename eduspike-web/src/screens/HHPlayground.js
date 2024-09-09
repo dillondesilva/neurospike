@@ -47,7 +47,10 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
     const [ time, setTime ] = useState(0);
     const [ visualMode, setVisualMode] = useState("AP");
     const [ plotMode, setPlotMode ] = useState("AP");
-    
+    const [currentTimepoint, setNewTimepoint] = useState(0);
+    const [isActive, setActiveState] = useState(true);
+    const [ isFocusOn, setFocus ] = useState(false);
+      
     const handleVisualToggle = () => {
       if (visualMode === "AP") {
         setVisualMode("Ion");
@@ -192,7 +195,13 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
                   paddingRight: '0!important'
                 }}
               >
-                <HHPlotting simulationDataStr={consoleOutputs} plotMode={plotMode}/>
+                <HHPlotting 
+                  plotMode={plotMode}
+                  setActiveState={setActiveState}
+                  setNewTimepoint={setNewTimepoint}
+                  simulationDataStr={consoleOutputs}
+                  setFocus={setFocus}
+                />
                 <div className="absolute top-[88%] right-[5%]">
                   {/* From Flowbites */}
                   <label class="inline-flex items-center mb-5 cursor-pointer"> 
@@ -208,7 +217,15 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
                 paddingRight: '0!important'
               }}>
                 {visualMode === "AP"
-                  ? <LIFSimulation simulationDataStr={consoleOutputs}/>
+                  ? <LIFSimulation 
+                    isActive={isActive}
+                    isFocusOn={isFocusOn}
+                    currentTimepoint={currentTimepoint}
+                    setActiveState={setActiveState}
+                    setFocus={setFocus}
+                    setNewTimepoint={setNewTimepoint}
+                    simulationDataStr={consoleOutputs}
+                    />
                   : <HHSimulation simulationDataStr={consoleOutputs}/>
                 }
                 <div className="absolute top-[88%] right-[5%]">

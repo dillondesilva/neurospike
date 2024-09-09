@@ -1,4 +1,4 @@
-import { Container } from '@mui/material';
+import { Container } from "@mui/material";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,11 +8,11 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
+} from "chart.js";
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from "react";
 
-import { Line } from 'react-chartjs-2';
+import { Line } from "react-chartjs-2";
 
 ChartJS.register(
   CategoryScale,
@@ -21,72 +21,77 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const seedData = {
   labels: [],
   datasets: [
     {
-      label: 'Transmembrane Potential',
+      label: "Transmembrane Potential",
       data: [],
       fill: false,
-      borderColor: 'rgb(75, 192, 192)',
-      yAxisID: 'y',
+      borderColor: "rgb(75, 192, 192)",
+      yAxisID: "y",
     },
     {
-      label: 'Current',
+      label: "Current",
       data: [],
       fill: false,
-      borderColor: 'rgb(255, 102, 102)',
-      yAxisID: 'y1',
+      borderColor: "rgb(255, 102, 102)",
+      yAxisID: "y1",
     },
   ],
 };
 
 let options = {
+  plugins: {
+    tooltip: {
+      animation: false
+    }
+  },
   scales: {
     x: {
       beginAtZero: true,
       title: {
         display: true,
-        text: 'Time (ms)',
+        text: "Time (ms)",
       },
     },
     y: {
       beginAtZero: true,
       title: {
         display: true,
-        text: 'Transmembrane Voltage (mV)',
+        text: "Transmembrane Voltage (mV)",
       },
       min: -75,
-      max: 10
+      max: 10,
     },
     y1: {
-      label: 'Current',
-      type: 'linear',
+      label: "Current",
+      type: "linear",
       title: {
         display: true,
-        text: 'Stimulating Current (pA)',
+        text: "Stimulating Current (pA)",
       },
       display: true,
-      position: 'right',
+      position: "right",
       grid: {
         drawOnChartArea: false, // only want the grid lines for one axis to show up
       },
     },
   },
-  elements:{
-    point:{
-        borderWidth: 0.5,
-        radius: 10,
-        pointBackgroundColor: 'rgb(255,0,0)',
-        pointBorderColor: 'rgb(255,0,0)',
+  elements: {
+    point: {
+      borderWidth: 0.5,
+      radius: 10,
+      pointBackgroundColor: "rgb(255,0,0)",
+      pointBorderColor: "rgb(255,0,0)",
     },
     line: {
-        tension : 0.2  // smooth lines
-    }
-  }
+      tension: 0.2, // smooth lines
+    },
+  },
 };
 
 export default function LIFPlotting(props) {
@@ -104,7 +109,7 @@ export default function LIFPlotting(props) {
     }
 
     return 0;
-  }
+  };
 
   const updatePlotData = () => {
     try {
@@ -118,34 +123,37 @@ export default function LIFPlotting(props) {
       const voltageMax = Math.max(...membraneVoltage);
       const currentMax = Math.max(...injectedCurrent);
 
-      const deltaToPlotMax = Math.abs(Math.abs(voltageMax) - Math.abs(voltageMin)) * 0.1;
-      newPlotOptions.scales.y.min = Math.min(...membraneVoltage) - deltaToPlotMax;
-      newPlotOptions.scales.y.max = Math.max(...membraneVoltage) + deltaToPlotMax;
+      const deltaToPlotMax =
+        Math.abs(Math.abs(voltageMax) - Math.abs(voltageMin)) * 0.1;
+      newPlotOptions.scales.y.min =
+        Math.min(...membraneVoltage) - deltaToPlotMax;
+      newPlotOptions.scales.y.max =
+        Math.max(...membraneVoltage) + deltaToPlotMax;
       newPlotOptions.scales.y1.max = currentMax * 2;
       newPlotOptions.elements.point.radius = customRadius;
-  
+
       let timePoints = parsedData.data.timepoints;
 
       timePoints = timePoints.map((timepoint) => {
         return Number(timepoint.toFixed(0));
       });
-  
+
       const newPlotData = {
         labels: timePoints,
         datasets: [
           {
-            label: 'Transmembrane Potential',
+            label: "Transmembrane Potential",
             data: membraneVoltage,
             fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            yAxisID: 'y'
+            borderColor: "rgb(75, 192, 192)",
+            yAxisID: "y",
           },
           {
-            label: 'Current',
+            label: "Current",
             data: injectedCurrent,
             fill: false,
-            borderColor: 'rgb(255, 102, 102)',
-            yAxisID: 'y1',
+            borderColor: "rgb(255, 102, 102)",
+            yAxisID: "y1",
           },
         ],
       };
@@ -156,13 +164,13 @@ export default function LIFPlotting(props) {
           {
             data: [10],
             fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            yAxisID: 'y'
+            borderColor: "rgb(75, 192, 192)",
+            yAxisID: "y",
           },
         ],
-      }
-      
-      setPlotData(newPlotData);  
+      };
+
+      setPlotData(newPlotData);
       setSpikeData(newSpikeData);
       setPlotOptions(newPlotOptions);
 
@@ -171,32 +179,43 @@ export default function LIFPlotting(props) {
       plotRef.current.options = newPlotOptions;
       plotRef.current.update();
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-  
   };
 
   useEffect(() => {
-      updatePlotData();
-    // updatePlotData
+    options.onClick = async (event, elements) => {
+      // elements contains the clicked points
+      if (elements.length > 0) {
+          const element = elements[0];
+          const dataIndex = element.index;
+          await props.setActiveState(false);
+          await props.setNewTimepoint(dataIndex);
+          await props.setFocus(true);
+      }
+    }
+  })
+
+  useEffect(() => {
+    updatePlotData();
   }, [props.simulationDataStr]);
 
   return (
     <Container
       sx={{
         flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <Container
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          paddingBottom: '0.2vh',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          paddingBottom: "0.2vh",
         }}
       >
         <Line ref={plotRef} data={plotData} options={plotOptions} />
