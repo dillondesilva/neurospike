@@ -4,7 +4,7 @@ import numpy as np
 
 RGB_WHITE = (255, 255, 255)
 RGB_OFF_WHITE = (240, 240, 240)
-DEFAULT_RGB_RESTING_POTENTIAL = (2, 0, 121)
+DEFAULT_RGB_RESTING_POTENTIAL = (214, 96, 77)
 DEFAULT_RGB_THRESHOLD_POTENTIAL = (4, 217, 255)
 
 class HHOutput:
@@ -86,17 +86,15 @@ class HHOutput:
     def _create_visualization_data(
         self, membrane_voltage, normalized_v_data, max_v, 
         ic_initial_color=RGB_WHITE, ec_initial_color=RGB_WHITE,
-        ic_final_color=(132, 215, 206), 
-        ec_final_color=(238, 129, 238), 
+        ic_final_color=(178, 24, 43), 
+        ec_final_color=(33, 102, 172),
         membrane_initial_color=DEFAULT_RGB_RESTING_POTENTIAL, 
         threshold_color=DEFAULT_RGB_THRESHOLD_POTENTIAL,
     ):
         """Calculate colors to create visualization for HH simulation"""
 
         # Determining change in membrane color
-        membrane_color_v = np.array(membrane_initial_color)
-        threshold_color_v = np.array(threshold_color)
-        membrane_color_dist = (threshold_color_v - membrane_color_v)[np.newaxis]
+        membrane_color_v = np.array(membrane_initial_color) * np.ones_like(normalized_v_data)
 
         # Setting color vectors for IC and EC visuals
         ic_initial_color_v = np.array(ic_initial_color)
@@ -109,15 +107,14 @@ class HHOutput:
         ec_color_distance = (ec_final_color_v - ec_initial_color)[np.newaxis]
 
         # color_time_v = color_distance * normalized_v_data
-        membrane_color_time_v = membrane_color_dist * normalized_v_data
-        membrane_color = membrane_color_v + membrane_color_time_v
+        membrane_color = membrane_color_v
 
         ic_color_v = ic_initial_color_v + (ic_color_distance * normalized_v_data)
         ec_color_v = ec_initial_color_v + (ec_color_distance * normalized_v_data)
 
         for i in range(len(normalized_v_data)):
             if membrane_voltage[i] >= max_v:
-                membrane_color[i] = RGB_WHITE
+                # membrane_color[i] = RGB_WHITE
                 ic_color_v[i] = RGB_WHITE
                 ec_color_v[i] = RGB_WHITE
 

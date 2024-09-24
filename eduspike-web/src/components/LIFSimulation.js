@@ -15,7 +15,7 @@ const INITIAL_LIF_VISUALISATION_DATA = {
   visualization: {
     intracellular_color_v: [[255, 255, 255]],
     extracellular_color_v: [[255, 255, 255]],
-    membrane_color_v: [[10, 250, 255]],
+    membrane_color_v: [[214, 96, 77]],
   },
 };
 
