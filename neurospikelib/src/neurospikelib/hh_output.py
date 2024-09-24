@@ -112,11 +112,11 @@ class HHOutput:
         ic_color_v = ic_initial_color_v + (ic_color_distance * normalized_v_data)
         ec_color_v = ec_initial_color_v + (ec_color_distance * normalized_v_data)
 
-        for i in range(len(normalized_v_data)):
-            if membrane_voltage[i] >= max_v:
-                # membrane_color[i] = RGB_WHITE
-                ic_color_v[i] = RGB_WHITE
-                ec_color_v[i] = RGB_WHITE
+        # for i in range(len(normalized_v_data)):
+        #     if membrane_voltage[i] >= max_v:
+        #         # membrane_color[i] = RGB_WHITE
+        #         ic_color_v[i] = RGB_WHITE
+        #         ec_color_v[i] = RGB_WHITE
 
         return (ic_color_v, ec_color_v, membrane_color)
 

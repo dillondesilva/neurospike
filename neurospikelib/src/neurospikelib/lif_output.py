@@ -92,8 +92,6 @@ class LIFOutput:
         ic_color_distance = (ic_final_color_v - ic_initial_color)[np.newaxis]
         ec_color_distance = (ec_final_color_v - ec_initial_color)[np.newaxis]
 
-        # color_time_v = color_distance * normalized_v_data
-        # membrane_color_time_v = membrane_color_dist * normalized_v_data
         membrane_color = membrane_color_v
 
         ic_color_v = ic_initial_color_v + (ic_color_distance * normalized_v_data)
@@ -101,12 +99,8 @@ class LIFOutput:
 
         for i in range(len(normalized_v_data)):
             if membrane_voltage[i] >= threshold_v:
-                # membrane_color[i] = RGB_WHITE
                 ic_color_v[i] = ic_final_color
                 ec_color_v[i] = ec_final_color
-
-        # intracellular_color_v = base_color_v + color_time_v
-        # extracellular_color_v = final_color_v - color_time_v
 
         return (ic_color_v, ec_color_v, membrane_color)
 
