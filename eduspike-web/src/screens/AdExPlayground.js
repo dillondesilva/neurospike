@@ -21,7 +21,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import PythonEditor from 'codehelium';
 import { useEffect, useState, useRef } from 'react';
-import { adexDefaultCodeString } from '../defaultCodeStrings';
+import { adexDefaultCodeString, adexAdaptiveCurrentExerciseString } from '../defaultCodeStrings';
 
 // Following code for theme from MUI example
 const darkTheme = createTheme({
@@ -40,9 +40,9 @@ export default function AdExPlayground(props) {
   const [ editorInitialText, setEditorInitialText ] = useState(adexDefaultCodeString);
   const [ menuOpen, setMenuOpen ] = useState(false);
 
-  const [isActive, setActiveState] = useState(true);
-  const [currentTimepoint, setNewTimepoint] = useState(0);
-  const [ isFocusOn, setFocus ] = useState(false);
+  const [currentTimepoint, setCurrentTimepoint] = useState(0);
+  const [isActive, setActiveState] = useState(false);
+  const [isFocusOn, setFocus] = useState(false);
 
   useEffect(() => {
     console.log("Output change");
@@ -109,11 +109,10 @@ export default function AdExPlayground(props) {
                 </ListItem>
                 <Divider />
                 <ListItem>
-                  <button onClick={() => {setEditorValue(""); setMenuOpen(false)}}>
-                    Exercise 1: Zero Step Current
+                  <button onClick={() => {setEditorValue(adexAdaptiveCurrentExerciseString); setMenuOpen(false)}}>
+                    Exercise 1: Exploring Adaptation Current
                   </button>
                 </ListItem>
-                <ListItem>Exercise 2: Exploring Tau</ListItem>
               </List>
             </Drawer>
             </div>
@@ -174,9 +173,10 @@ export default function AdExPlayground(props) {
                 justifyContent: 'center',
               }}
             >
-              <LIFPlotting 
+              <LIFPlotting
+                currentTimepoint={currentTimepoint}
                 setActiveState={setActiveState}
-                setNewTimepoint={setNewTimepoint}
+                setNewTimepoint={setCurrentTimepoint}
                 simulationDataStr={consoleOutputs}
                 setFocus={setFocus}
               />
@@ -187,7 +187,7 @@ export default function AdExPlayground(props) {
                 currentTimepoint={currentTimepoint}
                 setActiveState={setActiveState}
                 setFocus={setFocus}
-                setNewTimepoint={setNewTimepoint}
+                setNewTimepoint={setCurrentTimepoint}
                 simulationDataStr={consoleOutputs}
               />
           </Stack>

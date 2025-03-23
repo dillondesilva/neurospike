@@ -145,11 +145,36 @@ print(hh_data.data)
 
 `;
 
+const adexAdaptiveCurrentExerciseString = `
+"""
+ADEX MODEL EXERCISE: EXPLORING ADAPTATION CURRENT
+"""
+from neurospikelib.adex import AdEx
+
+adaptation_current=0
+
+# Uncomment the line below and observe the distance
+# between spikes.
+# adaptation_current=0.75
+
+pulses = [{
+    "start": 0,
+    "end": 1000,
+    "amp": 19
+}]
+
+v, time_vec = AdEx.simulate(resting_v=-72, membrane_c=15, 
+membrane_r=1, simulation_duration=1000, resolution=1, 
+pulses=pulses, initial_v=-70, v_reset=-75, threshold_v=-55, 
+sharpness=2, a=0.1, b=adaptation_current, tau_w=400)
+`;
+
 export { 
   adexDefaultCodeString, 
   lifDefaultCodeString, 
   hhDefaultCodeString,
   lifZeroStepExerciseString,
   lifExploringTauExerciseString,
-  hhMinStimExerciseString
+  hhMinStimExerciseString,
+  adexAdaptiveCurrentExerciseString
 };

@@ -96,21 +96,18 @@ class HHOutput:
         # Determining change in membrane color
         membrane_color_v = np.array(membrane_initial_color) * np.ones_like(normalized_v_data)
 
-        # Setting color vectors for IC and EC visuals
+        # Setting color vectors for IC visuals
         ic_initial_color_v = np.array(ic_initial_color)
-        ec_initial_color_v = np.array(ec_initial_color)
         ic_final_color_v = np.array(ic_final_color)
-        ec_final_color_v = np.array(ec_final_color)
 
         # Calculate distance vector between initial/final IC and EC colors
         ic_color_distance = (ic_final_color_v - ic_initial_color)[np.newaxis]
-        ec_color_distance = (ec_final_color_v - ec_initial_color)[np.newaxis]
 
         # color_time_v = color_distance * normalized_v_data
         membrane_color = membrane_color_v
 
         ic_color_v = ic_initial_color_v + (ic_color_distance * normalized_v_data)
-        ec_color_v = ec_initial_color_v + (ec_color_distance * normalized_v_data)
+        ec_color_v = np.array(ec_initial_color) * np.ones_like(normalized_v_data)
 
         # for i in range(len(normalized_v_data)):
         #     if membrane_voltage[i] >= max_v:

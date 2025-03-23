@@ -82,25 +82,21 @@ class LIFOutput:
         # threshold_color_v = np.array(threshold_color)
         # membrane_color_dist = (threshold_color_v - membrane_color_v)[np.newaxis]
 
-        # Setting color vectors for IC and EC visuals
+        # Setting color vectors for IC and EC visuals. EC should not change
         ic_initial_color_v = np.array(ic_initial_color)
-        ec_initial_color_v = np.array(ec_initial_color)
         ic_final_color_v = np.array(ic_final_color)
-        ec_final_color_v = np.array(ec_final_color)
 
         # Calculate distance vector between initial/final IC and EC colors
         ic_color_distance = (ic_final_color_v - ic_initial_color)[np.newaxis]
-        ec_color_distance = (ec_final_color_v - ec_initial_color)[np.newaxis]
 
         membrane_color = membrane_color_v
 
         ic_color_v = ic_initial_color_v + (ic_color_distance * normalized_v_data)
-        ec_color_v = ec_initial_color_v + (ec_color_distance * normalized_v_data)
+        ec_color_v = np.array(ec_initial_color) * np.ones_like(normalized_v_data)
 
         for i in range(len(normalized_v_data)):
             if membrane_voltage[i] >= threshold_v:
                 ic_color_v[i] = ic_final_color
-                ec_color_v[i] = ec_final_color
 
         return (ic_color_v, ec_color_v, membrane_color)
 

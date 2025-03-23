@@ -13,6 +13,7 @@ import {
 import { useEffect, useState, useRef } from 'react';
 
 import { Line } from 'react-chartjs-2';
+import { playbackBarPlugin } from './PlaybackBarPlugin';
 
 ChartJS.register(
   CategoryScale,
@@ -21,7 +22,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  playbackBarPlugin
 );
 
 const seedData = {
@@ -44,6 +46,14 @@ const seedData = {
 };
 
 let options = {
+  plugins: {
+    tooltip: {
+      animation: false
+    },
+    playbackBar: {
+      lineAtIndex: [0]
+    }
+  },
   scales: {
     x: {
       beginAtZero: true,
@@ -104,19 +114,18 @@ export default function HHPlotting(props) {
   }
 
   const updatePlotData = () => {
-
     try {
       const parsedData = JSON.parse(props.simulationDataStr[0]);
       let timePoints = parsedData.data.timepoints;
 
       timePoints = timePoints.map((timepoint) => {
-        return Number(timepoint.toFixed(0));
+        return Number(timepoint.toFixed(2));
       });
       if (props.plotMode === "AP") {
         const membraneVoltage = Array.from(parsedData.data.membrane_voltage);
         const injectedCurrent = Array.from(parsedData.data.injected_current);
 
-        let newPlotOptions = options;
+        let newPlotOptions = {...options};  // Create a new object instead of mutating
         const voltageMin = Math.min(...membraneVoltage);
         const voltageMax = Math.max(...membraneVoltage);
         const currentMax = Math.max(...injectedCurrent);
@@ -126,6 +135,8 @@ export default function HHPlotting(props) {
         newPlotOptions.scales.y.min = Math.min(...membraneVoltage) - deltaToPlotMax;
         newPlotOptions.scales.y.max = Math.max(...membraneVoltage) + deltaToPlotMax;
         newPlotOptions.scales.y1.max = currentMax * 2;
+        newPlotOptions.scales.y.title.text = "Transmembrane Voltage (mV)";
+        newPlotOptions.scales.y1.display = true;  // Show the right axis for current
 
         const newPlotData = {
           labels: timePoints,
@@ -148,22 +159,22 @@ export default function HHPlotting(props) {
 
         setPlotData(newPlotData);  
         setPlotOptions(newPlotOptions);
-
-        // Setting the options like this is unsafe.
-        // Need to refactor in future
         plotRef.current.options = newPlotOptions;
         plotRef.current.update();  
+
       } else {
         const naCurrent = Array.from(parsedData.data.na_current);
         const kCurrent = Array.from(parsedData.data.k_current);
         const leakCurrent = Array.from(parsedData.data.leak_current);
-        let newPlotOptions = options;
+        let newPlotOptions = {...options};  // Create a new object instead of mutating
         const voltageMin = Math.min(...naCurrent, ...kCurrent, ...leakCurrent);
         const voltageMax = Math.max(...naCurrent, ...kCurrent, ...leakCurrent);
         setVMax(voltageMax);
         newPlotOptions.scales.y.min = voltageMin - (Math.abs(voltageMin) * 0.1);
         newPlotOptions.scales.y.max = voltageMax + (0.1 * voltageMax);
-        newPlotOptions.scales.y.title.text = "Ion Currents (mA)"
+        newPlotOptions.scales.y.title.text = "Ion Currents (mA)";
+        newPlotOptions.scales.y1.display = false;  // Hide the right axis for ion currents view
+
         const newPlotData = {
           labels: timePoints,
           datasets: [
@@ -191,16 +202,20 @@ export default function HHPlotting(props) {
         setPlotData(newPlotData);  
         setPlotOptions(newPlotOptions);
 
-        // Setting the options like this is unsafe.
+                // Setting the options like this is unsafe.
         // Need to refactor in future
         plotRef.current.options = newPlotOptions;
         plotRef.current.update();  
+
+        // if (plotRef.current) {
+        //   plotRef.current.options = newPlotOptions;
+        //   plotRef.current.update();
+        // }
       }
    
     } catch (e) {
       console.log(e)
     }
-  
   };
 
   useEffect(() => {
@@ -215,6 +230,44 @@ export default function HHPlotting(props) {
       }
     }
   })
+
+  useEffect(() => {
+    const updatePlaybackBar = async () => {
+      let newPlotOptions = {...options};  // Create a new object from options instead of plotOptions
+      newPlotOptions.plugins.playbackBar.lineAtIndex = [props.currentTimepoint];
+      setPlotOptions(newPlotOptions);
+      if (plotRef.current) {
+        plotRef.current.options = newPlotOptions;
+        plotRef.current.update();
+      }
+    }
+
+    if (props.currentTimepoint !== undefined) {
+      updatePlaybackBar();
+    }
+  }, [props.currentTimepoint]);
+
+  useEffect(() => {
+    const handleClick = async (event, elements) => {
+      if (elements.length > 0) {
+        const element = elements[0];
+        const dataIndex = element.index;
+        // Update playback bar immediately
+        const newPlotOptions = {...options};  // Create a new object from options instead of plotOptions
+        newPlotOptions.plugins.playbackBar.lineAtIndex = [dataIndex];
+        setPlotOptions(newPlotOptions);
+        if (plotRef.current) {
+          plotRef.current.options = newPlotOptions;
+          plotRef.current.update();
+        }
+        // Then update the state
+        await props.setActiveState(false);
+        await props.setNewTimepoint(dataIndex);
+        await props.setFocus(true);
+      }
+    };
+
+  }, [props.setActiveState, props.setNewTimepoint, props.setFocus]);
 
   useEffect(() => {
       updatePlotData();
@@ -239,7 +292,7 @@ export default function HHPlotting(props) {
           paddingBottom: '0.2vh',
         }}
       >
-        <Line ref={plotRef} data={plotData} options={plotOptions}  />
+        <Line ref={plotRef} data={plotData} options={plotOptions} plugins={[playbackBarPlugin]} />
       </Container>
     </Container>
   );

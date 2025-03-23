@@ -11,10 +11,10 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
   <HashRouter>
-    <MediaQuery maxWidth={1224}>
+    <MediaQuery maxWidth={768}>
       <MobileLandingPage />
     </MediaQuery>
-    <MediaQuery minWidth={1224}>
+    <MediaQuery minWidth={769}>
       <App />
     </MediaQuery>
   </HashRouter>

@@ -176,6 +176,7 @@ export default function LIFPlayground(props) {
               }}
             >
               <LIFPlotting
+                currentTimepoint={currentTimepoint}
                 setActiveState={setActiveState}
                 setNewTimepoint={setNewTimepoint}
                 simulationDataStr={consoleOutputs}

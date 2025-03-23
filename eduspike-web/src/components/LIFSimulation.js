@@ -51,7 +51,6 @@ function TestMesh(props, data, active) {
   }, [timepoints])
 
   const updateTimepoint = async () => {
-    console.log(props.currentTimepoint);
     if (props.currentTimepoint === timepoints.length - 1) {
       props.setNewTimepoint(0);
     } else {
@@ -132,7 +131,6 @@ function TestMesh(props, data, active) {
 
       props.setFocus(false)
     }
-    console.log(props.currentTimepoint)
   });
 
   return (

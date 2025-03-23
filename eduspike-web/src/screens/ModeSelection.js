@@ -11,7 +11,7 @@ export default function ModeSelection() {
     lif: 'Explore the simplest integrate-and-fire model by stimulating a neuron to form an action potential',
     eif: 'See how factoring in exponential changes to membrane voltage produce more accurate integrate-and-fire models',
     hh:
-      'Explore how several different ion currents contribute to an action potential. This sandbox is still under development',
+      'Explore how several different ion currents contribute to an action potential.',
   };
 
   return (
@@ -21,7 +21,7 @@ export default function ModeSelection() {
         <div class="container p-16 content-center">
           <div>
             <img src='logo-white-bg.png' className='w-3/12' alt="logo"/>
-            <h1 className="text-4xl">Welcome to <h1 className="font-bold">Eduspike</h1></h1>
+            <h1 className="text-4xl">Welcome to <h1 className="font-bold">Neurospike</h1></h1>
             <p className="mt-4">Understanding computational neurons has never been more intuitive.</p>
           </div>
           <div>

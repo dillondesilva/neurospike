@@ -11,8 +11,8 @@ import {
 } from "chart.js";
 
 import { useEffect, useState, useRef } from "react";
-
 import { Line } from "react-chartjs-2";
+import { playbackBarPlugin } from './PlaybackBarPlugin';
 
 ChartJS.register(
   CategoryScale,
@@ -22,6 +22,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  playbackBarPlugin
 );
 
 const seedData = {
@@ -48,6 +49,9 @@ let options = {
   plugins: {
     tooltip: {
       animation: false
+    },
+    playbackBar: {
+      lineAtIndex: [0, 1, 2]
     }
   },
   scales: {
@@ -131,11 +135,12 @@ export default function LIFPlotting(props) {
         Math.max(...membraneVoltage) + deltaToPlotMax;
       newPlotOptions.scales.y1.max = currentMax * 2;
       newPlotOptions.elements.point.radius = customRadius;
+      newPlotOptions.plugins.playbackBar.lineAtIndex = [props.currentTimepoint];
 
       let timePoints = parsedData.data.timepoints;
 
       timePoints = timePoints.map((timepoint) => {
-        return Number(timepoint.toFixed(0));
+        return Number(timepoint.toFixed(2));
       });
 
       const newPlotData = {
@@ -200,6 +205,22 @@ export default function LIFPlotting(props) {
     updatePlotData();
   }, [props.simulationDataStr]);
 
+  useEffect(() => {
+    const updatePlaybackBar = async () => {
+      let newPlotOptions = plotOptions;
+      newPlotOptions.plugins.playbackBar.lineAtIndex = [props.currentTimepoint];
+      await setPlotOptions(newPlotOptions);
+      console.log(plotRef)
+      plotRef.current.update();
+    }
+
+    updatePlaybackBar();
+    // let newPlotOptions = plotOptions;
+    // newPlotOptions.plugins.playbackBar.lineAtIndex = [props.currentTimepoint];
+    // await setPlotOptions(newPlotOptions);
+    // plotRef.update();
+  }, [props.currentTimepoint])
+
   return (
     <Container
       sx={{
@@ -218,7 +239,7 @@ export default function LIFPlotting(props) {
           paddingBottom: "0.2vh",
         }}
       >
-        <Line ref={plotRef} data={plotData} options={plotOptions} />
+        <Line ref={plotRef} data={plotData} options={plotOptions} plugins={[playbackBarPlugin]} />
       </Container>
     </Container>
   );
