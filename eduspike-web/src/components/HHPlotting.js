@@ -61,6 +61,10 @@ let options = {
         display: true,
         text: 'Time (ms)',
       },
+      ticks: {
+        maxTicksLimit: 5,
+      },
+      type: "linear",
     },
     y: {
       beginAtZero: true,
@@ -68,6 +72,10 @@ let options = {
         display: true,
         text: 'Transmembrane Voltage (mV)',
       },
+      ticks: {
+        maxTicksLimit: 5,
+      },
+      type: "linear",
       min: -75,
       max: 10
     },
@@ -77,6 +85,9 @@ let options = {
       title: {
         display: true,
         text: 'Stimulating Current (pA)',
+      },
+      ticks: {
+        maxTicksLimit: 5,
       },
       display: true,
       position: 'right',
@@ -132,11 +143,18 @@ export default function HHPlotting(props) {
         setVMax(voltageMax);
 
         const deltaToPlotMax = Math.abs(Math.abs(voltageMax) - Math.abs(voltageMin)) * 0.1;
+        const timestepSize = (timePoints[timePoints.length - 1] - timePoints[0]) / 4;
+        const membraneVoltageTickStepSize = (voltageMax - voltageMin) / 4;
+        const injectedCurrentTickStepSize = (currentMax * 2) / 4;
+
         newPlotOptions.scales.y.min = Math.min(...membraneVoltage) - deltaToPlotMax;
         newPlotOptions.scales.y.max = Math.max(...membraneVoltage) + deltaToPlotMax;
         newPlotOptions.scales.y1.max = currentMax * 2;
         newPlotOptions.scales.y.title.text = "Transmembrane Voltage (mV)";
         newPlotOptions.scales.y1.display = true;  // Show the right axis for current
+        newPlotOptions.scales.x.ticks.stepSize = timestepSize;
+        newPlotOptions.scales.y.ticks.stepSize = membraneVoltageTickStepSize;
+        newPlotOptions.scales.y1.ticks.stepSize = injectedCurrentTickStepSize;
 
         const newPlotData = {
           labels: timePoints,

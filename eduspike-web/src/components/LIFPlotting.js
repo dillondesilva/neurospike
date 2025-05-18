@@ -56,20 +56,29 @@ let options = {
   },
   scales: {
     x: {
+      min: 0,
+      max: 100,
       beginAtZero: true,
+      type: "linear",
       title: {
         display: true,
         text: "Time (ms)",
       },
+      ticks: {
+        maxTicksLimit: 5,
+      }
     },
     y: {
-      beginAtZero: true,
+      type: "linear",
       title: {
         display: true,
         text: "Transmembrane Voltage (mV)",
       },
       min: -75,
       max: 10,
+      ticks: {
+        maxTicksLimit: 5,
+      }
     },
     y1: {
       label: "Current",
@@ -77,6 +86,9 @@ let options = {
       title: {
         display: true,
         text: "Stimulating Current (pA)",
+      },
+      ticks: {
+        maxTicksLimit: 5,
       },
       display: true,
       position: "right",
@@ -126,6 +138,7 @@ export default function LIFPlotting(props) {
       const voltageMin = Math.min(...membraneVoltage);
       const voltageMax = Math.max(...membraneVoltage);
       const currentMax = Math.max(...injectedCurrent);
+      let timePoints = parsedData.data.timepoints;
 
       const deltaToPlotMax =
         Math.abs(Math.abs(voltageMax) - Math.abs(voltageMin)) * 0.1;
@@ -134,10 +147,16 @@ export default function LIFPlotting(props) {
       newPlotOptions.scales.y.max =
         Math.max(...membraneVoltage) + deltaToPlotMax;
       newPlotOptions.scales.y1.max = currentMax * 2;
+      const timestepSize = (timePoints[timePoints.length - 1] - timePoints[0]) / 4;
+      const membraneVoltageTickStepSize = (voltageMax - voltageMin) / 4;
+      const injectedCurrentTickStepSize = (currentMax * 2) / 4;
+      newPlotOptions.scales.x.max = timePoints[timePoints.length - 1];
+      newPlotOptions.scales.x.min = 0;
+      newPlotOptions.scales.x.ticks.stepSize = timestepSize;
+      newPlotOptions.scales.y.ticks.stepSize = membraneVoltageTickStepSize;
+      newPlotOptions.scales.y1.ticks.stepSize = injectedCurrentTickStepSize;
       newPlotOptions.elements.point.radius = customRadius;
       newPlotOptions.plugins.playbackBar.lineAtIndex = [props.currentTimepoint];
-
-      let timePoints = parsedData.data.timepoints;
 
       timePoints = timePoints.map((timepoint) => {
         return Number(timepoint.toFixed(2));
